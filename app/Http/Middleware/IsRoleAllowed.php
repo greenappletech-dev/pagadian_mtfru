@@ -16,7 +16,9 @@ class IsRoleAllowed
      */
     public function handle(Request $request, Closure $next)
     {
-        if(auth()->user()->role != 7) {
+        if(auth()->user()->role == 7 || auth()->user()->role == 9) {
+
+        } else {
             abort('403');
         }
         return $next($request);
