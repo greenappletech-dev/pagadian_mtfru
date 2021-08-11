@@ -46,7 +46,7 @@
                     Address:
                 </th>
                 <th colspan="2" style="font-weight: bold; font-size: 15px">
-                    {{ $tricycle->address1 }}
+                    {{ $tricycle->address }}
                 </th>
             </tr>
 

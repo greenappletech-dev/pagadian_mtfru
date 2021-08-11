@@ -253,7 +253,7 @@ return [
 //            'label'       => 4,
 //            'label_color' => 'success',
 //        ],
-        ['header' => 'MTFRU'],
+        ['header' => 'Master Data'],
         [
             'text' => 'Operators',
             'url'  => 'operator',
@@ -269,6 +269,7 @@ return [
             'url'  => 'drivers',
             'icon' => 'far fa-id-card',
         ],
+        ['header' => 'Application'],
         [
             'text' => 'MTOP Application',
             'url'  => 'mtop',
