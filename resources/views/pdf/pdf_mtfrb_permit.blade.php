@@ -123,6 +123,24 @@
             font-size: 15px;
         }
 
+        .issue_day {
+            width: 350px;
+            text-align: center;
+            position: absolute;
+            bottom: 150px;
+            left: -20px;
+            font-size: 15px;
+        }
+
+        .issue_month {
+            width: 144px;
+            text-align: center;
+            position: absolute;
+            bottom: 150px;
+            left: 265px;
+            font-size: 15px;
+        }
+
 
 
     </style>
@@ -148,6 +166,26 @@
 <span class="plate_no">{{ $data[0]['plate_no'] }}</span>
 
 <span class="expiration_date">{{ date('m/d/Y', strtotime($data[0]['validity_date'])) }}</span>
+
+{{ $day = date('d', strtotime($data[3])) }}
+{{ $last_digit = substr($day, -1) }}
+{{ $ordinal = 'th' }}
+
+@if($day < 21 && $day > 4)
+    {{$ordinal = 'th'}}
+@elseif(($last_digit % 100) === 3)
+    {{ $ordinal = 'rd' }}
+@elseif(($last_digit % 100) === 2)
+    {{ $ordinal = 'nd' }}
+@elseif(($last_digit % 100) === 1)
+    {{ $ordinal = 'st' }}
+@elseif(($last_digit % 100) === 0)
+    {{ $ordinal = 'th' }}
+@endif
+
+<span class="issue_day">{{ $day.$ordinal }}</span>
+<span class="issue_month">{{ date('F', strtotime($data[3])) . ', ' . date('Y', strtotime($data[3])) }}</span>
+
 
 </body>
 </html>

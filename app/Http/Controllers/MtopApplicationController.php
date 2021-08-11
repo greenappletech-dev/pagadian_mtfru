@@ -468,8 +468,9 @@ class MtopApplicationController extends Controller
         $mtop_application = $this->mtop_applications->fetchDataForPrinting($id);
         $charges = $this->mtop_applications_charge->fetchDataById($id);
         $operator_img = $this->operator_img->fetchDataById($mtop_application->taxpayer_id);
+        $transaction = DB::table('colhdr')->where('mtop_application_id', $id)->first();
 
-        $data = [$mtop_application, $charges, $operator_img];
+        $data = [$mtop_application, $charges, $operator_img, $transaction->trnx_date];
 
         if((int)$form_to_print === 1) {
             $blade = 'pdf_mtfrb_application';
