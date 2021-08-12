@@ -489,6 +489,14 @@ class MtopApplicationController extends Controller
                 }
             }
 
+            if((int)$transaction_type[0] == 2) {
+                $application_type = $application_type . 'T';
+            }
+
+            if((int)$transaction_type[0] == 3) {
+                $application_type = $application_type . 'CU';
+            }
+
         } else {
 
             /* check if the transaction is multiple */
