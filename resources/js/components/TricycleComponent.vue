@@ -245,7 +245,7 @@ export default {
             this.tricycleIdValue = null;
             this.searchedValue = null;
             this.operatorValue = null;
-            //this.bodyNumberValue = null;
+            this.bodyNumberValue = null;
             this.makeTypeValue = null;
             this.engineNoValue = null;
             this.chassisNoValue = null;
@@ -256,7 +256,7 @@ export default {
             this.tableData = [];
             axios.get('tricycle/getdata').then(response => {
                 this.tableData = response.data.tricycles;
-                this.bodyNumberValue = response.data.body_number;
+                // this.bodyNumberValue = response.data.body_number;
             })
         },
 

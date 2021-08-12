@@ -275,6 +275,29 @@ return [
             'url'  => 'mtop',
             'icon' => 'fas fa-file-invoice',
         ],
+        ['header' => 'Reports'],
+        [
+            'text'    => 'MTFRU',
+            'icon'    => 'fas fa-chart-pie',
+            'submenu' => [
+                [
+                    'text' => 'MTFRU',
+                    'icon' => 'far fa-dot-circle',
+                    'url'  => '/annual_budget_report',
+                    'role' => ''
+                ],
+                [
+                    'text' => 'Expiring Franchise',
+                    'icon' => 'far fa-dot-circle',
+                    'url'  => '/supplemental_report',
+                ],
+                [
+                    'text' => 'Generate Franchise Report',
+                    'icon' => 'far fa-dot-circle',
+                    'url'  => '/supplemental_report',
+                ],
+            ]
+        ],
         ['header' => 'System'],
 //        [
 //            'text' => 'Charges',
@@ -294,6 +317,10 @@ return [
         [
             'text' => 'Log out',
             'url'  => 'logout',
+            'icon' => 'fas fa-power-off',
+        ],
+    ],
+
 //        [
 //            'text'    => 'multilevel',
 //            'icon'    => 'fas fa-fw fa-share',
@@ -348,9 +375,6 @@ return [
 //            'icon_color' => 'cyan',
 //            'url'        => '#',
 //        ],
-            'icon' => 'fas fa-power-off',
-        ],
-    ],
 
     /*
     |--------------------------------------------------------------------------

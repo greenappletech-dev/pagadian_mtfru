@@ -30,11 +30,11 @@ class TricycleController extends Controller
 
     public function getdata(){
         $tricycles = $this->tricycles->fetchData();
-        $body_number = DB::table('m99')->where('par_code', '001')->first();
+//        $body_number = DB::table('m99')->where('par_code', '001')->first();
 
         return response()->json([
             'tricycles' => $tricycles,
-            'body_number' => $body_number->body_number_from,
+//            'body_number' => $body_number->body_number_from,
         ], 200);
     }
 
@@ -63,32 +63,32 @@ class TricycleController extends Controller
             ,200);
     }
 
-    public function update_body_number_settings($current_body_number) {
-        $length = strlen($current_body_number);
-        $convert_to_int = (int)$current_body_number;
-        $converted_length = strlen($convert_to_int);
-        $zeros = '';
-
-        if($converted_length < $length) {
-
-            /* if the length is less than the current settings must add zeros in the beginning */
-
-            for($i = $converted_length; $i < $length; $i++) {
-
-                $zeros = $zeros . '0';
-
-            }
-        }
-
-        $convert_to_int = $convert_to_int + 1;
-        $new_body_number = $zeros . $convert_to_int;
-
-        return DB::table('m99')->where('par_code', '001')->update(['body_number_from' => $new_body_number]);
-    }
+//    public function update_body_number_settings($current_body_number) {
+//        $length = strlen($current_body_number);
+//        $convert_to_int = (int)$current_body_number;
+//        $converted_length = strlen($convert_to_int);
+//        $zeros = '';
+//
+//        if($converted_length < $length) {
+//
+//            /* if the length is less than the current settings must add zeros in the beginning */
+//
+//            for($i = $converted_length; $i < $length; $i++) {
+//
+//                $zeros = $zeros . '0';
+//
+//            }
+//        }
+//
+//        $convert_to_int = $convert_to_int + 1;
+//        $new_body_number = $zeros . $convert_to_int;
+//
+//        return DB::table('m99')->where('par_code', '001')->update(['body_number_from' => $new_body_number]);
+//    }
 
     public function store(StoreTricycle $request) {
         $tricycle = new Tricycle();
-        $this->update_body_number_settings($request->body_number);
+//        $this->update_body_number_settings($request->body_number);
         return $this->dbValues($tricycle, $request, 'Tricycle Successfully Saved');
     }
 

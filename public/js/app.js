@@ -7372,8 +7372,8 @@ __webpack_require__.r(__webpack_exports__);
       this.errors = [];
       this.tricycleIdValue = null;
       this.searchedValue = null;
-      this.operatorValue = null; //this.bodyNumberValue = null;
-
+      this.operatorValue = null;
+      this.bodyNumberValue = null;
       this.makeTypeValue = null;
       this.engineNoValue = null;
       this.chassisNoValue = null;
@@ -7384,8 +7384,7 @@ __webpack_require__.r(__webpack_exports__);
 
       this.tableData = [];
       axios.get('tricycle/getdata').then(function (response) {
-        _this.tableData = response.data.tricycles;
-        _this.bodyNumberValue = response.data.body_number;
+        _this.tableData = response.data.tricycles; // this.bodyNumberValue = response.data.body_number;
       });
     },
     findOperator: function findOperator() {
@@ -7920,7 +7919,8 @@ try {
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
-window.axios.defaults.baseURL = 'http://192.168.100.100/mtfru';
+window.axios.defaults.baseURL = 'http://192.168.100.100/mtfru'; // window.axios.defaults.baseURL = 'http://localhost/pagadian-mtfru';
+
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
@@ -78129,7 +78129,7 @@ var render = function() {
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
             _c("label", { attrs: { for: "body_number" } }, [
-              _vm._v("Body Numbers")
+              _vm._v("New Franchise")
             ]),
             _vm._v(" "),
             _c(
