@@ -46,7 +46,7 @@
                 </div>
 
                 <div class="card-body">
-                        <label for="body_number">Body Numbers</label>
+                        <label for="body_number">New Franchise</label>
 
                         <div class="form-group d-flex justify-content-start" id="body_number">
                             <p class="text-bold" style="margin: 5px 10px 0 0;">From: </p>
