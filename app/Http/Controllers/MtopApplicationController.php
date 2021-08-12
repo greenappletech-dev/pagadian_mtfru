@@ -470,7 +470,7 @@ class MtopApplicationController extends Controller
         $operator_img = $this->operator_img->fetchDataById($mtop_application->taxpayer_id);
         $transaction = DB::table('colhdr')->where('mtop_application_id', $id)->first();
 
-        $data = [$mtop_application, $charges, $operator_img, $transaction->trnx_date];
+        $data = [$mtop_application, $charges, $operator_img];
 
         if((int)$form_to_print === 1) {
             $blade = 'pdf_mtfrb_application';
@@ -478,10 +478,12 @@ class MtopApplicationController extends Controller
 
         if((int)$form_to_print === 3) {
             $blade = 'pdf_mtfrb_receipt';
+//            array_push($data, $transaction->trnx_date);
         }
 
         if((int)$form_to_print === 4) {
             $blade = 'pdf_mtfrb_permit';
+            array_push($data, $transaction->trnx_date);
         }
 
         $pdf = \App::make('dompdf.wrapper');

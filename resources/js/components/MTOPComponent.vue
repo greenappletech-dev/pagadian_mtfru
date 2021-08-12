@@ -44,7 +44,7 @@
 
         <div class="user-button d-flex justify-content-between pt-3 pb-3">
             <ul class="breadcrumb-1 pl-0 m-0">
-                <li class="d-inline align-middle" style="font-size: 12px">MTFRU</li>
+                <li class="d-inline align-middle" style="font-size: 12px">Application</li>
                 <li class="d-inline align-middle mr-1 ml-1" style="font-size: 5px; color: #95a5a6;"><i class="fas fa-circle"></i></li>
                 <li class="d-inline align-middle" style="font-size: 12px; color: #95a5a6">MTOP Application</li>
             </ul>

@@ -70430,7 +70430,7 @@ var staticRenderFns = [
               staticClass: "d-inline align-middle",
               staticStyle: { "font-size": "12px" }
             },
-            [_vm._v("MTFRU")]
+            [_vm._v("Master Data")]
           ),
           _vm._v(" "),
           _c(
@@ -71457,7 +71457,7 @@ var staticRenderFns = [
               staticClass: "d-inline align-middle",
               staticStyle: { "font-size": "12px" }
             },
-            [_vm._v("MTFRU")]
+            [_vm._v("Application")]
           ),
           _vm._v(" "),
           _c(
@@ -72804,7 +72804,7 @@ var staticRenderFns = [
               staticClass: "d-inline align-middle",
               staticStyle: { "font-size": "12px" }
             },
-            [_vm._v("MTFRU")]
+            [_vm._v("Application")]
           ),
           _vm._v(" "),
           _c(
@@ -74313,7 +74313,7 @@ var staticRenderFns = [
               staticClass: "d-inline align-middle",
               staticStyle: { "font-size": "12px" }
             },
-            [_vm._v("MTFRU")]
+            [_vm._v("Application")]
           ),
           _vm._v(" "),
           _c(
@@ -75828,7 +75828,7 @@ var staticRenderFns = [
               staticClass: "d-inline align-middle",
               staticStyle: { "font-size": "12px" }
             },
-            [_vm._v("MTFRU")]
+            [_vm._v("Application")]
           ),
           _vm._v(" "),
           _c(
@@ -77775,7 +77775,14 @@ var staticRenderFns = [
       { staticClass: "user-button d-flex justify-content-between pt-3 pb-3" },
       [
         _c("ul", { staticClass: "breadcrumb-1 pl-0 m-0" }, [
-          _c("li", { staticClass: "d-inline align-middle" }, [_vm._v("MTFRU")]),
+          _c(
+            "li",
+            {
+              staticClass: "d-inline align-middle",
+              staticStyle: { "font-size": "12px" }
+            },
+            [_vm._v("Master Data")]
+          ),
           _vm._v(" "),
           _c(
             "li",
@@ -77790,7 +77797,7 @@ var staticRenderFns = [
             "li",
             {
               staticClass: "d-inline align-middle",
-              staticStyle: { color: "#95a5a6" }
+              staticStyle: { color: "#95a5a6", "font-size": "12px" }
             },
             [_vm._v("Operator")]
           )
@@ -79059,7 +79066,7 @@ var staticRenderFns = [
               staticClass: "d-inline align-middle",
               staticStyle: { "font-size": "12px" }
             },
-            [_vm._v("MTFRU")]
+            [_vm._v("Master Data")]
           ),
           _vm._v(" "),
           _c(
@@ -79782,7 +79789,14 @@ var staticRenderFns = [
       { staticClass: "user-button d-flex justify-content-between pt-3 pb-3" },
       [
         _c("ul", { staticClass: "breadcrumb-1 pl-0 m-0" }, [
-          _c("li", { staticClass: "d-inline align-middle" }, [_vm._v("MTFRU")]),
+          _c(
+            "li",
+            {
+              staticClass: "d-inline align-middle",
+              staticStyle: { "font-size": "12px" }
+            },
+            [_vm._v("System")]
+          ),
           _vm._v(" "),
           _c(
             "li",
@@ -79797,7 +79811,7 @@ var staticRenderFns = [
             "li",
             {
               staticClass: "d-inline align-middle",
-              staticStyle: { color: "#95a5a6" }
+              staticStyle: { color: "#95a5a6", "font-size": "12px" }
             },
             [_vm._v("Users")]
           )

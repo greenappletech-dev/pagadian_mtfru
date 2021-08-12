@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'HRISystem')
+@section('title', 'Pagadian MTFRU')
 
 @section('content_header')
 
