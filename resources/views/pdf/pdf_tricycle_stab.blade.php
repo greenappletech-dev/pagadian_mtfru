@@ -89,7 +89,7 @@
                     Date Register
                 </th>
                 <th style="font-weight: bold; font-size: 15px">
-                    {{  date('m/d/Y', strtotime($tricycle->created_at)) }}
+                    {{  date('m/d/Y') }}
                 </th>
             </tr>
 
