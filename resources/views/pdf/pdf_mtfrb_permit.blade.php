@@ -143,18 +143,18 @@
             font-size: 15px;
         }
 
-        .copy_for {
+        table {
             position: absolute;
-            bottom: 0%;
-            left: 44%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            font-weight: bold;
-            font-style: italic;
-            padding: 5px 50px;
-            border: 2px solid #636e72;
+            bottom: 105px;
+            left: 20px;
+            border-collapse: collapse;
+        }
+
+        table tr th {
+            border: 2px solid #0984e3;
+            padding: 5px;
             font-size: 12px;
-            color: #636e72;
+            color: #0984e3;
         }
 
         .page {
@@ -221,13 +221,33 @@
         <div class="issue_month">{{ date('F', strtotime($data[3])) . ', ' . date('Y', strtotime($data[3])) }}</div>
 
         @if($i == 1)
-            <div class="copy_for">OWNER'S COPY</div>
+            <table>
+                <tr>
+                    <th style="width: 50px">{{ $data[4] }}</th>
+                    <th style="width: 120px">OWNER'S COPY</th>
+                </tr>
+            </table>
         @elseif($i == 2)
-            <div class="copy_for">MTFRU COPY</div>
+            <table>
+                <tr>
+                    <th style="width: 50px">{{ $data[4] }}</th>
+                    <th style="width: 120px">MTFRU COPY</th>
+                </tr>
+            </table>
         @elseif($i == 3)
-            <div class="copy_for">MTFRB COPY</div>
+            <table>
+                <tr>
+                    <th style="width: 50px">{{ $data[4] }}</th>
+                    <th style="width: 120px">MTFRB COPY</th>
+                </tr>
+            </table>
         @elseif($i == 4)
-            <div class="copy_for">LTO COPY</div>
+            <table>
+                <tr>
+                    <th style="width: 50px">{{ $data[4] }}</th>
+                    <th style="width: 120px">LTO COPY</th>
+                </tr>
+            </table>
         @endif
 
     </div>
