@@ -7,9 +7,24 @@
         font-family: Arial, sans-serif;
     }
 
+    .in_charge {
+        position: absolute;
+        bottom: 300px;
+        right: 0;
+        text-align: center;
+    }
+
+    .in_charge_name {
+        font-weight: bold;
+    }
+
+    .in_charge_title {
+        font-size: 13px;
+    }
+
     table {
         position: absolute;
-        bottom: 200px;
+        bottom: 270px;
         border-collapse: collapse;
         width: 100%;
     }
@@ -23,6 +38,12 @@
     }
 </style>
 <body>
+
+    <div class="in_charge">
+        <span class="in_charge_name">ANALIZA M. CARUMBA</span><br>
+        <span class="in_charge_title">MTFRU-FVR In-charge</span>
+    </div>
+
     <table>
         <thead>
             <tr>
