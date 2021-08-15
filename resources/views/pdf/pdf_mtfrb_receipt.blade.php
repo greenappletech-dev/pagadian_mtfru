@@ -22,32 +22,36 @@
             width: 350px;
             text-align: center;
             position: absolute;
-            top: 118px;
+            top: 116px;
             left: -20px;
+            font-size: 20px;
         }
 
         .mtfrb_case_no {
             width: 190px;
             text-align: center;
             position: absolute;
-            top: 118px;
+            top: 115px;
             right: -20px;
+            font-size: 22px;
         }
 
         .body_number {
             width: 190px;
             text-align: center;
             position: absolute;
-            top: 180px;
+            top: 171px;
             right: -20px;
+            font-size: 30px;
         }
 
         .mtfrb_case_no_recorded {
             width: 190px;
             text-align: center;
             position: absolute;
-            top: 472px;
+            top: 469px;
             left: 47px;
+            font-size: 20px;
         }
 
         .payment_information {
@@ -101,8 +105,8 @@
 
         @foreach($data[1] as $charges)
             <tr style="font-size: 13px;">
-                <td style="font-style: italic; font-weight: normal; padding: 5px 0;">{{ $charges['name'] }}</td>
-                <td style="font-style: italic; font-weight: normal; padding: 5px 0;">{{ number_format($charges['price'], 2) }}</td>
+                <td style="font-style: italic; font-weight: normal; padding: 2px 0;">{{ $charges['name'] }}</td>
+                <td style="font-style: italic; font-weight: normal; padding: 2px 0;">{{ number_format($charges['price'], 2) }}</td>
                 {{ $totals +=  $charges['price'] }}
             </tr>
         @endforeach

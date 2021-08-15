@@ -15,69 +15,72 @@
             width: 350px;
             text-align: center;
             position: absolute;
-            top: 105px;
+            top: 103px;
             left: -20px;
+             font-size: 20px;
         }
 
          .mtfrb_case_no {
              width: 190px;
              text-align: center;
              position: absolute;
-             top: 105px;
+             top: 101px;
              right: -20px;
+             font-size: 22px;
          }
 
          .body_number {
              width: 190px;
              text-align: center;
              position: absolute;
-             top: 163px;
+             top: 153px;
              right: -20px;
+             font-size: 30px;
          }
 
          .address {
              width: 767px;
              text-align: center;
              position: absolute;
-             top: 364px;
+             top: 362px;
              left: -20px;
-             font-size: 15px;
+             font-size: 18px;
          }
 
          .make_type {
              width: 178px;
              text-align: center;
              position: absolute;
-             top: 475px;
+             top: 472px;
              left: -20px;
-             font-size: 12px;
+             font-size: 18px;
          }
 
          .engine_motor_no {
              width: 178px;
              text-align: center;
              position: absolute;
-             top: 475px;
+             top: 472px;
              left: 176px;
-             font-size: 12px;
+             font-size: 18px;
          }
 
         .chassis_no {
             width: 178px;
             text-align: center;
             position: absolute;
-            top: 475px;
+            top: 472px;
             left: 373px;
-            font-size: 12px;
+            font-size: 18px;
         }
 
         .plate_no {
             width: 178px;
             text-align: center;
             position: absolute;
-            top: 475px;
+            top: 472px;
             right: -23px;
-            font-size: 12px;
+            font-size: 18px;
         }
 
         .date_signed {
@@ -127,7 +130,7 @@
     <span class="operator_name">{{ $data[0]['full_name'] }}</span>
     <span class="mtfrb_case_no">{{ $data[0]['mtfrb_case_no'] }}</span>
     <span class="body_number">{{ $data[0]['body_number'] }}</span>
-    <span class="address">{{ $data[0]['full_name'] }}</span>
+    <span class="address">{{ $data[0]['address'] }}</span>
 
     <span class="make_type">{{ $data[0]['make_type'] }}</span>
     <span class="engine_motor_no">{{ $data[0]['engine_motor_no'] }}</span>

@@ -29,18 +29,20 @@
             width: 350px;
             text-align: center;
             position: absolute;
-            top: 151px;
+            top: 147px;
             left: 20px;
             text-wrap: normal;
+            font-size: 20px;
         }
 
         .mtfrb_case_no {
             width: 195px;
             text-align: center;
             position: absolute;
-            top: 151px;
+            top: 148px;
             right: 181px;
             text-wrap: normal;
+            font-size: 22px;
         }
 
         .address {
@@ -57,9 +59,10 @@
             width: 195px;
             text-align: center;
             position: absolute;
-            top: 208px;
+            top: 201px;
             right: 181px;
             text-wrap: normal;
+            font-size: 30px;
         }
 
         .pertain_operator_name {
@@ -74,9 +77,9 @@
         .pertain_address {
             width: 681px;
             position: absolute;
-            top: 431px;
+            top: 430px;
             right: 20px;
-            font-size: 13px;
+            font-size: 15px;
             text-wrap: normal;
         }
 
@@ -84,45 +87,45 @@
             width: 178px;
             text-align: center;
             position: absolute;
-            top: 676px;
+            top: 672px;
             left: 19px;
-            font-size: 12px;
+            font-size: 18px;
         }
 
         .engine_motor_no {
             width: 178px;
             text-align: center;
             position: absolute;
-            top: 676px;
+            top: 672px;
             left: 218px;
-            font-size: 12px;
+            font-size: 18px;
         }
 
         .chassis_no {
             width: 178px;
             text-align: center;
             position: absolute;
-            top: 676px;
+            top: 672px;
             right: 220px;
-            font-size: 12px;
+            font-size: 18px;
         }
 
         .plate_no {
             width: 178px;
             text-align: center;
             position: absolute;
-            top: 676px;
+            top: 672px;
             right: 21px;
-            font-size: 12px;
+            font-size: 18px;
         }
 
         .expiration_date {
             width: 350px;
             text-align: center;
             position: absolute;
-            bottom: 424px;
+            bottom: 422px;
             left: 22px;
-            font-size: 15px;
+            font-size: 18px;
         }
 
         .issue_day {
@@ -188,11 +191,11 @@
 
         <div class="operator_name">{{ $data[0]['full_name'] }}</div>
         <div class="mtfrb_case_no">{{ $data[0]['mtfrb_case_no'] }}</div>
-        <div class="address">{{ $data[0]['address'] . ' ' . $data[0]['brgy_code'] . '-' . $data[0]['brgy_desc']  }}</div>
+        <div class="address">{{ $data[0]['address'] . ' / ' . $data[0]['mobile']}}</div>
         <div class="body_number">{{ $data[0]['body_number'] }}</div>
 
         <div class="pertain_operator_name">{{$data[0]['full_name']}}</div>
-        <div class="pertain_address">{{ $data[0]['address'] . ' ' . $data[0]['brgy_code'] . '-' . $data[0]['brgy_desc']  }}</div>
+        <div class="pertain_address">{{ $data[0]['address']}}</div>
 
         <div class="make_type">{{ $data[0]['make_type'] }}</div>
         <div class="engine_motor_no">{{ $data[0]['engine_motor_no'] }}</div>

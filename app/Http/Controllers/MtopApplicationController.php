@@ -473,49 +473,7 @@ class MtopApplicationController extends Controller
         /* must check if the application is new, renewal, dropping or change unit */
 
         $transaction_type = explode(',',$mtop_application->transact_type);
-        $application_type = '';
-
-
-
-        if(count($transaction_type) === 1) {
-
-            if((int)$transaction_type[0] === 1) {
-
-                $application_type = 'R';
-                $previous_application = MtopApplication::where('body_number', $mtop_application->body_number)->where('id', '<' , $id)->count();
-
-                if($previous_application === 0) {
-                    $application_type = 'N';
-                }
-            }
-
-            if((int)$transaction_type[0] == 2) {
-                $application_type = $application_type . 'T';
-            }
-
-            if((int)$transaction_type[0] == 3) {
-                $application_type = $application_type . 'CU';
-            }
-
-        } else {
-
-            /* check if the transaction is multiple */
-
-            foreach($transaction_type as $type) {
-
-                if((int)$type == 1) {
-                    $application_type = $application_type . 'R ';
-                }
-
-                if((int)$type == 2) {
-                    $application_type = $application_type . 'T ';
-                }
-
-                if((int)$type == 3) {
-                    $application_type = $application_type . 'CU ';
-                }
-            }
-        }
+        $application_type = $this->mtop_applications->getApplicationType($transaction_type, $mtop_application->body_number, $id);
 
 
         $data = [$mtop_application, $charges, $operator_img];
