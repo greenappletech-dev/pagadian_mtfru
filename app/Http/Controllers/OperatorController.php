@@ -63,7 +63,7 @@ class OperatorController extends Controller
             : response()->json([ 'message' => $message],200);
     }
 
-    private function getm99() {
+    private function getTaxId() {
         $tax_id = DB::table('m99')->select('tax_id')->first();
         return $tax_id->tax_id;
     }
@@ -74,11 +74,10 @@ class OperatorController extends Controller
     }
 
     public function store(StoreOperator $request) {
-        $tax_id_value = (int)$this->getm99() + 1;
-        $this->updatTaxId($tax_id_value);
-
         $operator = new Taxpayer();
-        $operator->tax_id = $this->getm99();
+        $operator->tax_id = $this->getTaxId();
+        $tax_id_value = (int)$this->getTaxId() + 1;
+        $this->updatTaxId($tax_id_value);
         return $this->dbValues($operator, $request, 'Operator Successfully Saved');
     }
 
