@@ -202,7 +202,7 @@
         <div class="chassis_no">{{ $data[0]['chassis_no'] }}</div>
         <div class="plate_no">{{ $data[0]['plate_no'] }}</div>
 
-        <div class="expiration_date">{{ date('m/d/Y', strtotime($data[0]['validity_date'])) }}</div>
+        <div class="expiration_date">{{ date('F d, Y', strtotime($data[0]['validity_date'])) }}</div>
 
         {{ $day = date('j', strtotime($data[3])) }}
         {{ $last_digit = substr($day, -1) }}
