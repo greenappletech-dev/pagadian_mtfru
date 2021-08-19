@@ -137,7 +137,7 @@
     <span class="chassis_no">{{ $data[0]['chassis_no'] }}</span>
     <span class="plate_no">{{ $data[0]['plate_no'] }}</span>
 
-    <span class="date_signed">{{ date('m/d/Y') }}</span>
+    <span class="date_signed">{{ date('m/d/Y', strtotime($data[0]['transact_date'])) }}</span>
     <span class="name_signature">{{ $data[0]['full_name'] }}</span>
 
     <span class="declaration">{{ $data[0]['full_name'] }}</span>
