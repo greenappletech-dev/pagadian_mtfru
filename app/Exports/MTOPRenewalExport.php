@@ -29,7 +29,23 @@ class MTOPRenewalExport implements FromCollection, WithHeadings, WithColumnForma
     {
         return [
             ['LIST OF FOR RENEWALS'],
-            ['Application Id','MTFRB #','Application Date','Body Number','Make Type','Engine Motor #','Chassis #','Plate #','Operator','Address', 'Barangay', 'Date Issued', 'Valid Until', 'OR #', 'Amount'],
+            [
+                'Application Id',
+                'MTFRB #',
+                'Application Date',
+                'Operator',
+                'Address',
+                'Barangay',
+                'Body Number',
+                'Make Type',
+                'Engine Motor #',
+                'Chassis #',
+                'Plate #',
+                'Date Issued',
+                'Valid Until',
+                'OR #',
+                'Amount'
+            ],
         ];
     }
 
