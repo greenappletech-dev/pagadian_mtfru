@@ -40,7 +40,19 @@ Vue.component('old_new-component', require('./components/OldNewFranchiseComponen
 Vue.component('view_renewal-component', require('./components/MTOPViewRenewalComponent.vue').default);
 Vue.component('renewal-component', require('./components/MTOPRenewalComponent.vue').default);
 Vue.component('driver-component', require('./components/DriverComponent.vue').default);
+Vue.component('master_list-component', require('./components/MasterListComponent.vue').default);
 
+/* FVR COMPONENT */
+Vue.component('banca-component', require('./components/BancaComponent.vue').default);
+Vue.component('banca_entry-component', require('./components/BancaEntryComponent').default);
+Vue.component('banca_edit-component', require('./components/BancaEditComponent').default);
+Vue.component('captain-component', require('./components/BoatCaptain.vue').default);
+Vue.component('fvr-component', require('./components/FVRComponent.vue').default);
+Vue.component('fvr_entry-component', require('./components/FVREntryComponent.vue').default);
+Vue.component('fvr_edit-component', require('./components/FVREditComponent.vue').default);
+Vue.component('fvr_view_renewal-component', require('./components/FVRViewRenewalComponent.vue').default);
+Vue.component('fvr_renewal-component', require('./components/FVRRenewalComponent.vue').default);
+Vue.component('boat_type-component', require('./components/BoatTypeComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

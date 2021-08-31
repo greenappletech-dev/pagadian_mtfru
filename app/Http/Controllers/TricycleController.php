@@ -109,7 +109,6 @@ class TricycleController extends Controller
 
     public function destroy($id) {
         $tricycle = $this->tricycles->fetchDataById($id);
-
         return $tricycle->delete()
 
         ? response()->json(
@@ -138,6 +137,6 @@ class TricycleController extends Controller
     }
 
     public function export() {
-        return Excel::download(new DriverExport(), 'drivers_' . date('mdy') . '.xlsx');
+        return Excel::download(new TricycleExport(), 'tricycle_' . date('mdy') . '.xlsx');
     }
 }

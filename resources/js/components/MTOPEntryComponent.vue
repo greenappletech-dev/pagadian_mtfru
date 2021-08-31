@@ -419,12 +419,12 @@
                         :data="selectedChargesTableData"
                         :columns="selected_charge_column"
                         :options="selected_charge_option">
-                            <span slot="price" slot-scope="{row}">
-                                {{ formatPrice(row.price) }}
-                            </span>
+                        <span slot="price" slot-scope="{row}">
+                            {{ formatPrice(row.price) }}
+                        </span>
                         <span slot="action" slot-scope="props">
-                                <button v-on:click="removeCharges(props.index, props.row.price)" class="btn btn-danger mb-2" style="font-size: 12px">Remove</button>
-                            </span>
+                            <button v-on:click="removeCharges(props.index, props.row.price)" class="btn btn-danger mb-2" style="font-size: 12px">Remove</button>
+                        </span>
                     </v-client-table>
                 </div>
             </div>
@@ -850,23 +850,23 @@ export default {
             /* validate if new information has values */
 
             axios.post('mtop/store', {
-            transact_date: this.transactionDate,
-            mtfrb_case_no: this.MTFRBCaseValue,
-            taxpayer_id: this.operatorIdValue,
-            address: this.addressValue,
-            barangay_id: this.barangayIdValue,
-            tricycle_id: this.tricycleValue,
-            body_number: this.bodyNumberValue,
-            make_type: this.makeTypeValue,
-            engine_motor_no: this.engineMotorNo,
-            chassis_no: this.chassisNoValue,
-            plate_no: this.plateNoValue,
-            charges: this.selectedChargesTableData,
-            renewal: this.renewal,
-            dropping: this.newOperator,
-            change_unit: this.changeUnit,
-            dropping_details: dropping_details,
-            change_unit_details: change_unit,
+                transact_date: this.transactionDate,
+                mtfrb_case_no: this.MTFRBCaseValue,
+                taxpayer_id: this.operatorIdValue,
+                address: this.addressValue,
+                barangay_id: this.barangayIdValue,
+                tricycle_id: this.tricycleValue,
+                body_number: this.bodyNumberValue,
+                make_type: this.makeTypeValue,
+                engine_motor_no: this.engineMotorNo,
+                chassis_no: this.chassisNoValue,
+                plate_no: this.plateNoValue,
+                charges: this.selectedChargesTableData,
+                renewal: this.renewal,
+                dropping: this.newOperator,
+                change_unit: this.changeUnit,
+                dropping_details: dropping_details,
+                change_unit_details: change_unit,
             })
             .then(response => {
 

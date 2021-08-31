@@ -821,17 +821,17 @@ export default {
                 dropping_details: dropping_details,
                 change_unit_details: change_unit,
             })
-                .then(response => {
+            .then(response => {
 
-                    this.returnSuccess(response);
+                this.returnSuccess(response);
 
-                })
-                .catch(error => {
+            })
+            .catch(error => {
 
-                    this.returnFailed(error);
+                this.returnFailed(error);
 
-                })
-                .finally(() => this.loader = false);
+            })
+            .finally(() => this.loader = false);
         },
 
         /* NEW/RENEWAL */

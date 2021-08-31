@@ -186,8 +186,10 @@
         <img class="form" src="{{ asset('image/forms/MTOP_PERMIT.jpg') }}" alt="">
 
         {{--    OPERATORS IMAGE    --}}
+        @if($data[2] !== null)
+            <img class="operator_img" src="{{ asset('image/operator_image/' . $data[2]['name']) }}" alt="">
+        @endif
 
-        <img class="operator_img" src="{{ asset('image/operator_image/' . $data[2]['name']) }}" alt="">
 
         <div class="operator_name">{{ $data[0]['full_name'] }}</div>
         <div class="mtfrb_case_no">{{ $data[0]['mtfrb_case_no'] }}</div>

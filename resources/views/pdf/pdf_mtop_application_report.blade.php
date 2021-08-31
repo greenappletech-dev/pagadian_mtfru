@@ -130,7 +130,7 @@
 
                         @if((int)$temp_value === (int)$details['mtop_application_id'])
                             <tr>
-                                <td colspan="8">{{ $details['name'] }}</td>
+                                <td colspan="8">{{ $details['charges'] }}</td>
                                 <td style="text-align: right;">{{ number_format($details['price'], 2) }}</td>
                             </tr>
 

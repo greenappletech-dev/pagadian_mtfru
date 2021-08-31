@@ -179,11 +179,6 @@ export default {
             return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
         },
 
-        openEntryForRenewal(id){
-            console.log(id);
-            // window.location.href = 'mtop_renewal/renew/' + id;
-        },
-
         convertDateFormat($date) {
             let d = new Date($date);
 

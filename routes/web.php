@@ -12,6 +12,16 @@ use \App\Http\Controllers\MTFRUReportController;
 use \App\Http\Controllers\MtopApplicationChargeController;
 use App\Http\Controllers\MtopViewRenewalController;
 use App\Http\Controllers\DriverController;
+use App\Http\Controllers\ReportController;
+use App\Http\Controllers\BancaController;
+use App\Http\Controllers\AuxiliaryEngineController;
+use App\Http\Controllers\BoatCaptainController;
+use App\Http\Controllers\FvrApplicationController;
+use App\Http\Controllers\FvrApplicationAuxiliaryEngineController;
+use App\Http\Controllers\FvrApplicationChargeController;
+use App\Http\Controllers\FvrViewRenewalController;
+use App\Http\Controllers\BoatTypeController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -124,6 +134,87 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('drivers/destory/{id}', [DriverController::class, 'destroy']);
         Route::get('drivers/export', [DriverController::class, 'export']);
 
+        /* Reports */
+        Route::get('master_list', [ReportController::class, 'master_list']);
+        Route::get('master_list/getdata', [ReportController::class, 'master_list_getdata']);
+        Route::get('master_list/export', [ReportController::class, 'master_list_export']);
+
+        /* Banca */
+        Route::get('banca', [BancaController::class, 'index']);
+        Route::get('banca/getdata', [BancaController::class, 'getdata']);
+        Route::get('banca/destroy/{id}', [BancaController::class, 'destroy']);
+        Route::get('banca/export', [BancaController::class, 'export']);
+
+
+        /* Banca Entry */
+        Route::get('banca/entry', [BancaController::class, 'entry']);
+        Route::get('banca/search/{string}', [BancaController::class, 'search']);
+        Route::post('banca/store', [BancaController::class, 'store']);
+
+        /* Auxiliary Engine */
+        Route::post('auxiliary_engine/store', [AuxiliaryEngineController::class, 'store']);
+        Route::get('auxiliary_engine/edit/{id}', [AuxiliaryEngineController::class,'edit']);
+        Route::post('auxiliary_engine/destory/{id}/{parent_id}', [AuxiliaryEngineController::class, 'destroy']);
+
+        /* Banca Edit */
+        Route::get('banca/edit/{id}', [BancaController::class, 'edit']);
+        Route::patch('banca/update', [BancaController::class, 'update']);
+
+        /* Boat Captain */
+        Route::get('captain', [BoatCaptainController::class, 'index']);
+        Route::get('captain/getrecord', [BoatCaptainController::class, 'getrecord']);
+        Route::get('captain/search/{string}', [BoatCaptainController::class, 'search']);
+        Route::post('captain/store', [BoatCaptainController::class, 'store']);
+        Route::get('captain/edit/{id}', [BoatCaptainController::class, 'edit']);
+        Route::patch('captain/update', [BoatCaptainController::class, 'update']);
+        Route::get('captain/destory/{id}', [BoatCaptainController::class, 'destroy']);
+        Route::get('captain/export', [BoatCaptainController::class, 'export']);
+        Route::post('captain/upload/{id}', [BoatCaptainController::class, 'upload']);
+
+        /* FVR */
+        Route::get('fvr', [FvrApplicationController::class, 'index']);
+        Route::get('fvr/getdata', [FvrApplicationController::class, 'getdata']);
+        Route::get('fvr/getdata_filtered/{from}/{to}/{barangay_id}', [FvrApplicationController::class, 'getdata_filtered']);
+        Route::get('fvr/pdf_application/{id}/{form_to_print}', [FvrApplicationController::class, 'pdfApplication']);
+        Route::patch('fvr/payment', [FvrApplicationController::class, 'payment']);
+        Route::get('fvr_edit/{id}', [FvrApplicationController::class, 'edit']);
+        Route::get('fvr/pdf/{size}/{orientation}/{from}/{to}/{barangay_id}', [FvrApplicationController::class, 'pdf']);
+        Route::get('fvr/destroy/{id}', [FvrApplicationController::class, 'destroy']);
+        Route::patch('fvr/approve/{id}', [FvrApplicationController::class, 'approve']);
+        Route::get('fvr/pdf_application/{id}/{form_to_print}', [FvrApplicationController::class, 'pdfApplication']);
+        Route::get('fvr/pdf/{size}/{orientation}/{from}/{to}/{barangay_id}', [FvrApplicationController::class, 'pdf']);
+
+
+        /* FVR ENTRY */
+        Route::get('fvr_entry', [FvrApplicationController::class, 'create']);
+        Route::get('fvr/search/{string}', [FvrApplicationController::class, 'search']);
+        Route::get('fvr/search_new_operator/{string}', [FvrApplicationController::class, 'search_new_operator']);
+        Route::post('fvr/store', [FvrApplicationController::class, 'store']);
+
+        /* FVR EDIT */
+        Route::get('fvr_edit', [FvrApplicationController::class, 'edit']);
+        Route::patch('fvr_edit/update', [FvrApplicationController::class, 'update']);
+        Route::post('fvr_update/add_charges', [FvrApplicationChargeController::class, 'store']);
+        Route::get('fvr_update/delete_charges/{id}', [FvrApplicationChargeController::class, 'destroy']);
+        Route::post('fvr_auxiliary/store', [FvrApplicationAuxiliaryEngineController::class, 'store']);
+        Route::patch('fvr_auxiliary/update', [FvrApplicationAuxiliaryEngineController::class, 'update']);
+        Route::get('fvr_auxiliary/destroy/{id}', [FvrApplicationAuxiliaryEngineController::class, 'destroy']);
+
+        /* FVR RENEWAL */
+        Route::get('fvr_renewal', [FvrViewRenewalController::class, 'index']);
+        Route::get('fvr_renewal/getdata', [FvrViewRenewalController::class, 'getdata']);
+        Route::get('fvr_renewal/filter/{from}/{to}/{barangay_id}', [FvrViewRenewalController::class, 'filter']);
+        Route::get('fvr_entry/renew/{id}', [FvrApplicationController::class, 'renew']);
+        Route::get('fvr_renewal/export/{from}/{to}/{barangay_id}', [FvrViewRenewalController::class, 'export']);
+
+
+        /* BOAT TYPE */
+        Route::get('boat_type', [BoatTypeController::class, 'index']);
+        Route::get('boat_type/getrecord', [BoatTypeController::class, 'getrecord']);
+        Route::post('boat_type/store', [BoatTypeController::class, 'store']);
+        Route::get('boat_type/edit/{id}', [BoatTypeController::class, 'edit']);
+        Route::patch('boat_type/update/{id}', [BoatTypeController::class, 'update']);
+        Route::get('boat_type/destroy/{id}', [BoatTypeController::class, 'destroy']);
     });
 
 });

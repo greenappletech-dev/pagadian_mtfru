@@ -253,12 +253,7 @@ return [
 //            'label'       => 4,
 //            'label_color' => 'success',
 //        ],
-        ['header' => 'Master Data'],
-        [
-            'text' => 'Operators',
-            'url'  => 'operator',
-            'icon' => 'fas fa-users',
-        ],
+        ['header' => 'MTOP Data'],
         [
             'text' => 'Tricycle',
             'url'  => 'tricycle',
@@ -269,35 +264,47 @@ return [
             'url'  => 'drivers',
             'icon' => 'far fa-id-card',
         ],
+        ['header' => 'FVR Data'],
+        [
+            'text' => 'Banca',
+            'url'  => 'banca',
+            'icon' => 'fas fa-anchor',
+        ],
+        [
+            'text' => 'Boat Captain',
+            'url'  => 'captain',
+            'icon' => 'far fa-id-card',
+        ],
         ['header' => 'Application'],
         [
             'text' => 'MTOP Application',
             'url'  => 'mtop',
-            'icon' => 'fas fa-file-invoice',
+            'icon' => 'fas fa-list-ul',
         ],
-//        ['header' => 'Reports'],
-//        [
-//            'text'    => 'MTFRU',
-//            'icon'    => 'fas fa-chart-pie',
-//            'submenu' => [
-//                [
-//                    'text' => 'MTFRU',
-//                    'icon' => 'far fa-dot-circle',
-//                    'url'  => '/annual_budget_report',
-//                    'role' => ''
-//                ],
-//                [
-//                    'text' => 'Expiring Franchise',
-//                    'icon' => 'far fa-dot-circle',
-//                    'url'  => '/supplemental_report',
-//                ],
-//                [
-//                    'text' => 'Generate Franchise Report',
-//                    'icon' => 'far fa-dot-circle',
-//                    'url'  => '/supplemental_report',
-//                ],
-//            ]
-//        ],
+        [
+            'text' => 'FVR Application',
+            'url'  => 'fvr',
+            'icon' => 'fas fa-list-ul',
+        ],
+        ['header' => 'Reports'],
+        [
+            'text'    => 'MTFRU',
+            'icon'    => 'fas fa-chart-pie',
+            'submenu' => [
+                [
+                    'text' => 'MTOP Master List',
+                    'icon' => 'far fa-dot-circle',
+                    'url'  => '/master_list',
+                    'role' => ''
+                ],
+                [
+                    'text' => '',
+                    'icon' => 'far fa-dot-circle',
+                    'url'  => '/',
+                    'role' => ''
+                ],
+            ]
+        ],
         ['header' => 'System'],
 //        [
 //            'text' => 'Charges',
@@ -305,14 +312,24 @@ return [
 //            'icon' => 'fas fa-file-invoice',
 //        ],
         [
-            'text' => 'System Parameters',
-            'url'  => 'parameter',
-            'icon' => 'fas fa-cogs',
+            'text' => 'Operators',
+            'url'  => 'operator',
+            'icon' => 'fas fa-users',
         ],
         [
             'text' => 'User Accounts',
             'url'  => 'users',
             'icon' => 'fas fa-users',
+        ],
+        [
+            'text' => 'Boat Type',
+            'url'  => 'boat_type',
+            'icon' => 'fas fa-anchor',
+        ],
+        [
+            'text' => 'System Parameters',
+            'url'  => 'parameter',
+            'icon' => 'fas fa-cogs',
         ],
         [
             'text' => 'Log out',
