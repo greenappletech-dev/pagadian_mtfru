@@ -121,14 +121,10 @@ class MtopApplication extends Model
 
         if(count($transaction_type) === 1) {
 
+            $application_type = 'N';
+
             if((int)$transaction_type[0] === 1) {
-
                 $application_type = 'R';
-                $previous_application = MtopApplication::where('body_number', $body_number)->where('id', '<' , $id)->count();
-
-                if($previous_application === 0) {
-                    $application_type = 'N';
-                }
             }
 
             if((int)$transaction_type[0] == 2) {

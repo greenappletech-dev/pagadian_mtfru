@@ -141,16 +141,27 @@ class MtopApplicationController extends Controller
 
         $transaction_type = [];
 
-        if($request->renewal) {
-            array_push($transaction_type, 1);
-        }
+        /* check if the transaction is new let's check if the body number has a previous records */
 
-        if($request->dropping) {
-            array_push($transaction_type, 2);
-        }
+        $previous_application = MtopApplication::where('body_number', $request->body_number)->count();
 
-        if($request->change_unit) {
-            array_push($transaction_type, 3);
+
+        if($previous_application === 0) {
+            array_push($transaction_type, 4);
+        }
+        else
+        {
+            if($request->renewal) {
+                array_push($transaction_type, 1);
+            }
+
+            if($request->dropping) {
+                array_push($transaction_type, 2);
+            }
+
+            if($request->change_unit) {
+                array_push($transaction_type, 3);
+            }
         }
 
 
@@ -187,7 +198,7 @@ class MtopApplicationController extends Controller
                                 : $request->chassis_no;
 
             $data->plate_no = $request->change_unit
-                                ? $request-> change_unit_details['new_plate_no']
+                                ? $request->change_unit_details['new_plate_no']
                                 : $request->plate_no;
 
             $data->transact_type = implode(',', $transaction_type); // implode array to save the transaction type separated by comma
@@ -195,6 +206,7 @@ class MtopApplicationController extends Controller
             $data->status = 1;
             $data->user_id = Auth::user()->name;
             $data->save();
+
 
             /* save all transaction details */
 
