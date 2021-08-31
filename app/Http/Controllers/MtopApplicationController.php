@@ -478,9 +478,8 @@ class MtopApplicationController extends Controller
 
     public function pdfApplication($id, $form_to_print) {
         $mtop_application = $this->mtop_applications->fetchDataForPrinting($id);
-        $charges = $this->mtop_applications_charge->fetchDataById($id);
+        $charges = DB::table('collne2')->where('or_code', $mtop_application->or_code)->get();
         $operator_img = $this->operator_img->fetchDataById($mtop_application->taxpayer_id);
-        $transaction = DB::table('colhdr')->where('mtop_application_id', $id)->first();
 
         /* must check if the application is new, renewal, dropping or change unit */
 
@@ -496,12 +495,11 @@ class MtopApplicationController extends Controller
 
         if((int)$form_to_print === 3) {
             $blade = 'pdf_mtfrb_receipt';
-//            array_push($data, $transaction->trnx_date);
         }
 
         if((int)$form_to_print === 4) {
             $blade = 'pdf_mtfrb_permit';
-            array_push($data, $transaction->trnx_date , $application_type);
+            array_push($data, $application_type);
         }
 
         $pdf = \App::make('dompdf.wrapper');

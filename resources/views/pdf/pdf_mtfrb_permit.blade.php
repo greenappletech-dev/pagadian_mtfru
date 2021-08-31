@@ -206,7 +206,7 @@
 
         <div class="expiration_date">{{ date('F d, Y', strtotime($data[0]['validity_date'])) }}</div>
 
-        {{ $day = date('j', strtotime($data[3])) }}
+        {{ $day = date('j', strtotime($data[0]['trnx_date'])) }}
         {{ $last_digit = substr($day, -1) }}
         {{ $ordinal = 'th' }}
 
@@ -223,33 +223,33 @@
         @endif
 
         <div class="issue_day">{{ $day.$ordinal }}</div>
-        <div class="issue_month">{{ date('F', strtotime($data[3])) . ', ' . date('Y', strtotime($data[3])) }}</div>
+        <div class="issue_month">{{ date('F', strtotime($data[0]['trnx_date'])) . ', ' . date('Y', strtotime($data[0]['trnx_date'])) }}</div>
 
         @if($i == 1)
             <table>
                 <tr>
-                    <th style="width: 50px">{{ $data[4] }}</th>
+                    <th style="width: 50px">{{ $data[3] }}</th>
                     <th style="width: 120px">OWNER'S COPY</th>
                 </tr>
             </table>
         @elseif($i == 2)
             <table>
                 <tr>
-                    <th style="width: 50px">{{ $data[4] }}</th>
+                    <th style="width: 50px">{{ $data[3] }}</th>
                     <th style="width: 120px">MTFRU COPY</th>
                 </tr>
             </table>
         @elseif($i == 3)
             <table>
                 <tr>
-                    <th style="width: 50px">{{ $data[4] }}</th>
+                    <th style="width: 50px">{{ $data[3] }}</th>
                     <th style="width: 120px">MTFRB COPY</th>
                 </tr>
             </table>
         @elseif($i == 4)
             <table>
                 <tr>
-                    <th style="width: 50px">{{ $data[4] }}</th>
+                    <th style="width: 50px">{{ $data[3] }}</th>
                     <th style="width: 120px">LTO COPY</th>
                 </tr>
             </table>

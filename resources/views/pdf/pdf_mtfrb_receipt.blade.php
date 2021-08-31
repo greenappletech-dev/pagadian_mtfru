@@ -103,11 +103,11 @@
 
         {{$totals = 0}}
 
-        @foreach($data[1] as $charges)
+        @foreach($data[1] as $charge)
             <tr style="font-size: 13px;">
-                <td style="font-style: italic; font-weight: normal; padding: 2px 0;">{{ $charges['name'] }}</td>
-                <td style="font-style: italic; font-weight: normal; padding: 2px 0;">{{ number_format($charges['price'], 2) }}</td>
-                {{ $totals +=  $charges['price'] }}
+                <td style="font-style: italic; font-weight: normal; padding: 2px 0;">{{ $charge->inc_desc }}</td>
+                <td style="font-style: italic; font-weight: normal; padding: 2px 0;">{{ number_format($charge->price, 2) }}</td>
+                {{ $totals +=  $charge->price }}
             </tr>
         @endforeach
 
