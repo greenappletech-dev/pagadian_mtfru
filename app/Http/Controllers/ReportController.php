@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Exports\MasterListExport;
+use App\Exports\MTOPReportExport;
+use App\Models\Barangay;
 use App\Models\MtopApplication;
 use App\Models\MtopApplicationCharge;
 use App\Models\Tricycle;
@@ -15,10 +17,12 @@ class ReportController extends Controller
 {
 
     private $mtop_applications;
+    private $barangay;
 
     public function __construct()
     {
         $this->mtop_applications = new MtopApplication();
+        $this->barangay = new Barangay();
     }
 
     public function master_list() {
@@ -114,6 +118,165 @@ class ReportController extends Controller
 
     public function master_list_export() {
         return Excel::download(new MasterListExport(), 'master_list.xls');
+    }
+
+
+    /* MTOP REPORTS */
+
+    public function index() {
+        return view('report.mtop_report');
+    }
+
+    public function getdata() {
+        $barangays = $this->barangay->fetchData();
+        return response()->json(['barangays' => $barangays]);
+    }
+
+    public function export($type, $from, $to, $barangay_id) {
+
+        /* generate old new franchise. group report per body number */
+
+        $application = array();
+
+        if($type == 1)
+        {
+            $transact_type = array(['1', 'renewal'], ['2', 'dropping'], ['3','change_unit'], ['4','new']);
+
+
+            /* we must check each record and check the transaction type */
+
+
+            foreach($transact_type as $transact)
+            {
+
+
+                $mtop_applications = MtopApplication::leftJoin('taxpayer', 'taxpayer.id', 'mtop_applications.taxpayer_id')
+                ->leftJoin('barangay', 'barangay.id', 'mtop_applications.barangay_id')
+                ->where(function($query) use ($barangay_id)
+                {
+                    if($barangay_id !== 'null')
+                    {
+                        $query->where('mtop_applications.barangay_id', $barangay_id);
+                    }
+                })
+                ->where('status', 4)
+                ->where('transact_type', 'LIKE' , '%'. $type[0] .'%')
+                ->whereBetween('transact_date', [$from, $to])
+                ->get();
+
+
+
+                foreach($mtop_applications as $data)
+                {
+
+                    array_push($application,[$data['body_number'], $data['full_name'], $data['address1'], $data['mobile'], $transact[1]]);
+
+                }
+
+
+            }
+
+            return Excel::download(new MTOPReportExport($application, $type), 'MTOP_Detailed_Report_' . time() . '.xlsx');
+        }
+
+
+
+
+        $franchise = array();
+        if($type == 2)
+        {
+
+            $system_settings = DB::table('m99')
+            ->select('body_number_from', 'body_number_to')
+            ->first();
+
+
+
+            /* SELECTING OLD BODY NUMBERS */
+
+
+            $old = Tricycle::where('body_number', '<' , $system_settings->body_number_from)
+            ->where('make_type', '<>', '')
+            ->select('make_type', DB::raw('count(*) as total'))
+            ->groupBy('make_type')
+            ->orderBy('make_type')
+            ->get();
+
+
+
+            $new = Tricycle::whereBetween('body_number', [$system_settings->body_number_from, $system_settings->body_number_to])
+            ->where('make_type', '<>', '')
+            ->select('make_type', DB::raw('count(*) as total'))
+            ->groupBy('make_type')
+            ->orderBy('make_type')
+            ->get();
+
+
+
+            $make_types = Tricycle::where('body_number', '<>', '')
+            ->select('make_type')
+            ->groupBy('make_type')
+            ->orderBy('make_type','DESC')
+            ->get();
+
+
+
+            $first_body_number = Tricycle::orderBy('body_number')
+            ->where('body_number', '<>', '')
+            ->first();
+
+
+
+            $old_body_numbers = $first_body_number['body_number'] . '-' . ($system_settings->body_number_from - 1);
+            $new_body_numbers = $system_settings->body_number_from . '-' . $system_settings->body_number_to;
+
+
+
+            foreach($make_types as $make_type)
+            {
+
+                $total_per_type = 0;
+                $old_total = 0;
+                $new_total = 0;
+
+
+                foreach($old as $data1)
+                {
+
+                    if($data1['make_type'] == $make_type['make_type'])
+                    {
+                        $total_per_type += $data1['total'];
+                        $old_total = $data1['total'];
+                        continue;
+                    }
+
+                }
+
+
+                foreach($new as $data2)
+                {
+
+                    if($data2['make_type'] == $make_type['make_type'])
+                    {
+                        $total_per_type += $data2['total'];
+                        $new_total = $data2['total'];
+                        continue;
+                    }
+
+                }
+
+
+                array_push($franchise, [$make_type['make_type'], $old_total, $new_total, $total_per_type]);
+
+            }
+
+
+            array_push($franchise, [$old_body_numbers, $new_body_numbers]);
+
+            return Excel::download(new MTOPReportExport($franchise, $type), 'Old_New_Franchise' . time() . '.xlsx');
+
+        }
+
     }
 
 

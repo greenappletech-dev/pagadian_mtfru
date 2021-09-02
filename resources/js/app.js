@@ -40,7 +40,12 @@ Vue.component('old_new-component', require('./components/OldNewFranchiseComponen
 Vue.component('view_renewal-component', require('./components/MTOPViewRenewalComponent.vue').default);
 Vue.component('renewal-component', require('./components/MTOPRenewalComponent.vue').default);
 Vue.component('driver-component', require('./components/DriverComponent.vue').default);
+
+/* MTOP REPORTS */
 Vue.component('master_list-component', require('./components/MasterListComponent.vue').default);
+Vue.component('mtop_report-component', require('./components/MTOPReportComponent.vue').default);
+
+
 
 /* FVR COMPONENT */
 Vue.component('banca-component', require('./components/BancaComponent.vue').default);

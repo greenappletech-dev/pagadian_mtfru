@@ -298,9 +298,9 @@ return [
                     'role' => ''
                 ],
                 [
-                    'text' => '',
+                    'text' => 'MTOP Report',
                     'icon' => 'far fa-dot-circle',
-                    'url'  => '/',
+                    'url'  => '/mtop_report',
                     'role' => ''
                 ],
             ]
