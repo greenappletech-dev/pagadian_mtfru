@@ -66,22 +66,22 @@ class ReportController extends Controller
             $body_number = $zeros . $i;
 
             $mtop_application = Tricycle::leftJoin('mtop_applications', 'mtop_applications.id', 'tricycles.mtop_application_id')
-                ->leftJoin('taxpayer', 'taxpayer.id', 'mtop_applications.taxpayer_id')
-                ->leftJoin('mtop_application_charges', 'mtop_application_charges.mtop_application_id', 'mtop_applications.id')
-                ->leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
-                ->where('tricycles.body_number', $body_number)
-                ->where('tricycles.mtop_application_id', '<>', null)
-                ->groupBy('mtop_applications.id', 'taxpayer.id', 'colhdr.or_number', 'mtop_application_charges.mtop_application_id', 'colhdr.id')
-                ->select(
-                    'mtop_applications.*',
-                    'taxpayer.full_name',
-                    'taxpayer.address1',
-                    'taxpayer.mobile',
-                    'colhdr.or_number as or_no',
-                    'colhdr.trnx_date',
-                    DB::raw('SUM(mtop_application_charges.price) as amount')
-                )
-                ->first();
+            ->leftJoin('taxpayer', 'taxpayer.id', 'mtop_applications.taxpayer_id')
+            ->leftJoin('mtop_application_charges', 'mtop_application_charges.mtop_application_id', 'mtop_applications.id')
+            ->leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
+            ->where('tricycles.body_number', $body_number)
+            ->where('tricycles.mtop_application_id', '<>', null)
+            ->groupBy('mtop_applications.id', 'taxpayer.id', 'colhdr.or_number', 'mtop_application_charges.mtop_application_id', 'colhdr.id')
+            ->select(
+                'mtop_applications.*',
+                'taxpayer.full_name',
+                'taxpayer.address1',
+                'taxpayer.mobile',
+                'colhdr.or_number as or_no',
+                'colhdr.trnx_date',
+                DB::raw('SUM(mtop_application_charges.price) as amount')
+            )
+            ->first();
 
             /* get transaction type */
 
@@ -149,7 +149,6 @@ class ReportController extends Controller
             foreach($transact_type as $transact)
             {
 
-
                 $mtop_applications = MtopApplication::leftJoin('taxpayer', 'taxpayer.id', 'mtop_applications.taxpayer_id')
                 ->leftJoin('barangay', 'barangay.id', 'mtop_applications.barangay_id')
                 ->where(function($query) use ($barangay_id)
@@ -160,8 +159,9 @@ class ReportController extends Controller
                     }
                 })
                 ->where('status', 4)
-                ->where('transact_type', 'LIKE' , '%'. $type[0] .'%')
+                ->where('transact_type', 'LIKE' , '%'. $transact[0] .'%')
                 ->whereBetween('transact_date', [$from, $to])
+                ->orderBy('transact_type')
                 ->get();
 
 
