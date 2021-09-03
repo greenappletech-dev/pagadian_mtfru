@@ -42,7 +42,7 @@ class Taxpayer extends Model
                 'barangay.id as barangay_id',
                 'barangay.brgy_desc as brgy_desc',
                 'barangay.brgy_code as brgy_code',
-                'barangay.banca_code',
+//                'barangay.banca_code',
                 'taxpayer.id as taxpayer_id',
                 'taxpayer.address1 as address',
                 'taxpayer.full_name as operator',
