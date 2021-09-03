@@ -144,7 +144,7 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('mtop_report', [ReportController::class, 'index']);
         Route::get('mtop_report/getdata', [ReportController::class, 'getdata']);
         Route::get('mtop_report/export/{type}/{from}/{to}/{barangay_id}', [ReportController::class, 'export']);
-
+        Route::get('mtop_report/pdf/{type}/{from}/{to}/{barangay_id}/{size}/{orientation}', [ReportController::class, 'pdf']);
 
 
 

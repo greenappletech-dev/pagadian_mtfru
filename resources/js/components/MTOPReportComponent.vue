@@ -78,12 +78,57 @@
                 </div>
 
                 <div class="card-footer d-flex justify-content-end">
-                    <button class="btn btn-info" style="font-size: 13px" v-on:click="exportReport">Generate Report</button>
+                    <button class="btn btn-info mr-1" style="font-size: 13px" v-on:click="exportReport"><i class="fas fa-file-excel mr-1"></i>Excel Report</button>
+                    <button class="btn btn-info" style="font-size: 13px" v-on:click="openModalToPrint"><i class="fas fa-file-pdf mr-1"></i>Print PDF</button>
                 </div>
 
             </div>
-
         </div>
+
+
+
+
+        <!--        modal window    -->
+
+        <div class="modal fade" id="print-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+
+                        <h5 class="modal-title" id="exampleModalLabel">Print Forms</h5>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="max-height: 500px; overflow: auto;">
+                        <div class="form-group">
+                            <label for="paper-size">Paper Size</label>
+                            <select id="paper-size" class="form-control" v-model="paperSize">
+                                <option>Letter</option>
+                                <option>Legal</option>
+                                <option>A4</option>
+                            </select>
+
+                            <label for="paper-orientation">Orientation</label>
+                            <select id="paper-orientation" class="form-control" v-model="paperOrientation">
+                                <option>Portrait</option>
+                                <option>Landscape</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button v-on:click="printPdf" type="button" class="rounded pl-3 pr-3 pt-2 pb-2 border-0" style="width: 100px; font-size: 14px; background: #1abc9c; color: #fff;">Print</button>
+                        <button type="button" data-dismiss="modal" class="rounded pl-3 pr-3 pt-2 pb-2 border-0" style="width: 100px; font-size: 14px; background: #e74c3c; color: #fff;">Discard</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
     </div>
 </template>
 
@@ -104,6 +149,9 @@ export default {
             err: false,
             suc: false,
             loader: false,
+            paperSize: 'Letter',
+            paperOrientation: 'Portrait',
+
         }
     },
     methods: {
@@ -134,17 +182,15 @@ export default {
 
         },
 
-        exportReport() {
 
+
+        openModalToPrint() {
 
             if(this.report.type == null)
             {
 
-
                 this.err = true;
                 return this.err_msg = 'Report Type is Required';
-
-
 
             }
 
@@ -152,6 +198,44 @@ export default {
             if(this.report.type !== '2')
             {
 
+                if(this.report.from == null || this.report.to == null)
+                {
+
+                    this.err = true;
+                    return this.err_msg = 'Please Set Range';
+
+                }
+
+            }
+
+            $('#print-modal').modal('show');
+
+        },
+
+
+        printPdf() {
+
+            let optional_route = this.barangay.id == null || this.barangay.id === '' ? '/null' : '/'  + this.barangay.id;
+            window.open('mtop_report/pdf/'+ this.report.type + '/' + this.report.from + '/' + this.report.to + optional_route + '/' + this.paperSize + '/' + this.paperOrientation)
+
+        },
+
+
+
+        exportReport() {
+
+
+            if(this.report.type == null)
+            {
+
+                this.err = true;
+                return this.err_msg = 'Report Type is Required';
+
+            }
+
+
+            if(this.report.type !== '2')
+            {
 
 
                 if(this.report.from == null || this.report.to == null)
@@ -163,7 +247,6 @@ export default {
 
 
                 }
-
 
 
             }
@@ -190,7 +273,6 @@ export default {
     mounted() {
         $('#body_number_from').attr('readonly', true);
         $('#body_number_to').attr('readonly', true);
-
         this.initialData();
     }
 }

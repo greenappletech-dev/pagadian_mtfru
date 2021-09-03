@@ -6,10 +6,7 @@ use App\Exports\MasterListExport;
 use App\Exports\MTOPReportExport;
 use App\Models\Barangay;
 use App\Models\MtopApplication;
-use App\Models\MtopApplicationCharge;
 use App\Models\Tricycle;
-use Illuminate\Database\Eloquent\Casts\ArrayObject;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Excel;
 
@@ -132,16 +129,16 @@ class ReportController extends Controller
         return response()->json(['barangays' => $barangays]);
     }
 
-    public function export($type, $from, $to, $barangay_id) {
-
+    public function generate_report($type, $from, $to, $barangay_id) {
         /* generate old new franchise. group report per body number */
 
-        $application = array();
+        $report = array();
+        $test = array();
 
         if($type == 1)
         {
-            $transact_type = array(['1', 'renewal'], ['2', 'dropping'], ['3','change_unit'], ['4','new']);
 
+            $transact_type = array(['1', 'renewal'], ['2', 'dropping'], ['3','change_unit'], ['4','new']);
 
             /* we must check each record and check the transaction type */
 
@@ -149,8 +146,26 @@ class ReportController extends Controller
             foreach($transact_type as $transact)
             {
 
-                $mtop_applications = MtopApplication::leftJoin('taxpayer', 'taxpayer.id', 'mtop_applications.taxpayer_id')
-                ->leftJoin('barangay', 'barangay.id', 'mtop_applications.barangay_id')
+                $mtop_applications = MtopApplication::leftJoin(
+                    'taxpayer',
+                    'taxpayer.id',
+                    'mtop_applications.taxpayer_id'
+                )
+                ->leftJoin(
+                    'barangay',
+                    'barangay.id',
+                    'mtop_applications.barangay_id'
+                )
+                ->leftJoin(
+                    'colhdr',
+                    'colhdr.mtop_application_id',
+                    'mtop_applications.id'
+                )
+                ->leftJoin(
+                    'collne2',
+                    'collne2.or_code',
+                    'colhdr.or_code'
+                )
                 ->where(function($query) use ($barangay_id)
                 {
                     if($barangay_id !== 'null')
@@ -161,34 +176,81 @@ class ReportController extends Controller
                 ->where('status', 4)
                 ->where('transact_type', 'LIKE' , '%'. $transact[0] .'%')
                 ->whereBetween('transact_date', [$from, $to])
+                ->select(
+                    'mtop_applications.body_number',
+                    'taxpayer.full_name',
+                    'taxpayer.address1',
+                    'taxpayer.mobile',
+                    'colhdr.or_number',
+                    'mtop_applications.transact_type'
+                )
+                ->selectRaw('SUM(collne2.price) as total_amount')
+                ->groupBy(
+                    'collne2.or_code',
+                    'mtop_applications.body_number',
+                    'taxpayer.full_name',
+                    'taxpayer.address1',
+                    'taxpayer.mobile',
+                    'colhdr.or_number',
+                    'mtop_applications.transact_type'
+                )
                 ->orderBy('transact_type')
                 ->get();
-
 
 
                 foreach($mtop_applications as $data)
                 {
 
-                    array_push($application,[$data['body_number'], $data['full_name'], $data['address1'], $data['mobile'], $transact[1]]);
+                    array_push(
+                        $report,
+                        [
+                            $data['body_number'],
+                            $data['full_name'],
+                            $data['address1'],
+                            $data['mobile'],
+                            $data['or_number'],
+                            $data['total_amount'],
+                            $transact[1],
+                            $data['transact_type'],
+                        ]);
 
                 }
+            }
 
+            foreach($report as $key=>$value)
+            {
+
+                if($value[6] == 'change_unit')
+                {
+                    continue;
+                }
+
+                foreach($report as $key2=>$value2)
+                {
+                    if($value2[6] != 'change_unit')
+                    {
+                        continue;
+                    }
+
+
+                    if($value[0] == $value2[0])
+                    {
+                        array_push($report[$key2], 'W/ ' . strtoupper($value[6]));
+                        $report[$key2][5] = 0.00;
+                    }
+                }
 
             }
 
-            return Excel::download(new MTOPReportExport($application, $type), 'MTOP_Detailed_Report_' . time() . '.xlsx');
         }
 
 
-
-
-        $franchise = array();
         if($type == 2)
         {
 
             $system_settings = DB::table('m99')
-            ->select('body_number_from', 'body_number_to')
-            ->first();
+                ->select('body_number_from', 'body_number_to')
+                ->first();
 
 
 
@@ -196,34 +258,34 @@ class ReportController extends Controller
 
 
             $old = Tricycle::where('body_number', '<' , $system_settings->body_number_from)
-            ->where('make_type', '<>', '')
-            ->select('make_type', DB::raw('count(*) as total'))
-            ->groupBy('make_type')
-            ->orderBy('make_type')
-            ->get();
+                ->where('make_type', '<>', '')
+                ->select('make_type', DB::raw('count(*) as total'))
+                ->groupBy('make_type')
+                ->orderBy('make_type')
+                ->get();
 
 
 
             $new = Tricycle::whereBetween('body_number', [$system_settings->body_number_from, $system_settings->body_number_to])
-            ->where('make_type', '<>', '')
-            ->select('make_type', DB::raw('count(*) as total'))
-            ->groupBy('make_type')
-            ->orderBy('make_type')
-            ->get();
+                ->where('make_type', '<>', '')
+                ->select('make_type', DB::raw('count(*) as total'))
+                ->groupBy('make_type')
+                ->orderBy('make_type')
+                ->get();
 
 
 
             $make_types = Tricycle::where('body_number', '<>', '')
-            ->select('make_type')
-            ->groupBy('make_type')
-            ->orderBy('make_type','DESC')
-            ->get();
+                ->select('make_type')
+                ->groupBy('make_type')
+                ->orderBy('make_type','DESC')
+                ->get();
 
 
 
             $first_body_number = Tricycle::orderBy('body_number')
-            ->where('body_number', '<>', '')
-            ->first();
+                ->where('body_number', '<>', '')
+                ->first();
 
 
 
@@ -266,17 +328,69 @@ class ReportController extends Controller
                 }
 
 
-                array_push($franchise, [$make_type['make_type'], $old_total, $new_total, $total_per_type]);
+                array_push($report, [$make_type['make_type'], $old_total, $new_total, $total_per_type]);
 
             }
 
-
-            array_push($franchise, [$old_body_numbers, $new_body_numbers]);
-
-            return Excel::download(new MTOPReportExport($franchise, $type), 'Old_New_Franchise' . time() . '.xlsx');
+            array_push($report, [$old_body_numbers, $new_body_numbers]);
 
         }
 
+
+
+        return $report;
+    }
+
+    public function export($type, $from, $to, $barangay_id) {
+        $generated_report = $this->generate_report($type, $from, $to, $barangay_id);
+        $report_title = '';
+
+        if($type == 1) {
+            $report_title = 'MTOP_Detailed_report';
+        }
+
+        if($type == 2) {
+            $report_title = 'Old_New_Franchise';
+        }
+
+        return Excel::download(new MTOPReportExport($generated_report, $type, $from, $to), $report_title . time() . '.xlsx');
+
+    }
+
+    public function pdf($type, $from, $to, $barangay_id, $size, $orientation) {
+
+        $generated_report = $this->generate_report($type, $from, $to, $barangay_id);
+
+
+        $blade = '';
+
+
+
+        if($type == 1)
+        {
+
+            $blade = 'pdf.pdf_mtop_detail_report';
+
+        }
+
+
+        if($type == 2)
+        {
+
+            $blade = 'pdf.pdf_mtop_old_new_franchise';
+
+        }
+
+
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->getDomPDF()->set_option("enable_php", true);
+        $pdf->loadView($blade, compact('generated_report', 'from', 'to'))->setPaper($size, $orientation);
+
+
+
+
+
+        return $pdf->stream();
     }
 
 

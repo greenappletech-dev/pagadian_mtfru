@@ -12172,6 +12172,51 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -12183,7 +12228,9 @@ __webpack_require__.r(__webpack_exports__);
       suc_msg: null,
       err: false,
       suc: false,
-      loader: false
+      loader: false,
+      paperSize: 'Letter',
+      paperOrientation: 'Portrait'
     };
   },
   methods: {
@@ -12208,6 +12255,25 @@ __webpack_require__.r(__webpack_exports__);
       axios.get('mtop_report/getdata').then(function (response) {
         _this.barangay = response.data.barangays;
       });
+    },
+    openModalToPrint: function openModalToPrint() {
+      if (this.report.type == null) {
+        this.err = true;
+        return this.err_msg = 'Report Type is Required';
+      }
+
+      if (this.report.type !== '2') {
+        if (this.report.from == null || this.report.to == null) {
+          this.err = true;
+          return this.err_msg = 'Please Set Range';
+        }
+      }
+
+      $('#print-modal').modal('show');
+    },
+    printPdf: function printPdf() {
+      var optional_route = this.barangay.id == null || this.barangay.id === '' ? '/null' : '/' + this.barangay.id;
+      window.open('mtop_report/pdf/' + this.report.type + '/' + this.report.from + '/' + this.report.to + optional_route + '/' + this.paperSize + '/' + this.paperOrientation);
     },
     exportReport: function exportReport() {
       if (this.report.type == null) {
@@ -14370,9 +14436,9 @@ try {
 
 
 window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
-window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'; // window.axios.defaults.baseURL = 'http://192.168.100.100/mtfru';
+window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+window.axios.defaults.baseURL = 'http://192.168.100.100/mtfru'; // window.axios.defaults.baseURL = 'http://localhost/pagadian-mtfru';
 
-window.axios.defaults.baseURL = 'http://localhost/pagadian-mtfru';
 /**
  * Echo exposes an expressive API for subscribing to channels and listening
  * for events that are broadcast by Laravel. Echo and event broadcasting
@@ -95833,16 +95899,183 @@ var render = function() {
             _c(
               "button",
               {
-                staticClass: "btn btn-info",
+                staticClass: "btn btn-info mr-1",
                 staticStyle: { "font-size": "13px" },
                 on: { click: _vm.exportReport }
               },
-              [_vm._v("Generate Report")]
+              [
+                _c("i", { staticClass: "fas fa-file-excel mr-1" }),
+                _vm._v("Excel Report")
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "button",
+              {
+                staticClass: "btn btn-info",
+                staticStyle: { "font-size": "13px" },
+                on: { click: _vm.openModalToPrint }
+              },
+              [
+                _c("i", { staticClass: "fas fa-file-pdf mr-1" }),
+                _vm._v("Print PDF")
+              ]
             )
           ])
         ]
       )
-    ])
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "print-modal",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "exampleModalLabel",
+          "aria-hidden": "true"
+        }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(3),
+              _vm._v(" "),
+              _c(
+                "div",
+                {
+                  staticClass: "modal-body",
+                  staticStyle: { "max-height": "500px", overflow: "auto" }
+                },
+                [
+                  _c("div", { staticClass: "form-group" }, [
+                    _c("label", { attrs: { for: "paper-size" } }, [
+                      _vm._v("Paper Size")
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.paperSize,
+                            expression: "paperSize"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { id: "paper-size" },
+                        on: {
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.paperSize = $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          }
+                        }
+                      },
+                      [
+                        _c("option", [_vm._v("Letter")]),
+                        _vm._v(" "),
+                        _c("option", [_vm._v("Legal")]),
+                        _vm._v(" "),
+                        _c("option", [_vm._v("A4")])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("label", { attrs: { for: "paper-orientation" } }, [
+                      _vm._v("Orientation")
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "select",
+                      {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.paperOrientation,
+                            expression: "paperOrientation"
+                          }
+                        ],
+                        staticClass: "form-control",
+                        attrs: { id: "paper-orientation" },
+                        on: {
+                          change: function($event) {
+                            var $$selectedVal = Array.prototype.filter
+                              .call($event.target.options, function(o) {
+                                return o.selected
+                              })
+                              .map(function(o) {
+                                var val = "_value" in o ? o._value : o.value
+                                return val
+                              })
+                            _vm.paperOrientation = $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          }
+                        }
+                      },
+                      [
+                        _c("option", [_vm._v("Portrait")]),
+                        _vm._v(" "),
+                        _c("option", [_vm._v("Landscape")])
+                      ]
+                    )
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "rounded pl-3 pr-3 pt-2 pb-2 border-0",
+                    staticStyle: {
+                      width: "100px",
+                      "font-size": "14px",
+                      background: "#1abc9c",
+                      color: "#fff"
+                    },
+                    attrs: { type: "button" },
+                    on: { click: _vm.printPdf }
+                  },
+                  [_vm._v("Print")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "rounded pl-3 pr-3 pt-2 pb-2 border-0",
+                    staticStyle: {
+                      width: "100px",
+                      "font-size": "14px",
+                      background: "#e74c3c",
+                      color: "#fff"
+                    },
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Discard")]
+                )
+              ])
+            ])
+          ]
+        )
+      ]
+    )
   ])
 }
 var staticRenderFns = [
@@ -95910,6 +96143,31 @@ var staticRenderFns = [
       _c("h4", { staticStyle: { "font-size": "18px", margin: "0" } }, [
         _vm._v("MTOP Reports")
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "h5",
+        { staticClass: "modal-title", attrs: { id: "exampleModalLabel" } },
+        [_vm._v("Print Forms")]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      )
     ])
   }
 ]
