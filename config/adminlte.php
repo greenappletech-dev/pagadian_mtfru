@@ -289,18 +289,24 @@ return [
         ['header' => 'Reports'],
         [
             'text'    => 'MTFRU',
-            'icon'    => 'fas fa-chart-pie',
+            'icon'    => 'far fa-folder-open',
             'submenu' => [
                 [
-                    'text' => 'MTOP Master List',
-                    'icon' => 'far fa-dot-circle',
+                    'text' => 'Master List',
+                    'icon' => 'far fa-file-alt',
                     'url'  => '/master_list',
                     'role' => ''
                 ],
                 [
-                    'text' => 'MTOP Report',
-                    'icon' => 'far fa-dot-circle',
+                    'text' => 'Report',
+                    'icon' => 'far fa-file-alt',
                     'url'  => '/mtop_report',
+                    'role' => ''
+                ],
+                [
+                    'text' => 'Annual Tax',
+                    'icon' => 'far fa-file-alt',
+                    'url'  => '/mtop_charges_list',
                     'role' => ''
                 ],
             ]

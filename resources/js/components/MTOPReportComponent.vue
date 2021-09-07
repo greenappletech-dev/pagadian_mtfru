@@ -48,33 +48,39 @@
                 <div class="card-body">
 
                     <label for="report_type">Report Type</label>
-                    <select id="report_type" class="form-control" v-model="report.type">
-                        <option value="1">MTOP Detailed Report</option>
-                        <option value="2">Old New Franchise Report</option>
+                    <select id="report_type" class="form-control" v-model="report.type" v-on:change="selectChange">
+                        <option value="1">MTOP Detailed Report - (Range)</option>
+                        <option value="4">New Franchise Report - (Range)</option>
+                        <option value="3">New Franchise Summary Per Month - (Range)</option>
+                        <option value="2">Summary Report Per Make/Type</option>
                     </select>
 
+                        <div id="filter_options_1">
 
-                    <label for="barangay" class="mt-1">Barangay</label>
-                    <select id="barangay" class="form-control" v-model="barangay.id">
-                        <option value=""></option>
-                        <option v-for="data in barangay"
-                                v-bind:value="data.id">
-                            {{ data.brgy_code + '-' + data.brgy_desc }}
-                        </option>
-                    </select>
+                            <label for="barangay" class="mt-1">Specific Barangay</label>
+                                <select id="barangay" class="form-control" v-model="barangay.id">
+                                    <option value=""></option>
+                                    <option v-for="data in barangay"
+                                            v-bind:value="data.id">
+                                        {{ data.brgy_code + '-' + data.brgy_desc }}
+                                    </option>
+                                </select>
 
 
-                    <div class="row mt-1">
-                        <div class="col">
-                            <label for="from">From:</label>
-                            <input type="date" id="from" class="form-control" v-model="report.from">
+                            <div class="row mt-1">
+                                <div class="col">
+                                    <label for="from">From:</label>
+                                    <input type="date" id="from" class="form-control" v-model="report.from">
+                                </div>
+
+                                <div class="col">
+                                    <label for="to">To:</label>
+                                    <input type="date" id="to" class="form-control" v-model="report.to">
+                                </div>
+                            </div>
+
                         </div>
 
-                        <div class="col">
-                            <label for="to">To:</label>
-                            <input type="date" id="to" class="form-control" v-model="report.to">
-                        </div>
-                    </div>
                 </div>
 
                 <div class="card-footer d-flex justify-content-end">
@@ -170,7 +176,23 @@ export default {
             this.print = false;
             this.err_msg = '';
             this.suc_msg = '';
-            this.initialData();
+        },
+
+        selectChange(e)
+        {
+
+            if(e.target.value !== '2') {
+                $('#filter_options_1').show();
+                return
+            }
+
+
+            this.report.from = null;
+            this.report.to = null;
+            this.barangay.id = null;
+            $('#filter_options_1').hide();
+
+
         },
 
         initialData() {
@@ -271,8 +293,9 @@ export default {
     },
 
     mounted() {
-        $('#body_number_from').attr('readonly', true);
-        $('#body_number_to').attr('readonly', true);
+        $('#filter_options_1').hide();
+        $('#filter_options_2').hide();
+
         this.initialData();
     }
 }

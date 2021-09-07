@@ -34,9 +34,9 @@ class CreateFvrApplicationsTable extends Migration
             $table->string('fishing_gear')->nullable();
             $table->integer('manning_crew')->nullable();
             $table->string('body_number',80);
-            $table->date('approve_date');
-            $table->date('validity_date');
-            $table->string('transact_type');
+            $table->date('approve_date')->nullable();
+            $table->date('validity_date')->nullable();
+            $table->string('transact_type')->nullable();
             $table->integer('status');
             $table->string('user_id', 80)->nullable();
             $table->timestamps();

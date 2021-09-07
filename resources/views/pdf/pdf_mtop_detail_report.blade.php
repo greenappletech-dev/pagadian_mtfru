@@ -102,6 +102,7 @@
         </tr>
         <tr>
             <th style="font-weight: bold">{{ 'FROM: ' . date('m/d/Y', strtotime($from)) . ' TO: ' . date('m/d/Y', strtotime($to)) }}</th>
+            <th style="font-weight: bold">@if($barangay != null) {{ $barangay->brgy_desc }} @else ALL BARANGAY @endif</th>
         </tr>
     </table>
 </header>
@@ -117,15 +118,16 @@
         <thead>
 
 
-            <tr>
-                <th>APPLICATION TYPE</th>
-                <th>BODY #</th>
-                <th>OPERATOR</th>
-                <th>ADDRESS</th>
-                <th>CONTACT #</th>
-                <th>OR NUMBER</th>
-                <th>AMOUNT</th>
-            </tr>
+        <tr>
+            <th style="text-align: center">APPLICATION TYPE</th>
+            <th style="text-align: center">DATE</th>
+            <th style="text-align: center">BODY #</th>
+            <th style="text-align: center">OPERATOR</th>
+            <th style="text-align: center">ADDRESS</th>
+            <th style="text-align: center">CONTACT #</th>
+            <th style="text-align: center">OR NUMBER</th>
+            <th style="text-align: center">AMOUNT</th>
+        </tr>
 
 
 
@@ -149,7 +151,7 @@
                 @if($count > 1)
 
                     <tr style="font-size: 13px; font-weight: bold;">
-                        <td colspan="5" style="border-top: 1px solid #000; border-bottom: 1px solid #000">
+                        <td colspan="6" style="border-top: 1px solid #000; border-bottom: 1px solid #000">
                             TOTAL COUNT: {{ $count }}
                         </td>
                         <td style="border-top: 1px solid #000; border-bottom: 1px solid #000; text-align: center">
@@ -164,7 +166,7 @@
 
 
                 <tr>
-                    <td colspan="7" style="padding-top: 10px; font-size: 13px; font-weight: bold;">
+                    <td colspan="8" style="padding-top: 10px; font-size: 13px; font-weight: bold;">
 
                         @if($value[6] == 'renewal')
 
@@ -197,12 +199,13 @@
             @endif
 
             <tr>
-                <td style="font-size: 10px; font-weight: bold">@if(!empty($value[8])) {{ $value[8] }} @endif</td>
+                <td style="font-size: 10px; font-weight: bold">@if(!empty($value[9])) {{ $value[9] }} @endif</td>
+                <td style="padding: 5px 0; text-align: center">{{ date('m/d/Y', strtotime($value[8])) }}</td>
                 <td style="padding: 5px 0;">{{ $value[0] }}</td>
                 <td>{{ $value[1] }}</td>
                 <td>{{ $value[2] }}</td>
                 <td>{{ $value[3] }}</td>
-                <td>{{ $value[4] }}</td>
+                <td style="text-align: center;">{{ $value[4] }}</td>
                 <td style="text-align: right">{{ number_format($value[5], 2) }}</td>
             </tr>
 
@@ -215,7 +218,7 @@
             @if($x == $array_count)
 
                 <tr style="font-size: 13px; font-weight: bold;">
-                    <td colspan="5" style="border-top: 1px solid #000; border-bottom: 1px solid #000">
+                    <td colspan="6" style="border-top: 1px solid #000; border-bottom: 1px solid #000">
                         TOTAL COUNT: {{ $count }}
                     </td>
                     <td style="border-top: 1px solid #000; border-bottom: 1px solid #000; text-align: center">

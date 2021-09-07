@@ -7,6 +7,7 @@ use App\Exports\MTOPReportExport;
 use App\Models\Barangay;
 use App\Models\MtopApplication;
 use App\Models\Tricycle;
+use DateTime;
 use Illuminate\Support\Facades\DB;
 use Excel;
 
@@ -135,6 +136,10 @@ class ReportController extends Controller
         $report = array();
         $test = array();
 
+
+        /* MTOP DETAILED REPORT */
+
+
         if($type == 1)
         {
 
@@ -177,6 +182,7 @@ class ReportController extends Controller
                 ->where('transact_type', 'LIKE' , '%'. $transact[0] .'%')
                 ->whereBetween('transact_date', [$from, $to])
                 ->select(
+                    'mtop_applications.transact_date',
                     'mtop_applications.body_number',
                     'taxpayer.full_name',
                     'taxpayer.address1',
@@ -186,8 +192,9 @@ class ReportController extends Controller
                 )
                 ->selectRaw('SUM(collne2.price) as total_amount')
                 ->groupBy(
-                    'collne2.or_code',
+                    'mtop_applications.transact_date',
                     'mtop_applications.body_number',
+                    'collne2.or_code',
                     'taxpayer.full_name',
                     'taxpayer.address1',
                     'taxpayer.mobile',
@@ -212,6 +219,7 @@ class ReportController extends Controller
                             $data['total_amount'],
                             $transact[1],
                             $data['transact_type'],
+                            $data['transact_date']
                         ]);
 
                 }
@@ -243,6 +251,12 @@ class ReportController extends Controller
             }
 
         }
+
+
+        /* END */
+
+
+        /* SUMMARY PER MAKE/TYPE REPORT */
 
 
         if($type == 2)
@@ -337,23 +351,182 @@ class ReportController extends Controller
         }
 
 
+        /* END */
+
+
+        /* NEW FRANCHISE SUMMARY REPORT */
+
+
+        if($type == 3)
+        {
+
+            $month = '';
+            $application = 0;
+            $payment = 0;
+            $pending = 0;
+            $completed = 0;
+            $count = 0;
+            $to = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
+            $start_date = new DateTime($from);
+            $end_date = new DateTime($to);
+            $interval = \DateInterval::createFromDateString('+1 day');
+            $dates = new \DatePeriod($start_date, $interval, $end_date);
+            $date_difference = abs(strtotime($from) - strtotime($to)); /* create this computation go get the last count of the array */
+            $date_difference = $date_difference / (60 * 60 * 24);
+
+            foreach ($dates as $date)
+            {
+
+                if($count == 0)
+                {
+                    $month = $date->format('F');
+                }
+
+
+                $application += MtopApplication::where('transact_date', $date)
+                ->where('transact_type', 4)
+                ->where(function($query) use ($barangay_id)
+                {
+                    if($barangay_id !== 'null')
+                    {
+                        $query->where('mtop_applications.barangay_id', $barangay_id);
+                    }
+                })
+                ->count();
+
+
+
+                $payment += MtopApplication::leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
+                ->where('colhdr.trnx_date', $date)
+                ->where('colhdr.mtop_application_id', '>', 0)
+                ->where('transact_type', 4)
+                ->where(function($query) use ($barangay_id)
+                {
+                    if($barangay_id !== 'null')
+                    {
+                        $query->where('mtop_applications.barangay_id', $barangay_id);
+                    }
+                })
+                ->count();
+
+
+                $pending += MtopApplication::where('transact_date', $date)
+                ->whereIn('status', [1,2])
+                ->where('transact_type', 4)
+                ->where(function($query) use ($barangay_id)
+                {
+                    if($barangay_id !== 'null')
+                    {
+                        $query->where('mtop_applications.barangay_id', $barangay_id);
+                    }
+                })
+                ->count();
+
+
+
+                $completed += MtopApplication::where('approve_date', $date)
+                ->where('status', 4)
+                ->where('transact_type', 4)
+                ->where(function($query) use ($barangay_id)
+                {
+                    if($barangay_id !== 'null')
+                    {
+                        $query->where('mtop_applications.barangay_id', $barangay_id);
+                    }
+                })
+                ->count();
+
+                $count++;
+
+                if($month != $date->format('F'))
+                {
+                    array_push($report, [$month, $application, $payment, $pending, $completed]);
+                    $application = $payment = $pending = $completed = 0;
+                    $month = $date->format('F');
+                }
+
+                if($count == $date_difference)
+                {
+                    array_push($report, [$month, $application, $payment, $pending, $completed]);
+                    $application = $payment = $pending = $completed = 0;
+                }
+
+            }
+
+        }
+
+        /* END */
+
+
+
+        /* NEW FRANCHISE REPORT */
+
+
+        if($type == 4)
+        {
+
+
+            $report = MtopApplication::leftJoin('taxpayer', 'taxpayer.id', 'mtop_applications.taxpayer_id')
+            ->leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
+            ->whereBetween('mtop_applications.transact_date', [$from, $to])
+            ->where('mtop_applications.transact_type', 4)
+            ->where(function($query) use ($barangay_id)
+            {
+                if($barangay_id !== 'null')
+                {
+                    $query->where('mtop_applications.barangay_id', $barangay_id);
+                }
+            })
+            ->select(
+                'mtop_applications.*',
+                'colhdr.trnx_date',
+                'taxpayer.full_name',
+                'taxpayer.mobile',
+                'taxpayer.address1 as address'
+            )
+            ->orderBy('mtop_applications.body_number')
+            ->get();
+
+
+        }
+
+        /* END */
 
         return $report;
     }
 
     public function export($type, $from, $to, $barangay_id) {
+
         $generated_report = $this->generate_report($type, $from, $to, $barangay_id);
+
+        $barangay = null;
+
+        if($barangay_id != 'null') {
+            $barangay = Barangay::where('id', $barangay_id)
+            ->select('brgy_desc')
+            ->first();
+        }
+
         $report_title = '';
 
         if($type == 1) {
-            $report_title = 'MTOP_Detailed_report';
+            $report_title = 'MTOP_Detailed_Report_Range';
         }
 
         if($type == 2) {
-            $report_title = 'Old_New_Franchise';
+            $report_title = 'Summary_Per_MakeType_Report';
         }
 
-        return Excel::download(new MTOPReportExport($generated_report, $type, $from, $to), $report_title . time() . '.xlsx');
+        if($type == 3) {
+            $report_title = 'New_Franchise_Summary_Per_Month_Range';
+        }
+
+        if($type == 4) {
+            $report_title = 'New_Franchise_Report_Range';
+        }
+
+
+        return Excel::download(new MTOPReportExport($generated_report, $type, $from, $to, $barangay), $report_title . time() . '.xlsx');
 
     }
 
@@ -361,30 +534,44 @@ class ReportController extends Controller
 
         $generated_report = $this->generate_report($type, $from, $to, $barangay_id);
 
+        $barangay = null;
+
+        if($barangay_id != 'null') {
+            $barangay = Barangay::where('id', $barangay_id)
+                ->select('brgy_desc')
+                ->first();
+        }
+
 
         $blade = '';
 
 
-
         if($type == 1)
         {
-
             $blade = 'pdf.pdf_mtop_detail_report';
-
         }
 
 
         if($type == 2)
         {
-
             $blade = 'pdf.pdf_mtop_old_new_franchise';
+        }
 
+
+        if($type == 3)
+        {
+            $blade = 'pdf.pdf_mtop_summary_new_franchise';
+        }
+
+        if($type == 4)
+        {
+            $blade = 'pdf.pdf_mtop_new_franchise';
         }
 
 
         $pdf = \App::make('dompdf.wrapper');
         $pdf->getDomPDF()->set_option("enable_php", true);
-        $pdf->loadView($blade, compact('generated_report', 'from', 'to'))->setPaper($size, $orientation);
+        $pdf->loadView($blade, compact('generated_report', 'from', 'to', 'barangay'))->setPaper($size, $orientation);
 
 
 

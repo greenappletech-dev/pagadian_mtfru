@@ -1,26 +1,27 @@
 <?php
 
-use App\Http\Controllers\UserController;
-use Illuminate\Support\Facades\Route;
-use \App\Http\Controllers\HomeController;
+use App\Http\Controllers\FvrApplicationAuxiliaryEngineController;
+use \App\Http\Controllers\MtopApplicationChargeController;
+use App\Http\Controllers\FvrApplicationChargeController;
+use \App\Http\Controllers\SystemParameterController;
+use \App\Http\Controllers\MtopApplicationController;
+use App\Http\Controllers\MtopViewRenewalController;
+use App\Http\Controllers\AuxiliaryEngineController;
+use App\Http\Controllers\FvrApplicationController;
+use App\Http\Controllers\FvrViewRenewalController;
+use App\Http\Controllers\MTOPChargeListController;
+use \App\Http\Controllers\MTFRUReportController;
+use App\Http\Controllers\BoatCaptainController;
 use \App\Http\Controllers\TricycleController;
 use \App\Http\Controllers\OperatorController;
-use \App\Http\Controllers\MtopApplicationController;
+use App\Http\Controllers\BoatTypeController;
 use \App\Http\Controllers\ChargeController;
-use \App\Http\Controllers\SystemParameterController;
-use \App\Http\Controllers\MTFRUReportController;
-use \App\Http\Controllers\MtopApplicationChargeController;
-use App\Http\Controllers\MtopViewRenewalController;
 use App\Http\Controllers\DriverController;
 use App\Http\Controllers\ReportController;
+use \App\Http\Controllers\HomeController;
 use App\Http\Controllers\BancaController;
-use App\Http\Controllers\AuxiliaryEngineController;
-use App\Http\Controllers\BoatCaptainController;
-use App\Http\Controllers\FvrApplicationController;
-use App\Http\Controllers\FvrApplicationAuxiliaryEngineController;
-use App\Http\Controllers\FvrApplicationChargeController;
-use App\Http\Controllers\FvrViewRenewalController;
-use App\Http\Controllers\BoatTypeController;
+use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Route;
 
 
 /*
@@ -139,13 +140,17 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('master_list/getdata', [ReportController::class, 'master_list_getdata']);
         Route::get('master_list/export', [ReportController::class, 'master_list_export']);
 
+        /* MTOP Charges List */
+        Route::get('mtop_charges_list', [MTOPChargeListController::class, 'index']);
+        Route::get('mtop_charges_list/filter/{operator}/{year}', [MTOPChargeListController::class, 'filter']);
+        Route::get('mtop_charges_list/pdf/{operator}/{year}/{size}/{orientation}', [MTOPChargeListController::class, 'pdf']);
+        Route::get('mtop_charges_list/export/{operator}/{year}', [MTOPChargeListController::class, 'export']);
 
         /* MTOP Reports */
         Route::get('mtop_report', [ReportController::class, 'index']);
         Route::get('mtop_report/getdata', [ReportController::class, 'getdata']);
         Route::get('mtop_report/export/{type}/{from}/{to}/{barangay_id}', [ReportController::class, 'export']);
         Route::get('mtop_report/pdf/{type}/{from}/{to}/{barangay_id}/{size}/{orientation}', [ReportController::class, 'pdf']);
-
 
 
         /* Banca */

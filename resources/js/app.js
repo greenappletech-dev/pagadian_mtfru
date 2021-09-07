@@ -43,9 +43,8 @@ Vue.component('driver-component', require('./components/DriverComponent.vue').de
 
 /* MTOP REPORTS */
 Vue.component('master_list-component', require('./components/MasterListComponent.vue').default);
-Vue.component('mtop_report-component', require('./components/MTOPReportComponent.vue').default);
-
-
+Vue.component('mtop_report-component', require('./components/MTOPReportComponent').default);
+Vue.component('mtop_charge_list-component', require('./components/MTOPChargesListComponent').default);
 
 /* FVR COMPONENT */
 Vue.component('banca-component', require('./components/BancaComponent.vue').default);
