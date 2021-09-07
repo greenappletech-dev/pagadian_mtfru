@@ -106,8 +106,9 @@
         @foreach($data[1] as $charge)
             <tr style="font-size: 13px;">
                 <td style="font-style: italic; font-weight: normal; padding: 2px 0;">{{ $charge->inc_desc }}</td>
-                <td style="font-style: italic; font-weight: normal; padding: 2px 0;">{{ number_format($charge->price, 2) }}</td>
-                {{ $totals +=  $charge->price }}
+
+                <td style="font-style: italic; font-weight: normal; padding: 2px 0;">{{ number_format($charge->ln_amnt, 2) }}</td>
+                {{ $totals += $charge->ln_amnt }}
             </tr>
         @endforeach
 
