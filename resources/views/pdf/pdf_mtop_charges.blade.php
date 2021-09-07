@@ -112,7 +112,7 @@
             <tr>
                 <th style="width: 10%">DATE</th>
                 <th style="width: 15%">TAX DATE</th>
-                <th>OPERATOR</th>
+                <th style="text-align: left">OPERATOR</th>
                 <th style="width: 10%">OR NUMBER</th>
                 <th style="width: 15%">MTFRB CASE NO</th>
                 <th style="width: 10%">VALIDITY DATE</th>
