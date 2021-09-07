@@ -484,7 +484,7 @@ class MtopApplicationController extends Controller
         /* must check if the application is new, renewal, dropping or change unit */
 
         $transaction_type = explode(',',$mtop_application->transact_type);
-        $application_type = $this->mtop_applications->getApplicationType($transaction_type, $mtop_application->body_number, $id);
+        $application_type = $this->mtop_applications->getApplicationType($transaction_type);
 
 
         $data = [$mtop_application, $charges, $operator_img];

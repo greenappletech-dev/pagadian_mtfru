@@ -115,7 +115,7 @@ class MtopApplication extends Model
             ->get();
     }
 
-    public function getApplicationType(array $transaction_type, $body_number, $id): string
+    public function getApplicationType(array $transaction_type): string
     {
         $application_type = '';
 

@@ -20,10 +20,10 @@
         <thead>
             <tr>
                 <th rowspan="2">SIDECAR NUMBER</th>
+                <th rowspan="2">OPERATOR</th>
                 <th rowspan="2">MTFRB CASE NO.</th>
                 <th rowspan="2">ADDRESS</th>
                 <th rowspan="2">CONTACT NO.</th>
-                <th rowspan="1" colspan="2">DATE ISSUED</th>
                 <th rowspan="2">DATE ISSUED</th>
                 <th rowspan="2">EXPIRE ON</th>
                 <th rowspan="2">STATUS</th>
@@ -36,8 +36,6 @@
                 <th colspan="5">TRANSACTION DETAILS</th>
             </tr>
             <tr>
-                <th>DAY</th>
-                <th>MONTH/YEAR</th>
                 <th>SIGN</th>
                 <th>CHARGES</th>
                 <th>OR NO.</th>
@@ -52,16 +50,14 @@
             @foreach($applications as $application)
                 <tr>
                     <td>{{ $application['body_number'] }}</td>
-                    <td>{{ $application['mtfrb_case_no'] }}</td>
                     <td>{{ $application['full_name'] }}</td>
-{{--                    <td>{{ $application['address'] }}</td>--}}
+                    <td>{{ $application['mtfrb_case_no'] }}</td>
+                    <td>{{ $application['address1'] }}</td>
                     <td>{{ $application['mobile'] }}</td>
-                    <td>{{ $application['date_issue_day'] }}</td>
-                    <td>{{ $application['date_issue_month_year'] }}</td>
-                    <td>{{ $application['date_issue'] }}</td>
+                    <td>{{ $application['trnx_date']}}</td>
                     <td>{{ $application['validity_date'] }}</td>
                     <td>{{ $application['transact_type'] }}</td>
-                    <td>{{ $application['transact_date'] }}</td>
+                    <td>{{ $application['transact_date'] == null ? '' : $application['transact_date'] }}</td>
                     <td>{{ $application['make_type'] }}</td>
                     <td>{{ $application['engine_motor_no'] }}</td>
                     <td>{{ $application['chassis_no'] }}</td>
@@ -69,8 +65,13 @@
                     <td>{{ $application['approve_date'] }}</td>
                     <td>{{ $application['charges'] }}</td>
                     <td>{{ $application['or_no'] }}</td>
-                    <td> @if($application['mtfrb_case_no'] !== null) PAGADIAN CITY @else  @endif</td>
-                    <td>{{ $application['date_issue'] }}</td>
+                    <td>
+                        @if($application['or_no'] != null)
+                            PAGADIAN CITY
+                        @else
+                        @endif
+                    </td>
+                    <td>{{ $application['trnx_date'] }}</td>
                     <td>{{ $application['amount'] }}</td>
                     <td></td>
                 </tr>
