@@ -16,11 +16,13 @@ class ReportController extends Controller
 
     private $mtop_applications;
     private $barangay;
+    private $tricycles;
 
     public function __construct()
     {
         $this->mtop_applications = new MtopApplication();
         $this->barangay = new Barangay();
+        $this->tricycles = new Tricycle();
     }
 
     public function master_list() {
@@ -30,42 +32,38 @@ class ReportController extends Controller
 
     public function master_list_getdata() {
 
-        $master_list = Tricycle::leftJoin('taxpayer','taxpayer.id', 'tricycles.operator_id')
-        ->leftJoin('mtop_applications', 'mtop_applications.id', 'tricycles.mtop_application_id')
-        ->leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
-        ->leftJoin('collne2', 'collne2.or_code', 'colhdr.or_code')
-        ->orderBy('tricycles.body_number')
-        ->select(
-            'tricycles.body_number',
-            'mtop_applications.mtfrb_case_no',
-            'taxpayer.full_name',
-            'mtop_applications.transact_date',
-            'mtop_applications.validity_date',
-            'mtop_applications.transact_type',
-            'tricycles.make_type',
-            'tricycles.engine_motor_no',
-            'tricycles.chassis_no',
-            'tricycles.plate_no',
-            'mtop_applications.approve_date',
-            'colhdr.or_number as or_no',
-            DB::raw('SUM(collne2.ln_amnt) as amount')
-        )
-        ->groupBy('tricycles.body_number',
-            'mtop_applications.mtfrb_case_no',
-            'taxpayer.full_name',
-            'mtop_applications.transact_date',
-            'mtop_applications.validity_date',
-            'mtop_applications.transact_type',
-            'tricycles.make_type',
-            'tricycles.engine_motor_no',
-            'tricycles.chassis_no',
-            'tricycles.plate_no',
-            'mtop_applications.approve_date',
-            'colhdr.or_number'
-        )
-        ->get();
+        $arr = array();
 
-        return response()->json(['applications' => $master_list]);
+        $master_list = $this->tricycles->masterList();
+
+        foreach($master_list as $data) {
+
+            $transact_type = $this->mtop_applications->getApplicationType(explode(',', $data->transact_type));
+
+            array_push($arr,
+            [
+                'mtfrb_case_no' => $data->mtfrb_case_no,
+                'transact_date' => $data->transact_date,
+                'validity_date' => $data->validity_date,
+                'approve_date' => $data->approve_date,
+                'trnx_date' => $data->trnx_date,
+                'body_number' => $data->body_number,
+                'make_type' => $data->make_type,
+                'engine_motor_no' => $data->engine_motor_no,
+                'chassis_no' => $data->chassis_no,
+                'plate_no' => $data->plate_no,
+                'full_name' => $data->full_name,
+                'address1' => $data->address1,
+                'mobile' => $data->mobile,
+                'or_no' => $data->or_no,
+                'amount' => $data->amount,
+                'transact_type' => !empty($data->transact_type) ? $transact_type : '',
+            ]);
+
+        }
+
+
+        return response()->json(['master_list' => $arr]);
     }
 
 

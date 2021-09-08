@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Tricycle extends Model
 {
@@ -37,6 +38,55 @@ class Tricycle extends Model
 
     public function fetchDataByOperator($id) {
         return Tricycle::where('operator_id', $id)->get();
+    }
+
+    public function masterList() {
+        return Tricycle::leftJoin('taxpayer','taxpayer.id', 'tricycles.operator_id')
+        ->leftJoin('mtop_applications', 'mtop_applications.id', 'tricycles.mtop_application_id')
+        ->leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
+        ->leftJoin('collne2', 'collne2.or_code', 'colhdr.or_code')
+        ->orderBy('tricycles.body_number')
+        ->select(
+            'mtop_applications.mtfrb_case_no',
+            'mtop_applications.transact_date',
+            'mtop_applications.validity_date',
+            'mtop_applications.transact_type',
+            'mtop_applications.approve_date',
+            'colhdr.trnx_date',
+            'tricycles.body_number',
+            'tricycles.make_type',
+            'tricycles.engine_motor_no',
+            'tricycles.chassis_no',
+            'tricycles.plate_no',
+            'taxpayer.full_name',
+            'taxpayer.address1',
+            'taxpayer.mobile',
+            'mtop_applications.approve_date',
+            'colhdr.or_number as or_no',
+            'colhdr.or_code',
+            DB::raw('SUM(collne2.ln_amnt) as amount')
+        )
+        ->groupBy(
+            'tricycles.body_number',
+            'mtop_applications.mtfrb_case_no',
+            'mtop_applications.transact_date',
+            'mtop_applications.validity_date',
+            'mtop_applications.transact_type',
+            'mtop_applications.approve_date',
+            'colhdr.trnx_date',
+            'tricycles.body_number',
+            'tricycles.make_type',
+            'tricycles.engine_motor_no',
+            'tricycles.chassis_no',
+            'tricycles.plate_no',
+            'taxpayer.full_name',
+            'taxpayer.address1',
+            'taxpayer.mobile',
+            'mtop_applications.approve_date',
+            'colhdr.or_number',
+            'colhdr.or_code',
+        )
+        ->get();
     }
 
     public const VALIDATION_RULE =

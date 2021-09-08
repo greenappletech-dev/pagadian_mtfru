@@ -13030,7 +13030,7 @@ __webpack_require__.r(__webpack_exports__);
       this.tableData = [];
       this.loader = true;
       axios.get('master_list/getdata').then(function (response) {
-        _this.tableData = response.data.applications;
+        _this.tableData = response.data.master_list;
       })["finally"](function () {
         return _this.loader = false;
       });

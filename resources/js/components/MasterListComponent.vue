@@ -204,7 +204,7 @@ export default {
             this.tableData = [];
             this.loader = true;
             axios.get('master_list/getdata').then(response => {
-                this.tableData = response.data.applications;
+                this.tableData = response.data.master_list;
             }).finally(() => this.loader = false)
         },
 

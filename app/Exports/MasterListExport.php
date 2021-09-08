@@ -18,10 +18,12 @@ use PhpOffice\PhpSpreadsheet\Worksheet\Worksheet;
 class MasterListExport implements FromView, WithStyles,  WithColumnFormatting
 {
     private $mtop_applications;
+    private $tricycles;
 
     public function __construct()
     {
         $this->mtop_applications = new MtopApplication();
+        $this->tricycles = new Tricycle();
     }
     /**
     * @return \Illuminate\Support\Collection
@@ -31,54 +33,7 @@ class MasterListExport implements FromView, WithStyles,  WithColumnFormatting
 
         $arr = array();
 
-        $master_list = Tricycle::leftJoin('taxpayer','taxpayer.id', 'tricycles.operator_id')
-            ->leftJoin('mtop_applications', 'mtop_applications.id', 'tricycles.mtop_application_id')
-            ->leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
-            ->leftJoin('collne2', 'collne2.or_code', 'colhdr.or_code')
-            ->orderBy('tricycles.body_number')
-            ->select(
-                'mtop_applications.mtfrb_case_no',
-                'mtop_applications.transact_date',
-                'mtop_applications.validity_date',
-                'mtop_applications.transact_type',
-                'mtop_applications.approve_date',
-                'colhdr.trnx_date',
-                'tricycles.body_number',
-                'tricycles.make_type',
-                'tricycles.engine_motor_no',
-                'tricycles.chassis_no',
-                'tricycles.plate_no',
-                'taxpayer.full_name',
-                'taxpayer.address1',
-                'taxpayer.mobile',
-                'mtop_applications.approve_date',
-                'colhdr.or_number as or_no',
-                'colhdr.or_code',
-                DB::raw('SUM(collne2.ln_amnt) as amount')
-            )
-            ->groupBy(
-                'tricycles.body_number',
-                'mtop_applications.mtfrb_case_no',
-                'mtop_applications.transact_date',
-                'mtop_applications.validity_date',
-                'mtop_applications.transact_type',
-                'mtop_applications.approve_date',
-                'colhdr.trnx_date',
-                'tricycles.body_number',
-                'tricycles.make_type',
-                'tricycles.engine_motor_no',
-                'tricycles.chassis_no',
-                'tricycles.plate_no',
-                'taxpayer.full_name',
-                'taxpayer.address1',
-                'taxpayer.mobile',
-                'mtop_applications.approve_date',
-                'colhdr.or_number',
-                'colhdr.or_code',
-            )
-            ->get();
-
-
+        $master_list = $this->tricycles->masterList();
 
         $arr_count = 0;
 
