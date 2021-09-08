@@ -15,7 +15,6 @@ class HomeController extends Controller
 
     public function index() {
         return view('home');
-//        return Excel::download(new SampleExport(), 'sample.xlsx');
     }
 
 }

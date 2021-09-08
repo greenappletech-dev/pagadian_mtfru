@@ -8769,20 +8769,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -8791,29 +8777,7 @@ __webpack_require__.r(__webpack_exports__);
       errors: []
     };
   },
-  methods: {
-    pdfModal: function pdfModal() {
-      var _this = this;
-
-      this.loader = true;
-      axios({
-        url: 'home/pdf',
-        method: 'GET',
-        responseType: 'blob'
-      }).then(function (response) {
-        var url = window.URL.createObjectURL(new Blob([response.data]));
-        var link = document.createElement('a');
-        link.href = url;
-        link.setAttribute('download', 'file.pdf');
-        document.body.appendChild(link);
-        link.click();
-      })["catch"](function (error) {
-        _this.errors = error.response.data.errors;
-      })["finally"](function () {
-        return _this.loader = false;
-      });
-    }
-  },
+  methods: {},
   mounted: function mounted() {}
 });
 
@@ -90485,45 +90449,9 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _vm.loader
-      ? _c(
-          "div",
-          {
-            staticStyle: {
-              position: "absolute",
-              top: "0",
-              left: "0",
-              "z-index": "1000",
-              width: "100%",
-              height: "100%",
-              background: "rgba(0, 0, 0, 0.1)"
-            }
-          },
-          [_vm._m(0)]
-        )
-      : _vm._e()
-  ])
+  return _c("div", { staticClass: "main-conatiner" })
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "div",
-      {
-        staticStyle: {
-          position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)"
-        }
-      },
-      [_c("img", { attrs: { src: "public/loader/loader.gif", alt: "loader" } })]
-    )
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

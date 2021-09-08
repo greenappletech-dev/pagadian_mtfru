@@ -34,7 +34,7 @@
         .sidebar nav li a i {
             width: 20px;
             text-align: center;
-            margin-right: 12px;
+            margin-right: 9px;
         }
 
         .sidebar nav li a p {
