@@ -253,6 +253,18 @@ return [
 //            'label'       => 4,
 //            'label_color' => 'success',
 //        ],
+        ['header' => 'Home'],
+        [
+            'text' => 'Dashboard',
+            'url'  => 'home',
+            'icon' => 'fas fa-tachometer-alt',
+        ],
+        ['header' => 'MTFRU'],
+        [
+            'text' => 'Operators',
+            'url'  => 'operator',
+            'icon' => 'far fa-id-card',
+        ],
         ['header' => 'MTOP Data'],
         [
             'text' => 'Tricycle',
@@ -288,7 +300,7 @@ return [
         ],
         ['header' => 'Reports'],
         [
-            'text'    => 'MTFRU',
+            'text'    => 'MTOP',
             'icon'    => 'far fa-folder-open',
             'submenu' => [
                 [
@@ -311,6 +323,13 @@ return [
                 ],
             ]
         ],
+        [
+            'text'    => 'FVR',
+            'icon'    => 'far fa-folder-open',
+            'submenu' => [
+
+            ]
+        ],
         ['header' => 'System'],
 //        [
 //            'text' => 'Charges',
@@ -318,14 +337,9 @@ return [
 //            'icon' => 'fas fa-file-invoice',
 //        ],
         [
-            'text' => 'Operators',
-            'url'  => 'operator',
-            'icon' => 'fas fa-users',
-        ],
-        [
             'text' => 'User Accounts',
             'url'  => 'users',
-            'icon' => 'fas fa-users',
+            'icon' => 'fas fa-users-cog',
         ],
         [
             'text' => 'Boat Type',
