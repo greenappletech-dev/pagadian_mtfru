@@ -132,10 +132,6 @@
             </div>
         </div>
     </div>
-
-
-
-    </div>
 </template>
 
 <script>
@@ -180,10 +176,12 @@ export default {
 
         selectChange(e)
         {
+            const wout_range = ['2', '4'];
 
-            if(e.target.value !== '2') {
+            if(wout_range.indexOf(this.report.type) < 0)
+            {
                 $('#filter_options_1').show();
-                return
+                return;
             }
 
 
@@ -216,8 +214,9 @@ export default {
 
             }
 
+            const wout_range = ['2', '4'];
 
-            if(this.report.type !== '2')
+            if(wout_range.indexOf(this.report.type) < 0)
             {
 
                 if(this.report.from == null || this.report.to == null)
@@ -255,8 +254,9 @@ export default {
 
             }
 
+            const wout_range = ['2', '4'];
 
-            if(this.report.type !== '2')
+            if(wout_range.indexOf(this.report.type) < 0)
             {
 
 

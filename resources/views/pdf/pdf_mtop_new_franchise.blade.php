@@ -40,11 +40,10 @@
             font-weight: bold;
         }
 
-
         /* main */
 
         main {
-            font-size: 12px;
+            font-size: 10px;
         }
 
         main table {
@@ -55,30 +54,29 @@
             border: 1px solid #000;
         }
 
-        main table thead tr th {
-            padding: 5px 0px;
-            font-weight: normal;
+        main table thead tr th:nth-child(1) {
+            width: 5%;
         }
 
-        main table thead tr th:first-child {
-            padding-left: 10px;
+        main table thead tr th:nth-child(1),
+        table tbody tr td:nth-child(1)
+        {
+            text-align: center;
         }
 
-        main table thead tr th:last-child {
-            padding-right: 10px;
+        main table thead tr th:nth-child(2),
+        :nth-child(3),
+        :nth-child(4)
+        {
+            text-align: left;
         }
 
+
+
+        main table thead tr th,
         main table tbody tr td {
-            padding: 5px 0px 2px 0px;
-            vertical-align: top;
-        }
-
-        main table tbody tr td:first-child {
-            padding-left: 10px;
-        }
-
-        main table tbody tr td:last-child {
-            padding-right: 10px;
+            padding: 5px 5px;
+            font-weight: normal;
         }
 
 
@@ -101,8 +99,7 @@
             <th class="datetime">{{ date('m/d/Y h:i:s A') }}</th>
         </tr>
         <tr>
-            <th style="font-weight: bold">{{ 'FROM: ' . date('m/d/Y', strtotime($from)) . ' TO: ' . date('m/d/Y', strtotime($to)) }}</th>
-            <th style="font-weight: bold">@if($barangay != null) {{ $barangay->brgy_desc }} @else ALL BARANGAY @endif</th>
+            <th>{{ 'As of: ' . date('F d, Y') }}</th>
         </tr>
     </table>
 </header>
@@ -112,6 +109,7 @@
 {{--</footer>--}}
 
 <!-- Wrap the content of your PDF inside a main tag -->
+
 <main>
 
 
@@ -120,62 +118,94 @@
         <thead>
 
             <tr>
-                <th style="width: 9%">SIDECAR #</th>
-                <th style="width: 15%;">OPERATOR</th>
+                <th>SIDECAR NUMBER</th>
+                <th>OPERATOR</th>
                 <th>ADDRESS</th>
-                <th style="width: 10%;">CONTACT #</th>
-                <th style="width: 7%;">DATE APPLY</th>
-                <th style="width: 8%;">DATE OF PAYMENT</th>
-                <th style="width: 8%;">DATE COMPLETED</th>
-                <th style="width: 10%;">MAKE/TYPE</th>
-                <th style="width: 8%;">REMARKS</th>
+                <th>CONTACT #</th>
+                <th>DATE APPLY</th>
+                <th>DATE OF PAYMENT</th>
+                <th>DATE COMPLETED</th>
+                <th>MAKE/TYPE</th>
+                <th>REMARKS</th>
             </tr>
 
 
         </thead>
 
+
         <tbody>
 
-        @foreach($generated_report as $key=>$value)
+            @foreach($generated_report as $report)
 
-            <tr>
-                <td style="text-align: center">{{ $value['body_number'] }}</td>
-                <td>{{ $value['full_name'] }}</td>
-                <td>{{ $value['address'] }}</td>
-                <td style="text-align: center">{{ $value['mobile'] }}</td>
-                <td style="text-align: center">{{ $value['transact_date'] }}</td>
-                <td style="text-align: center">{{ $value['trnx_date'] }}</td>
-                <td style="text-align: center">{{ $value['approve_date'] }}</td>
-                <td style="text-align: center">{{ $value['make_type'] }}</td>
-                <td style="text-align: center">
+                <tr>
+                    <td style="text-align: center">{{ $report[0] }}</td>
+                    <td>{{ $report[1]['full_name'] }}</td>
+                    <td>{{ $report[1]['address'] }}</td>
+                    <td style="text-align: center">{{ $report[1]['mobile'] }}</td>
+                    <td style="text-align: center">
+                        @if($report[1]['transact_date'] != null && $report[1]['full_name'] != null)
+                        {{
+                            date('m/d/Y', strtotime($report[1]['transact_date']))
+                        }}
+                        @endif
+                    </td>
+                    <td style="text-align: center">
+                        @if($report[1]['trnx_date'] != null && $report[1]['full_name'] != null)
+                        {{
+                            date('m/d/Y', strtotime($report[1]['trnx_date']))
+                        }}
+                        @endif
+                    </td>
+                    <td style="text-align: center">
+                        @if($report[1]['approve_date'] != null && $report[1]['full_name'] != null)
+                        {{
+                            date('m/d/Y', strtotime($report[1]['approve_date']))
+                        }}
+                        @endif
+                   </td>
+                    <td style="text-align: center">{{ $report[1]['make_type'] }}</td>
+                    <td style="text-align: center">
 
-                    @switch($value['status'])
+                        @if($report[1]['full_name'] != null)
 
-                        @case(1)
+                            @switch($report[1]['status'])
 
-                            PENDING
-                            @break
+                                @case(1)
 
-                        @case(2)
+                                    PENDING
 
-                            FOR PAYMENT
-                            @break
+                                @break
 
-                        @case(3)
+                                @case(2)
 
-                            FOR APPROVAL
-                            @break
+                                    FOR PAYMENT
 
-                        @default
+                                @break
 
-                            APPROVED
+                                @case(3)
 
-                    @endswitch
+                                    FOR APPROVAL
 
-                </td>
-            </tr>
+                                @break
 
-        @endforeach
+                                @case(4)
+
+                                    APPROVED
+
+                                @break
+
+                                @default
+
+
+
+                            @endswitch
+
+                        @endif
+
+                    </td>
+                </tr>
+
+            @endforeach
 
         </tbody>
 

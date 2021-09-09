@@ -12447,10 +12447,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -12483,7 +12479,9 @@ __webpack_require__.r(__webpack_exports__);
       this.suc_msg = '';
     },
     selectChange: function selectChange(e) {
-      if (e.target.value !== '2') {
+      var wout_range = ['2', '4'];
+
+      if (wout_range.indexOf(this.report.type) < 0) {
         $('#filter_options_1').show();
         return;
       }
@@ -12506,7 +12504,9 @@ __webpack_require__.r(__webpack_exports__);
         return this.err_msg = 'Report Type is Required';
       }
 
-      if (this.report.type !== '2') {
+      var wout_range = ['2', '4'];
+
+      if (wout_range.indexOf(this.report.type) < 0) {
         if (this.report.from == null || this.report.to == null) {
           this.err = true;
           return this.err_msg = 'Please Set Range';
@@ -12525,7 +12525,9 @@ __webpack_require__.r(__webpack_exports__);
         return this.err_msg = 'Report Type is Required';
       }
 
-      if (this.report.type !== '2') {
+      var wout_range = ['2', '4'];
+
+      if (wout_range.indexOf(this.report.type) < 0) {
         if (this.report.from == null || this.report.to == null) {
           this.err = true;
           return this.err_msg = 'Please Set Range';

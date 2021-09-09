@@ -23,8 +23,7 @@
     <thead>
 
             <tr>
-                <th style="font-weight: bold">{{ 'FROM: ' . date('m/d/Y', strtotime($from)) . ' TO: ' . date('m/d/Y', strtotime($to)) }}</th>
-                <th style="font-weight: bold">@if($barangay != null) {{ $barangay }} @else ALL BARANGAY @endif</th>
+                <th style="font-weight: bold">{{ 'As of: ' . date('F d, Y') }}</th>
             </tr>
 
             <tr>
@@ -43,46 +42,78 @@
 
     <tbody>
 
-    @foreach($array as $key=>$value)
 
-        <tr>
-            <td style="text-align: center">{{ $value['body_number'] }}</td>
-            <td>{{ $value['full_name'] }}</td>
-            <td>{{ $value['address'] }}</td>
-            <td style="text-align: center">{{ $value['mobile'] }}</td>
-            <td style="text-align: center">{{ $value['transact_date'] }}</td>
-            <td style="text-align: center">{{ $value['trnx_date'] }}</td>
-            <td style="text-align: center">{{ $value['approve_date'] }}</td>
-            <td style="text-align: center">{{ $value['make_type'] }}</td>
-            <td style="text-align: center">
+        @foreach($array as $report)
 
-                @switch($value['status'])
+            <tr>
+                <td style="text-align: center">{{ $report[0] }}</td>
+                <td>{{ $report[1]['full_name'] }}</td>
+                <td>{{ $report[1]['address'] }}</td>
+                <td style="text-align: center">{{ $report[1]['mobile'] }}</td>
+                <td style="text-align: center">
+                    @if($report[1]['transact_date'] != null && $report[1]['full_name'] != null)
+                        {{
+                            date('m/d/Y', strtotime($report[1]['transact_date']))
+                        }}
+                    @endif
+                </td>
+                <td style="text-align: center">
+                    @if($report[1]['trnx_date'] != null && $report[1]['full_name'] != null)
+                        {{
+                            date('m/d/Y', strtotime($report[1]['trnx_date']))
+                        }}
+                    @endif
+                </td>
+                <td style="text-align: center">
+                    @if($report[1]['approve_date'] != null && $report[1]['full_name'] != null)
+                        {{
+                            date('m/d/Y', strtotime($report[1]['approve_date']))
+                        }}
+                    @endif
+                </td>
+                <td style="text-align: center">{{ $report[1]['make_type'] }}</td>
+                <td style="text-align: center">
 
-                    @case(1)
+                    @if($report[1]['full_name'] != null)
 
-                    PENDING
-                    @break
+                        @switch($report[1]['status'])
 
-                    @case(2)
+                            @case(1)
 
-                    FOR PAYMENT
-                    @break
+                            PENDING
 
-                    @case(3)
+                            @break
 
-                    FOR APPROVAL
-                    @break
+                            @case(2)
 
-                    @default
+                            FOR PAYMENT
 
-                    APPROVED
+                            @break
 
-                @endswitch
+                            @case(3)
 
-            </td>
-        </tr>
+                            FOR APPROVAL
 
-    @endforeach
+                            @break
+
+                            @case(4)
+
+                            APPROVED
+
+                            @break
+
+                            @default
+
+
+
+                        @endswitch
+
+                    @endif
+
+                </td>
+            </tr>
+
+        @endforeach
 
     </tbody>
 

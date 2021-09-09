@@ -417,29 +417,35 @@ class ReportController extends Controller
 
         if($type == 4)
         {
+            $new_franchise = DB::table('m99')->select('body_number_from', 'body_number_to')->first();
+            $get_body_number_length = strlen($new_franchise->body_number_from);
+            $report = array();
 
 
-            $report = MtopApplication::leftJoin('taxpayer', 'taxpayer.id', 'mtop_applications.taxpayer_id')
-            ->leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
-            ->whereBetween('mtop_applications.transact_date', [$from, $to])
-            ->where('mtop_applications.transact_type', 4)
-            ->where(function($query) use ($barangay_id)
+            for($i = (int)$new_franchise->body_number_from; $i <= (int)$new_franchise->body_number_to; $i++)
             {
-                if($barangay_id !== 'null')
-                {
-                    $query->where('mtop_applications.barangay_id', $barangay_id);
-                }
-            })
-            ->select(
-                'mtop_applications.*',
-                'colhdr.trnx_date',
-                'taxpayer.full_name',
-                'taxpayer.mobile',
-                'taxpayer.address1 as address'
-            )
-            ->orderBy('mtop_applications.body_number')
-            ->get();
 
+                /* adding zeros in the front of the number */
+                $body_number = str_pad($i, $get_body_number_length, '0', STR_PAD_LEFT);
+
+                $data = Tricycle::leftJoin('mtop_applications', 'mtop_applications.id', 'tricycles.mtop_application_id')
+                    ->leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
+                    ->leftJoin('taxpayer', 'taxpayer.id', 'mtop_applications.taxpayer_id')
+                    ->where('tricycles.body_number', $body_number)
+                    ->select(
+                        'tricycles.*',
+                        'mtop_applications.transact_date',
+                        'mtop_applications.approve_date',
+                        'mtop_applications.status',
+                        'colhdr.trnx_date',
+                        'taxpayer.full_name',
+                        'taxpayer.address1 as address',
+                        'taxpayer.mobile'
+                    )
+                    ->first();
+
+                array_push($report, [$body_number,$data]);
+            }
 
         }
 
@@ -463,7 +469,7 @@ class ReportController extends Controller
         $report_title = '';
 
         if($type == 1) {
-            $report_title = 'MTOP_Detailed_Report_Range';
+            $report_title = 'MTOP_Detailed_Report';
         }
 
         if($type == 2) {
@@ -471,11 +477,11 @@ class ReportController extends Controller
         }
 
         if($type == 3) {
-            $report_title = 'New_Franchise_Summary_Per_Month_Range';
+            $report_title = 'New_Franchise_Summary_Per_Month';
         }
 
         if($type == 4) {
-            $report_title = 'New_Franchise_Report_Range';
+            $report_title = 'New_Franchise_Report';
         }
 
 
