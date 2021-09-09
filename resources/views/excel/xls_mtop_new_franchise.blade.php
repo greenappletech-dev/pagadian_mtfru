@@ -47,70 +47,91 @@
 
             <tr>
                 <td style="text-align: center">{{ $report[0] }}</td>
-                <td>{{ $report[1]['full_name'] }}</td>
-                <td>{{ $report[1]['address'] }}</td>
-                <td style="text-align: center">{{ $report[1]['mobile'] }}</td>
-                <td style="text-align: center">
+
+                @if($report[1] != null)
+
+                    <td>
+                        {{ $report[1]['full_name'] }}
+                    </td>
+
+                    <td>
+                        {{ $report[1]['address'] }}
+                    </td>
+
+                    <td style="text-align: center">
+                        {{ $report[1]['mobile'] }}
+                    </td>
+
+                    <td style="text-align: center">
                     @if($report[1]['transact_date'] != null && $report[1]['full_name'] != null)
                         {{
                             date('m/d/Y', strtotime($report[1]['transact_date']))
                         }}
                     @endif
-                </td>
-                <td style="text-align: center">
+                    </td>
+
+                    <td style="text-align: center">
                     @if($report[1]['trnx_date'] != null && $report[1]['full_name'] != null)
                         {{
                             date('m/d/Y', strtotime($report[1]['trnx_date']))
                         }}
                     @endif
-                </td>
-                <td style="text-align: center">
+                    </td>
+
+                    <td style="text-align: center">
                     @if($report[1]['approve_date'] != null && $report[1]['full_name'] != null)
                         {{
                             date('m/d/Y', strtotime($report[1]['approve_date']))
                         }}
                     @endif
-                </td>
-                <td style="text-align: center">{{ $report[1]['make_type'] }}</td>
-                <td style="text-align: center">
+                    </td>
 
-                    @if($report[1]['full_name'] != null)
+                    <td style="text-align: center">
+                        {{ $report[1]['make_type'] }}
+                    </td>
 
-                        @switch($report[1]['status'])
+                    <td style="text-align: center">
 
-                            @case(1)
+                        @if($report[1]['full_name'] != null)
 
-                            PENDING
+                            @switch($report[1]['status'])
 
-                            @break
+                                @case(1)
 
-                            @case(2)
+                                PENDING
 
-                            FOR PAYMENT
+                                @break
 
-                            @break
+                                @case(2)
 
-                            @case(3)
+                                FOR PAYMENT
 
-                            FOR APPROVAL
+                                @break
 
-                            @break
+                                @case(3)
 
-                            @case(4)
+                                FOR APPROVAL
 
-                            APPROVED
+                                @break
 
-                            @break
+                                @case(4)
 
-                            @default
+                                APPROVED
+
+                                @break
+
+                                @default
 
 
 
-                        @endswitch
+                            @endswitch
 
-                    @endif
+                        @endif
 
-                </td>
+                    </td>
+
+                @endif
+
             </tr>
 
         @endforeach

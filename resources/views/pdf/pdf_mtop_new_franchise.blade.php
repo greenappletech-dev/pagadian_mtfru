@@ -137,13 +137,24 @@
             @foreach($generated_report as $report)
 
                 <tr>
-                    <td style="text-align: center">{{ $report[0] }}</td>
+                    <td style="text-align: center">
+                        {{ $report[0] }}
+                    </td>
 
                     @if($report[1] != null)
 
-                        <td>{{ $report[1]['full_name'] }}</td>
-                        <td>{{ $report[1]['address'] }}</td>
-                        <td style="text-align: center">{{ $report[1]['mobile'] }}</td>
+                        <td>
+                            {{ $report[1]['full_name'] }}
+                        </td>
+
+                        <td>
+                            {{ $report[1]['address'] }}
+                        </td>
+
+                        <td style="text-align: center">
+                            {{ $report[1]['mobile'] }}
+                        </td>
+
                         <td style="text-align: center">
                             @if($report[1]['transact_date'] != null && $report[1]['full_name'] != null)
                                 {{
@@ -151,21 +162,27 @@
                                 }}
                             @endif
                         </td>
+
                         <td style="text-align: center">
-                            @if($report[1]['trnx_date'] != null && $report[1]['full_name'] != null)
-                                {{
-                                    date('m/d/Y', strtotime($report[1]['trnx_date']))
-                                }}
-                            @endif
+                        @if($report[1]['trnx_date'] != null && $report[1]['full_name'] != null)
+                            {{
+                                date('m/d/Y', strtotime($report[1]['trnx_date']))
+                            }}
+                        @endif
                         </td>
+
                         <td style="text-align: center">
-                            @if($report[1]['approve_date'] != null && $report[1]['full_name'] != null)
-                                {{
-                                    date('m/d/Y', strtotime($report[1]['approve_date']))
-                                }}
-                            @endif
+                        @if($report[1]['approve_date'] != null && $report[1]['full_name'] != null)
+                            {{
+                                date('m/d/Y', strtotime($report[1]['approve_date']))
+                            }}
+                        @endif
                         </td>
-                        <td style="text-align: center">{{ $report[1]['make_type'] }}</td>
+
+                        <td style="text-align: center">
+                            {{ $report[1]['make_type'] }}
+                        </td>
+
                         <td style="text-align: center">
 
                             @if($report[1]['full_name'] != null)
@@ -207,6 +224,7 @@
                         </td>
 
                     @endif
+
                 </tr>
 
             @endforeach
