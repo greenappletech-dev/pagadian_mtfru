@@ -132,6 +132,8 @@
 
         </thead>
 
+        @dd($generated_report)
+
 
         <tbody>
 
