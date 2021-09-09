@@ -428,9 +428,9 @@ class ReportController extends Controller
                 /* adding zeros in the front of the number */
                 $body_number = str_pad($i, $get_body_number_length, '0', STR_PAD_LEFT);
 
-                $data = Tricycle::leftJoin('mtop_applications', 'mtop_applications.id', 'tricycles.mtop_application_id')
+                $data = Tricycle::leftJoin('mtop_applications', 'mtop_applications.body_number', 'tricycles.body_number')
                     ->leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
-                    ->leftJoin('taxpayer', 'taxpayer.id', 'mtop_applications.taxpayer_id')
+                    ->leftJoin('taxpayer', 'taxpayer.id', 'tricycles.operator_id')
                     ->where('tricycles.body_number', $body_number)
                     ->select(
                         'tricycles.*',

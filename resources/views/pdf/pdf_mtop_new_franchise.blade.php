@@ -141,49 +141,55 @@
                         {{ $report[0] }}
                     </td>
 
-                    @if($report[1] != null)
+                    <td>
+                        {{ $report[1] != null ? $report[1]['full_name'] : ''}}
+                    </td>
 
-                        <td>
-                            {{ $report[1]['full_name'] }}
-                        </td>
+                    <td>
+                        {{ $report[1] != null ? $report[1]['address'] : ''}}
+                    </td>
 
-                        <td>
-                            {{ $report[1]['address'] }}
-                        </td>
+                    <td style="text-align: center">
+                        {{ $report[1] != null ? $report[1]['mobile'] : ''}}
+                    </td>
 
-                        <td style="text-align: center">
-                            {{ $report[1]['mobile'] }}
-                        </td>
-
-                        <td style="text-align: center">
-                            @if($report[1]['transact_date'] != null && $report[1]['full_name'] != null)
-                                {{
-                                    date('m/d/Y', strtotime($report[1]['transact_date']))
-                                }}
-                            @endif
-                        </td>
-
-                        <td style="text-align: center">
-                        @if($report[1]['trnx_date'] != null && $report[1]['full_name'] != null)
+                    <td style="text-align: center">
+                        @if($report[1] != null && $report[1]['transact_date'] != null)
                             {{
-                                date('m/d/Y', strtotime($report[1]['trnx_date']))
+                                $report[1]['full_name'] != null
+                                ? date('m/d/Y', strtotime($report[1]['transact_date']))
+                                : ''
                             }}
                         @endif
-                        </td>
+                    </td>
 
-                        <td style="text-align: center">
-                        @if($report[1]['approve_date'] != null && $report[1]['full_name'] != null)
+                    <td style="text-align: center">
+                        @if($report[1] != null && $report[1]['trnx_date'] != null)
                             {{
-                                date('m/d/Y', strtotime($report[1]['approve_date']))
+                                $report[1]['full_name'] != null
+                                ? date('m/d/Y', strtotime($report[1]['trnx_date']))
+                                : ''
                             }}
                         @endif
-                        </td>
+                    </td>
 
-                        <td style="text-align: center">
-                            {{ $report[1]['make_type'] }}
-                        </td>
+                    <td style="text-align: center">
+                        @if($report[1] != null && $report[1]['approve_date'] != null)
+                            {{
+                                $report[1]['full_name'] != null
+                                ? date('m/d/Y', strtotime($report[1]['approve_date']))
+                                : ''
+                            }}
+                        @endif
+                    </td>
 
-                        <td style="text-align: center">
+                    <td style="text-align: center">
+                         {{ $report[1] != null ? $report[1]['make_type'] : ''}}
+                    </td>
+
+                    <td style="text-align: center">
+
+                        @if($report[1] != null)
 
                             @if($report[1]['full_name'] != null)
 
@@ -215,15 +221,13 @@
 
                                     @default
 
-
-
                                 @endswitch
 
                             @endif
 
-                        </td>
+                        @endif
 
-                    @endif
+                    </td>
 
                 </tr>
 
