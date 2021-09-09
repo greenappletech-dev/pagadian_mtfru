@@ -138,70 +138,75 @@
 
                 <tr>
                     <td style="text-align: center">{{ $report[0] }}</td>
-                    <td>{{ $report[1]['full_name'] }}</td>
-                    <td>{{ $report[1]['address'] }}</td>
-                    <td style="text-align: center">{{ $report[1]['mobile'] }}</td>
-                    <td style="text-align: center">
-                        @if($report[1]['transact_date'] != null && $report[1]['full_name'] != null)
-                        {{
-                            date('m/d/Y', strtotime($report[1]['transact_date']))
-                        }}
-                        @endif
-                    </td>
-                    <td style="text-align: center">
-                        @if($report[1]['trnx_date'] != null && $report[1]['full_name'] != null)
-                        {{
-                            date('m/d/Y', strtotime($report[1]['trnx_date']))
-                        }}
-                        @endif
-                    </td>
-                    <td style="text-align: center">
-                        @if($report[1]['approve_date'] != null && $report[1]['full_name'] != null)
-                        {{
-                            date('m/d/Y', strtotime($report[1]['approve_date']))
-                        }}
-                        @endif
-                   </td>
-                    <td style="text-align: center">{{ $report[1]['make_type'] }}</td>
-                    <td style="text-align: center">
 
-                        @if($report[1]['full_name'] != null)
+                    @if($report[1] != null)
 
-                            @switch($report[1]['status'])
+                        <td>{{ $report[1]['full_name'] }}</td>
+                        <td>{{ $report[1]['address'] }}</td>
+                        <td style="text-align: center">{{ $report[1]['mobile'] }}</td>
+                        <td style="text-align: center">
+                            @if($report[1]['transact_date'] != null && $report[1]['full_name'] != null)
+                                {{
+                                    date('m/d/Y', strtotime($report[1]['transact_date']))
+                                }}
+                            @endif
+                        </td>
+                        <td style="text-align: center">
+                            @if($report[1]['trnx_date'] != null && $report[1]['full_name'] != null)
+                                {{
+                                    date('m/d/Y', strtotime($report[1]['trnx_date']))
+                                }}
+                            @endif
+                        </td>
+                        <td style="text-align: center">
+                            @if($report[1]['approve_date'] != null && $report[1]['full_name'] != null)
+                                {{
+                                    date('m/d/Y', strtotime($report[1]['approve_date']))
+                                }}
+                            @endif
+                        </td>
+                        <td style="text-align: center">{{ $report[1]['make_type'] }}</td>
+                        <td style="text-align: center">
 
-                                @case(1)
+                            @if($report[1]['full_name'] != null)
+
+                                @switch($report[1]['status'])
+
+                                    @case(1)
 
                                     PENDING
 
-                                @break
+                                    @break
 
-                                @case(2)
+                                    @case(2)
 
                                     FOR PAYMENT
 
-                                @break
+                                    @break
 
-                                @case(3)
+                                    @case(3)
 
                                     FOR APPROVAL
 
-                                @break
+                                    @break
 
-                                @case(4)
+                                    @case(4)
 
                                     APPROVED
 
-                                @break
+                                    @break
 
-                                @default
+                                    @default
 
 
 
-                            @endswitch
+                                @endswitch
 
-                        @endif
+                            @endif
 
-                    </td>
+                        </td>
+
+                    @endif
                 </tr>
 
             @endforeach
