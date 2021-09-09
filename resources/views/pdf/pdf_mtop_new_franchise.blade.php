@@ -132,9 +132,6 @@
 
         </thead>
 
-        @dd($generated_report)
-
-
         <tbody>
 
             @foreach($generated_report as $report)
