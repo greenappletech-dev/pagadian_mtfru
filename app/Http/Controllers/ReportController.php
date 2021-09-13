@@ -7,8 +7,8 @@ use App\Exports\MTOPReportExport;
 use App\Models\Barangay;
 use App\Models\MtopApplication;
 use App\Models\Tricycle;
-use DateTime;
 use Illuminate\Support\Facades\DB;
+use DateTime;
 use Excel;
 
 class ReportController extends Controller
@@ -313,31 +313,15 @@ class ReportController extends Controller
         if($type == 3)
         {
 
-            $month = '';
-            $application = 0;
-            $payment = 0;
-            $pending = 0;
-            $completed = 0;
-            $count = 0;
-            $to = date('Y-m-d H:i:s', strtotime($to . ' +1 day'));
-            $start_date = new DateTime($from);
-            $end_date = new DateTime($to);
-            $interval = \DateInterval::createFromDateString('+1 day');
-            $dates = new \DatePeriod($start_date, $interval, $end_date);
-            $date_difference = abs(strtotime($from) - strtotime($to)); /* create this computation go get the last count of the array */
-            $date_difference = $date_difference / (60 * 60 * 24);
-
-            foreach ($dates as $date)
-            {
-
-                if($count == 0)
-                {
-                    $month = $date->format('F');
-                }
+            $report = array();
 
 
-                $application += MtopApplication::where('transact_date', $date)
-                ->where('transact_type', 4)
+            $new_franchise = DB::table('m99')->select('body_number_from', 'body_number_to')->first();
+
+
+            $application = MtopApplication::whereBetween('body_number', [$new_franchise->body_number_from, $new_franchise->body_number_to])
+                ->whereBetween('transact_date', [$from, $to])
+                ->where('mtop_applications.transact_type', 4)
                 ->where(function($query) use ($barangay_id)
                 {
                     if($barangay_id !== 'null')
@@ -345,14 +329,20 @@ class ReportController extends Controller
                         $query->where('mtop_applications.barangay_id', $barangay_id);
                     }
                 })
-                ->count();
+                ->select(
+                    DB::raw("date_trunc('month', transact_date) as month"),
+                    DB::raw("count(*) as total")
+                )
+                ->groupBy('month')
+                ->get();
 
 
 
-                $payment += MtopApplication::leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
-                ->where('colhdr.trnx_date', $date)
-                ->where('colhdr.mtop_application_id', '>', 0)
-                ->where('transact_type', 4)
+
+            $payment = MtopApplication::leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
+                ->whereBetween('colhdr.trnx_date', [$from, $to])
+                ->whereBetween('mtop_applications.body_number', [$new_franchise->body_number_from, $new_franchise->body_number_to])
+                ->where('mtop_applications.transact_type', 4)
                 ->where(function($query) use ($barangay_id)
                 {
                     if($barangay_id !== 'null')
@@ -360,10 +350,16 @@ class ReportController extends Controller
                         $query->where('mtop_applications.barangay_id', $barangay_id);
                     }
                 })
-                ->count();
+                ->select(
+                    DB::raw("date_trunc('month', colhdr.trnx_date) as month"),
+                    DB::raw("count(*) as total")
+                )
+                ->groupBy('month', 'body_number')
+                ->get();
 
 
-                $pending += MtopApplication::where('transact_date', $date)
+            $pending = MtopApplication::whereBetween('transact_date', [$from, $to])
+                ->whereBetween('body_number', [$new_franchise->body_number_from, $new_franchise->body_number_to])
                 ->whereIn('status', [1,2])
                 ->where('transact_type', 4)
                 ->where(function($query) use ($barangay_id)
@@ -373,12 +369,17 @@ class ReportController extends Controller
                         $query->where('mtop_applications.barangay_id', $barangay_id);
                     }
                 })
-                ->count();
+                ->select(
+                    DB::raw("date_trunc('month', transact_date) as month"),
+                    DB::raw("count(*) as total")
+                )
+                ->groupBy('month')
+                ->get();
 
 
-
-                $completed += MtopApplication::where('approve_date', $date)
+            $completed = MtopApplication::whereBetween('approve_date', [$from, $to])
                 ->where('status', 4)
+                ->whereBetween('body_number', [$new_franchise->body_number_from, $new_franchise->body_number_to])
                 ->where('transact_type', 4)
                 ->where(function($query) use ($barangay_id)
                 {
@@ -387,25 +388,67 @@ class ReportController extends Controller
                         $query->where('mtop_applications.barangay_id', $barangay_id);
                     }
                 })
-                ->count();
+                ->select(
+                    DB::raw("date_trunc('month', approve_date) as month"),
+                    DB::raw("count(*) as total")
+                )
+                ->groupBy('month')
+                ->get();
 
-                $count++;
+            /* change both filter dates to the beginning day of the month */
 
-                if($month != $date->format('F'))
-                {
-                    array_push($report, [$month, $application, $payment, $pending, $completed]);
-                    $application = $payment = $pending = $completed = 0;
-                    $month = $date->format('F');
-                }
 
-                if($count == $date_difference)
-                {
-                    array_push($report, [$month, $application, $payment, $pending, $completed]);
-                    $application = $payment = $pending = $completed = 0;
-                }
 
+            $start_date = new DateTime(date('Y-m-01', strtotime($from)));
+            $end_date = new DateTime(date('Y-m-01', strtotime("+1 month" . $to)));
+            $interval = \DateInterval::createFromDateString('1 month');
+            $dates = new \DatePeriod($start_date, $interval, $end_date);
+
+
+            $total = 0;
+
+
+
+            foreach($dates as $date)
+            {
+
+
+                $application_key = $application->search(function($item, $key) use ($date) {
+                    if(date('m', strtotime($item->month)) == $date->format('m')) {
+                        return;
+                    }
+                });
+
+
+                $payment_key = $payment->search(function($item, $key) use ($date) {
+                    if(date('m', strtotime($item->month)) == $date->format('m')) {
+                        return;
+                    }
+                });
+
+                $pending_key = $pending->search(function($item, $key) use ($date) {
+                    if(date('m', strtotime($item->month)) == $date->format('m')) {
+                        return;
+                    }
+                });
+
+
+                $completed_key = $completed->search(function($item, $key) use ($date) {
+                    return date('m-Y', strtotime($item->month)) == $date->format('m-Y');
+                });
+
+                array_push($report,
+                    [
+                        $date->format('F'),
+                        $application_key === false ? 0 : $application[$application_key]->total,
+                        $payment_key === false ? 0 : $payment[$payment_key]->total,
+                        $pending_key === false ? 0 : $pending[$pending_key]->total,
+                        $completed_key === false ? 0 : $completed[$completed_key]->total,
+                    ]
+                );
             }
 
+            return $report;
         }
 
         /* END */

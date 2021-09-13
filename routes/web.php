@@ -45,6 +45,9 @@ Route::group(['middleware'=> 'auth'], function() {
         /* Home Route */
         Route::get('/',[HomeController::class, 'index']);
         Route::get('/home',[HomeController::class, 'index']);
+        Route::get('home/transactioncount/{month}',[HomeController::class, 'transactioncount']);
+        Route::get('home/monthlyrevenue/{year}',[HomeController::class, 'monthlyrevenue']);
+        Route::get('home/dailytransactions/{month}',[HomeController::class, 'dailytransaction']);
 
         /* Log out */
         Route::get('/logout', '\App\Http\Controllers\Auth\LoginController@logout');

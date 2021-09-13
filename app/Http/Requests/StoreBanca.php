@@ -36,5 +36,9 @@ class StoreBanca extends FormRequest
         }
 
         return $rules;
+
+
+
+
     }
 }

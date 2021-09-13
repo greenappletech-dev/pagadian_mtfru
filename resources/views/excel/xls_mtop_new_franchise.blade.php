@@ -46,7 +46,7 @@
 
             <tr>
                 <td style="text-align: center">
-                    {{ $report[0] }}
+                {{ $report[0] }}
                 </td>
 
                 <td>

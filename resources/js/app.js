@@ -8,11 +8,70 @@
 require('./bootstrap');
 
 window.Vue = require('vue').default;
-
-import moment from "moment";
 window.moment = moment;
 
+import moment from "moment";
 import { ClientTable } from 'vue-tables-2';
+import Vue from 'vue'
+
+import {
+    Chart,
+    ArcElement,
+    LineElement,
+    BarElement,
+    PointElement,
+    BarController,
+    BubbleController,
+    DoughnutController,
+    LineController,
+    PieController,
+    PolarAreaController,
+    RadarController,
+    ScatterController,
+    CategoryScale,
+    LinearScale,
+    LogarithmicScale,
+    RadialLinearScale,
+    TimeScale,
+    TimeSeriesScale,
+    Decimation,
+    Filler,
+    Legend,
+    Title,
+    Tooltip,
+    SubTitle
+} from 'chart.js';
+
+Chart.register(
+    ArcElement,
+    LineElement,
+    BarElement,
+    PointElement,
+    BarController,
+    BubbleController,
+    DoughnutController,
+    LineController,
+    PieController,
+    PolarAreaController,
+    RadarController,
+    ScatterController,
+    CategoryScale,
+    LinearScale,
+    LogarithmicScale,
+    RadialLinearScale,
+    TimeScale,
+    TimeSeriesScale,
+    Decimation,
+    Filler,
+    Legend,
+    Title,
+    Tooltip,
+    SubTitle
+);
+
+import Chartkick from 'vue-chartkick';
+
+Vue.use(Chartkick.use(Chart))
 Vue.use(ClientTable, {}, false, 'bootstrap4')
 
 /**
