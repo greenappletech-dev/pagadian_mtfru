@@ -574,11 +574,6 @@ class ReportController extends Controller
         $pdf = \App::make('dompdf.wrapper');
         $pdf->getDomPDF()->set_option("enable_php", true);
         $pdf->loadView($blade, compact('generated_report', 'from', 'to', 'barangay'))->setPaper($size, $orientation);
-
-
-
-
-
         return $pdf->stream();
     }
 

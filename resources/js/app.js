@@ -117,6 +117,10 @@ Vue.component('fvr_view_renewal-component', require('./components/FVRViewRenewal
 Vue.component('fvr_renewal-component', require('./components/FVRRenewalComponent.vue').default);
 Vue.component('boat_type-component', require('./components/BoatTypeComponent.vue').default);
 
+/* FVR REPORT */
+Vue.component('fvr_report-component', require('./components/FVRReportComponent.vue').default);
+
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

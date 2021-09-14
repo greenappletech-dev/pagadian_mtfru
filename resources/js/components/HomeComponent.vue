@@ -190,7 +190,7 @@
                     <div class="card container-fluid">
 
                         <div class="card-header" style="width: 100%">
-                            <h3 style="font-size: 16px; padding: 0; margin: 0">MTOP Monthy Revenue</h3>
+                            <h3 style="font-size: 16px; padding: 0; margin: 0">FVR Monthy Revenue</h3>
                         </div>
 
                         <div class="card-body">

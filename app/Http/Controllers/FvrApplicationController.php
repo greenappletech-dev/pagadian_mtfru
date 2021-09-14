@@ -180,16 +180,24 @@ class FvrApplicationController extends Controller
 
         $transaction_type = [];
 
-        if($request->renewal) {
-            array_push($transaction_type, 1);
-        }
+        $check_if_new = Banca::where('id', $request->banca_id)->whereNotNull('fvr_application_id')->count();
 
-        if($request->dropping) {
-            array_push($transaction_type, 2);
+        if(!$check_if_new) {
+            array_push($transaction_type, 4);
         }
+        else
+        {
+            if($request->renewal) {
+                array_push($transaction_type, 1);
+            }
 
-        if($request->change_unit) {
-            array_push($transaction_type, 3);
+            if($request->dropping) {
+                array_push($transaction_type, 2);
+            }
+
+            if($request->change_unit) {
+                array_push($transaction_type, 3);
+            }
         }
 
         DB::beginTransaction();
@@ -355,16 +363,24 @@ class FvrApplicationController extends Controller
     public function update(StoreFVRApplication $request) {
         $transaction_type = [];
 
-        if($request->renewal) {
-            array_push($transaction_type, 1);
-        }
+        $check_if_new = Banca::where('id', $request->banca_id)->whereNotNull('fvr_application_id')->count();
 
-        if($request->dropping) {
-            array_push($transaction_type, 2);
+        if(!$check_if_new) {
+            array_push($transaction_type, 4);
         }
+        else
+        {
+            if($request->renewal) {
+                array_push($transaction_type, 1);
+            }
 
-        if($request->change_unit) {
-            array_push($transaction_type, 3);
+            if($request->dropping) {
+                array_push($transaction_type, 2);
+            }
+
+            if($request->change_unit) {
+                array_push($transaction_type, 3);
+            }
         }
 
         DB::beginTransaction();
@@ -575,37 +591,7 @@ class FvrApplicationController extends Controller
         $license_number = implode('-', $arr_body_number);
 
 
-        /* get transaction type */
-
-        $transactions = explode(',' , $fvr_application->transact_type);
-        $transaction_type = [];
-
-
-        if(array_search(1,$transactions) !== false) {
-
-           /* check if the body_number has a previous application */
-
-           $check_previous = FvrApplication::where('banca_id', $fvr_application->banca_id)->where('id', '<', $id)->count();
-
-           if($check_previous === 0) {
-               array_push($transaction_type, 'NEW');
-           } else {
-               array_push($transaction_type, 'RENEWAL');
-           }
-
-        }
-
-        if(array_search(2,$transactions) !== false) {
-            array_push($transaction_type, 'DROPPING');
-        }
-
-        if(array_search(3,$transactions) !== false) {
-            array_push($transaction_type, 'CHANGE UNIT');
-        }
-
-
-        $transaction_type = implode(' - ', $transaction_type);
-
+        $transaction_type = $this->fvr_application->transactionType($fvr_application->transact_type);
 
         /* GET AGE */
 

@@ -327,7 +327,12 @@ return [
             'text'    => 'FVR',
             'icon'    => 'far fa-folder-open',
             'submenu' => [
-
+                [
+                    'text' => 'Report',
+                    'icon' => 'far fa-file-alt',
+                    'url'  => '/fvr_report',
+                    'role' => ''
+                ],
             ]
         ],
         ['header' => 'System'],

@@ -18,5 +18,4 @@ class Barangay extends Model
     public function fetchDataById($id) {
         return Barangay::where('id', $id)->first();
     }
-
 }

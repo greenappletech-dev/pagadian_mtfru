@@ -132,4 +132,29 @@ class FvrApplication extends Model
             ->where('bancas.fvr_application_id' , '<>' , null)
             ->get();
     }
+
+    public function transactionType($transaction_type) {
+        /* get transaction type */
+
+        $transactions = explode(',' , $transaction_type);
+        $transaction_type = [];
+
+        if(array_search(4,$transactions) !== false) {
+            array_push($transaction_type, 'NEW');
+        }
+
+        if(array_search(1,$transactions) !== false) {
+            array_push($transaction_type, 'RENEWAL');
+        }
+
+        if(array_search(2,$transactions) !== false) {
+            array_push($transaction_type, 'DROPPING');
+        }
+
+        if(array_search(3,$transactions) !== false) {
+            array_push($transaction_type, 'CHANGE UNIT');
+        }
+
+       return implode(' - ', $transaction_type);
+    }
 }
