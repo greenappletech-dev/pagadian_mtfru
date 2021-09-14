@@ -49,6 +49,11 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('home/monthlyrevenue/{year}',[HomeController::class, 'monthlyrevenue']);
         Route::get('home/dailytransactions/{month}',[HomeController::class, 'dailytransaction']);
 
+        /* FVR Home Route */
+        Route::get('home/fvrtransactioncount/{month}',[HomeController::class, 'fvrtransactioncount']);
+        Route::get('home/fvrmonthlyrevenue/{year}',[HomeController::class, 'fvrmonthlyrevenue']);
+        Route::get('home/fvrdailytransactions/{month}',[HomeController::class, 'fvrdailytransaction']);
+
         /* Log out */
         Route::get('/logout', '\App\Http\Controllers\Auth\LoginController@logout');
 
