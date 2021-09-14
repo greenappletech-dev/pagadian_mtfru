@@ -12,6 +12,7 @@ use App\Models\Charge;
 use App\Models\FvrApplication;
 use App\Models\FvrApplicationAuxiliaryEngine;
 use App\Models\FvrApplicationCharge;
+use App\Models\FvrCharges;
 use App\Models\OperatorImage;
 use App\Models\Taxpayer;
 use Carbon\Carbon;
@@ -46,7 +47,7 @@ class FvrApplicationController extends Controller
         $this->auxiliary_engine = new AuxiliaryEngine();
         $this->fvr_application_auxiliary_engine = new FvrApplicationAuxiliaryEngine();
         $this->fvr_application_charges = new FvrApplicationCharge();
-        $this->charges = new Charge();
+        $this->charges = new FvrCharges();
         $this->boat_captain = new BoatCaptain();
         $this->operator_img = new OperatorImage();
     }
