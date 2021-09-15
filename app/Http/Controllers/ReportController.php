@@ -354,7 +354,7 @@ class ReportController extends Controller
                     DB::raw("date_trunc('month', colhdr.trnx_date) as month"),
                     DB::raw("count(*) as total")
                 )
-                ->groupBy('month', 'body_number')
+                ->groupBy('month')
                 ->get();
 
 
@@ -405,31 +405,21 @@ class ReportController extends Controller
             $dates = new \DatePeriod($start_date, $interval, $end_date);
 
 
-            $total = 0;
-
-
-
             foreach($dates as $date)
             {
 
 
                 $application_key = $application->search(function($item, $key) use ($date) {
-                    if(date('m', strtotime($item->month)) == $date->format('m')) {
-                        return;
-                    }
+                    return date('m-Y', strtotime($item->month)) == $date->format('m-Y');
                 });
 
 
                 $payment_key = $payment->search(function($item, $key) use ($date) {
-                    if(date('m', strtotime($item->month)) == $date->format('m')) {
-                        return;
-                    }
+                    return date('m-Y', strtotime($item->month)) == $date->format('m-Y');
                 });
 
                 $pending_key = $pending->search(function($item, $key) use ($date) {
-                    if(date('m', strtotime($item->month)) == $date->format('m')) {
-                        return;
-                    }
+                    return date('m-Y', strtotime($item->month)) == $date->format('m-Y');
                 });
 
 
