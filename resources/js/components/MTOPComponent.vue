@@ -99,6 +99,7 @@
                                 <button v-on:click="openModalToPrint(row.application_id, row.status)" class="btn btn-primary d-inline-block"><i class="fas fa-print mr-1"></i> Print</button>
                                 <button v-if="row.status !== 4" v-on:click="openToEdit(row.application_id)" class="btn btn-success d-inline-block"><i class="fas fa-edit mr-1"></i> Edit</button>
                                 <button v-if="row.status !== 4" v-on:click="destroyRecord(row.application_id)" class="btn btn-danger d-inline-block"><i class="fas fa-trash mr-1"></i>Delete</button>
+                                <button v-if="row.status === 4 && row.transact_type === '3'" v-on:click="openModalToEditValidity(row.application_id)" class="btn btn-info d-inline-block"><i class="fas fa-edit mr-1"></i> Change Validity Date</button>
                             </span>
                         </v-client-table>
                     </div>
@@ -126,34 +127,50 @@
                             </ul>
                         </div>
 
-                        <div class="form-group" v-if="print">
-                            <label for="forms">Select Form:</label>
-                            <select id="forms" class="form-control" v-model="formToPrint">
-                                <option value="1">MTFRB APPLICATION FORM</option>
-                                <option value="3">RECEIPT OF APPLICATION</option>
-                                <option value="4">MOTORIZED TRICYCLE OPERATOR'S PERMIT</option>
-                            </select>
+
+                        <div class="" v-if="validity_update">
+                            <label for="validity_date">Validity Date</label>
+                            <input type="date" id="validity_date" class="form-control" v-model="validityDateValue">
                         </div>
 
-                        <div class="form-group" v-else>
-                            <label for="paper-size">Paper Size</label>
-                            <select id="paper-size" class="form-control" v-model="paperSize">
-                                <option>Letter</option>
-                                <option>Legal</option>
-                                <option>A4</option>
-                            </select>
 
-                            <label for="paper-orientation">Orientation</label>
-                            <select id="paper-orientation" class="form-control" v-model="paperOrientation">
-                                <option>Portrait</option>
-                                <option>Landscape</option>
-                            </select>
+                        <div v-else>
+
+                            <div class="form-group" v-if="print">
+                                <label for="forms">Select Form:</label>
+                                <select id="forms" class="form-control" v-model="formToPrint">
+                                    <option value="1">MTFRB APPLICATION FORM</option>
+                                    <option value="3">RECEIPT OF APPLICATION</option>
+                                    <option value="4">MOTORIZED TRICYCLE OPERATOR'S PERMIT</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" v-else>
+                                <label for="paper-size">Paper Size</label>
+                                <select id="paper-size" class="form-control" v-model="paperSize">
+                                    <option>Letter</option>
+                                    <option>Legal</option>
+                                    <option>A4</option>
+                                </select>
+
+                                <label for="paper-orientation">Orientation</label>
+                                <select id="paper-orientation" class="form-control" v-model="paperOrientation">
+                                    <option>Portrait</option>
+                                    <option>Landscape</option>
+                                </select>
+                            </div>
+
                         </div>
 
                     </div>
                     <div class="modal-footer">
-                        <button v-if="print" @click="printApplicationForm" type="button" class="rounded pl-3 pr-3 pt-2 pb-2 border-0" style="width: 100px; font-size: 14px; background: #1abc9c; color: #fff;">Print</button>
-                        <button v-else @click="printReport" type="button" class="rounded pl-3 pr-3 pt-2 pb-2 border-0" style="width: 100px; font-size: 14px; background: #1abc9c; color: #fff;">Print</button>
+
+                        <button v-if="validity_update" @click="updateValidity" type="button" class="rounded pl-3 pr-3 pt-2 pb-2 border-0" style="width: 100px; font-size: 14px; background: #1abc9c; color: #fff;">Update</button>
+
+                        <div v-else>
+                            <button v-if="print" @click="printApplicationForm" type="button" class="rounded pl-3 pr-3 pt-2 pb-2 border-0" style="width: 100px; font-size: 14px; background: #1abc9c; color: #fff;">Print</button>
+                            <button v-else @click="printReport" type="button" class="rounded pl-3 pr-3 pt-2 pb-2 border-0" style="width: 100px; font-size: 14px; background: #1abc9c; color: #fff;">Print</button>
+                        </div>
                         <button type="button" data-dismiss="modal" class="rounded pl-3 pr-3 pt-2 pb-2 border-0" style="width: 100px; font-size: 14px; background: #e74c3c; color: #fff;">Discard</button>
                     </div>
                 </div>
@@ -229,6 +246,7 @@ export default {
             plateNoValue: null,
             searchedValue: null,
             formToPrint: null,
+            validityDateValue: null,
             barangayCodeValue: '',
             statusValue: '',
 
@@ -241,6 +259,7 @@ export default {
             loader: false,
             adding: false,
             print: false,
+            validity_update: false,
             paperSize: 'Letter',
             paperOrientation: 'Portrait',
         }
@@ -308,13 +327,43 @@ export default {
             this.statusValue = status;
             this.applicationIdValue = id;
             this.print = true;
+            this.validity_update = false;
             this.errors = [];
             $('#print-modal').modal('show');
         },
 
         openModalToPrintReport() {
             this.print = false;
+            this.validity_update = false;
             $('#print-modal').modal('show');
+        },
+
+        openModalToEditValidity(id) {
+            this.validity_update = true;
+            this.applicationIdValue = id;
+            $('#print-modal').modal('show');
+        },
+
+        updateValidity() {
+            this.loader = true;
+            axios.patch('mtop/validity_date', {
+                id              :   this.applicationIdValue,
+                validity_date   :   this.validityDateValue
+            })
+            .then(response => {
+                this.suc = true;
+                this.suc_msg = response.data.message;
+            })
+            .catch(error => {
+                this.err = true;
+                this.err_msg = error.response.data.err_msg;
+            })
+            .finally(
+                ()=> this.loader = false
+            )
+
+            this.validity_update = false;
+            $('#print-modal').modal('hide');
         },
 
         printReport() {

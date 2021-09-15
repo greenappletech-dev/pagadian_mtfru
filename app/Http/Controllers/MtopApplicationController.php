@@ -345,6 +345,14 @@ class MtopApplicationController extends Controller
         return $this->updateDBValues($request,$mtop_application, 'Application Successfully Updated!');
     }
 
+    public function update_validity(Request $request) {
+        $mtop_application = MtopApplication::where('id', $request->id)->first();
+        $mtop_application->validity_date = $request->validity_date;
+        return $mtop_application->save()
+            ? response()->json(['message' => 'Validity Date Successfully Updated!'], 200)
+            : response()->json(['err_msg' => 'Failed to Save!'], 401);
+    }
+
 
     /* END OF MTOP UPDATE */
 

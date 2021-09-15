@@ -90,6 +90,7 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('mtop/pdf/{size}/{orientation}/{from}/{to}/{barangay_id}', [MtopApplicationController::class, 'pdf']);
         Route::get('mtop/destroy/{id}', [MtopApplicationController::class, 'destroy']);
         Route::patch('mtop/approve/{id}/{type}', [MtopApplicationController::class, 'approve']);
+        Route::patch('mtop/validity_date', [MtopApplicationController::class,'update_validity']);
 
         /* MTOP Entry */
         Route::get('mtop_entry/renew/{id}', [MtopApplicationController::class, 'renew']);
