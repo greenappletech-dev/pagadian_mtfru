@@ -197,7 +197,7 @@
 
     .cert_numbers .table-2 {
         position: absolute;
-        top: 465px;
+        top: 455px;
         left: 64px;
         width: 589px;
         font-size: 13px;
@@ -1013,8 +1013,8 @@
 
             <table class="table-2">
                 <tr>
-                    <th width="50%">{{ $data[0]['full_name'] }}</th>
-                    <th width="50%">{{ $data[0]['address'] }}</th>
+                    <th style="width: 50%">{{ $data[0]['full_name'] }}</th>
+                    <th style="width: 50%">{{ $data[0]['address'] }}</th>
                 </tr>
             </table>
 
