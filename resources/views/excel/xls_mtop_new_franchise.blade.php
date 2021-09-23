@@ -14,6 +14,22 @@
         border: 1px solid #000;
     }
 
+    table thead tr th:nth-child(2),
+    :nth-child(3),
+    :nth-child(4)
+    {
+        text-align: left;
+    }
+
+    table tbody tr td:nth-child(3),
+    table tbody tr td:nth-child(5),
+    table tbody tr td:nth-child(6),
+    table tbody tr td:nth-child(7),
+    table tbody tr td:nth-child(8),
+    table tbody tr td:nth-child(9) {
+        text-align: center;
+    }
+
 </style>
 
 <body>
@@ -23,120 +39,39 @@
     <thead>
 
             <tr>
-                <th style="font-weight: bold">{{ 'As of: ' . date('F d, Y') }}</th>
+                <th style="font-weight: bold">{{ 'FROM: ' . date('m/d/Y', strtotime($from)) . ' TO: ' . date('m/d/Y', strtotime($to)) }}</th>
             </tr>
 
             <tr>
-                <th style="width: 9%">SIDECAR #</th>
-                <th style="width: 15%;">OPERATOR</th>
+                <th>SIDECAR NUMBER</th>
+                <th>OPERATOR</th>
                 <th>ADDRESS</th>
-                <th style="width: 10%;">CONTACT #</th>
-                <th style="width: 7%;">DATE APPLY</th>
-                <th style="width: 8%;">DATE OF PAYMENT</th>
-                <th style="width: 8%;">DATE COMPLETED</th>
-                <th style="width: 10%;">MAKE/TYPE</th>
-                <th style="width: 8%;">REMARKS</th>
+                <th>CONTACT #</th>
+                <th>DATE ISSUED</th>
+                <th>DATE APPLY</th>
+                <th>DATE OF PAYMENT</th>
+                <th>DATE COMPLETED</th>
+                <th>MAKE/TYPE</th>
+                <th>REMARKS</th>
             </tr>
 
     </thead>
 
     <tbody>
 
-        @foreach($array as $report)
+        @foreach($array['report'] as $key=>$value)
 
             <tr>
-                <td style="text-align: center">
-                {{ $report[0] }}
-                </td>
-
-                <td>
-                    {{ $report[1] != null ? $report[1]['full_name'] : ''}}
-                </td>
-
-                <td>
-                    {{ $report[1] != null ? $report[1]['address'] : ''}}
-                </td>
-
-                <td style="text-align: center">
-                    {{ $report[1] != null ? $report[1]['mobile'] : ''}}
-                </td>
-
-                <td style="text-align: center">
-                    @if($report[1] != null && $report[1]['transact_date'] != null)
-                        {{
-                            $report[1]['full_name'] != null
-                            ? date('m/d/Y', strtotime($report[1]['transact_date']))
-                            : ''
-                        }}
-                    @endif
-                </td>
-
-                <td style="text-align: center">
-                    @if($report[1] != null && $report[1]['trnx_date'] != null)
-                        {{
-                            $report[1]['full_name'] != null
-                            ? date('m/d/Y', strtotime($report[1]['trnx_date']))
-                            : ''
-                        }}
-                    @endif
-                </td>
-
-                <td style="text-align: center">
-                    @if($report[1] != null && $report[1]['approve_date'] != null)
-                        {{
-                            $report[1]['full_name'] != null
-                            ? date('m/d/Y', strtotime($report[1]['approve_date']))
-                            : ''
-                        }}
-                    @endif
-                </td>
-
-                <td style="text-align: center">
-                    {{ $report[1] != null ? $report[1]['make_type'] : ''}}
-                </td>
-
-                <td style="text-align: center">
-
-                    @if($report[1] != null)
-
-                        @if($report[1]['full_name'] != null)
-
-                            @switch($report[1]['status'])
-
-                                @case(1)
-
-                                PENDING
-
-                                @break
-
-                                @case(2)
-
-                                FOR PAYMENT
-
-                                @break
-
-                                @case(3)
-
-                                FOR APPROVAL
-
-                                @break
-
-                                @case(4)
-
-                                APPROVED
-
-                                @break
-
-                                @default
-
-                            @endswitch
-
-                        @endif
-
-                    @endif
-
-                </td>
-
+                <td>{{ $key }}</td>
+                <td>{{ $value['full_name'] }}</td>
+                <td>{{ $value['address'] }}</td>
+                <td>{{ $value['mobile'] }}</td>
+                <td>{{ $value['date_issued'] }}</td>
+                <td>{{ $value['transact_date'] }}</td>
+                <td>{{ $value['payment_date'] }}</td>
+                <td>{{ $value['approve_date'] }}</td>
+                <td>{{ $value['make_type'] }}</td>
+                <td>{{ $value['status'] }}</td>
             </tr>
 
         @endforeach

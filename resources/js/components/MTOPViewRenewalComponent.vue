@@ -126,7 +126,7 @@ export default {
                     amount: 'Amount',
                     action: 'Action',
                 },
-                sortable: ['mtfrb_case_no', 'transact_date'],
+                sortable: ['mtfrb_case_no', 'make_type'],
                 filterable: ['mtfrb_case_no', 'body_number'],
                 templates: {
                     hol_date: function(h, row) {

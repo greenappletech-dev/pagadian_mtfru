@@ -166,20 +166,18 @@ class MTOPReportExport implements FromView, WithStyles, WithColumnFormatting
 
             foreach($cells as $cell)
             {
-
                 $sheet->getColumnDimension($cell)
                 ->setAutoSize('true');
             }
 
-            $sheet->getStyle('A1:I1')
+            $sheet->getStyle('A1:J1')
             ->getFont()
             ->setBold(true);
 
-            $sheet->getStyle('A2:I2')
+            $sheet->getStyle('A2:J2')
             ->getFont()
             ->setBold(true);
         }
-
     }
 
     public function columnFormats(): array

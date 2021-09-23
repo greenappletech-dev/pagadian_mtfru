@@ -678,7 +678,7 @@ export default {
                     price: 'Price',
                     action: 'Action',
                 },
-                filterable: false,
+                filterable: ['name'],
                 texts : {
                     filter: 'Search:',
                 },

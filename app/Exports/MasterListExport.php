@@ -47,14 +47,15 @@ class MasterListExport implements FromView, WithStyles,  WithColumnFormatting
             array_push($arr,
                 [
                     'mtfrb_case_no' => $data->mtfrb_case_no,
-                    'transact_date' => $data->transact_date,
-                    'validity_date' => $data->validity_date,
-                    'approve_date' => $data->approve_date,
-                    'trnx_date' => $data->trnx_date,
+                    'transact_date' => !empty($data->transact_date) ? date('m-d-Y', strtotime($data->transact_date)) : '',
+                    'validity_date' => !empty($data->validity_date) ? date('m-d-Y', strtotime($data->validity_date)) : '',
+                    'approve_date' => !empty($data->approve_date) ? date('m-d-Y', strtotime($data->approve_date)) : '',
+                    'payment_date' => !empty($data->payment_date) ? date('m-d-Y', strtotime($data->payment_date)) : '',
                     'body_number' => $data->body_number,
                     'make_type' => $data->make_type,
                     'engine_motor_no' => $data->engine_motor_no,
                     'chassis_no' => $data->chassis_no,
+                    'date_issued' => !empty($data->date_issued) ? date('m-d-Y', strtotime($data->date_issued)) : '',
                     'plate_no' => $data->plate_no,
                     'full_name' => $data->full_name,
                     'address1' => $data->address1,
@@ -64,10 +65,7 @@ class MasterListExport implements FromView, WithStyles,  WithColumnFormatting
                     'transact_type' => !empty($data->transact_type) ? $transact_type : '',
                     'charges' => $get_charges
                 ]);
-
         }
-
-
 
 
         return view('excel.xls_master_list', ['applications' => $arr]);

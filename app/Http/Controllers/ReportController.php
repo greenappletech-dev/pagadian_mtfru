@@ -7,6 +7,7 @@ use App\Exports\MTOPReportExport;
 use App\Models\Barangay;
 use App\Models\MtopApplication;
 use App\Models\Tricycle;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
 use DateTime;
 use Excel;
@@ -46,9 +47,10 @@ class ReportController extends Controller
                 'transact_date' => $data->transact_date,
                 'validity_date' => $data->validity_date,
                 'approve_date' => $data->approve_date,
-                'trnx_date' => $data->trnx_date,
+                'payment_date' => $data->payment_date,
                 'body_number' => $data->body_number,
                 'make_type' => $data->make_type,
+                'date_issued' => $data->date_issued,
                 'engine_motor_no' => $data->engine_motor_no,
                 'chassis_no' => $data->chassis_no,
                 'plate_no' => $data->plate_no,
@@ -81,6 +83,15 @@ class ReportController extends Controller
     public function getdata() {
         $barangays = $this->barangay->fetchData();
         return response()->json(['barangays' => $barangays]);
+    }
+
+    private function get_status($status): string {
+        if($status !== null) {
+            $status_array = array('PENDING', 'FOR PAYMENT', 'FOR APPROVAL', 'APPROVED');
+            return $status_array[$status - 1];
+        }
+
+        return false;
     }
 
     public function generate_report($type, $from, $to, $barangay_id) {
@@ -220,7 +231,6 @@ class ReportController extends Controller
                 ->first();
 
 
-
             /* SELECTING OLD BODY NUMBERS */
 
 
@@ -231,8 +241,6 @@ class ReportController extends Controller
                 ->orderBy('make_type')
                 ->get();
 
-
-
             $new = Tricycle::whereBetween('body_number', [$system_settings->body_number_from, $system_settings->body_number_to])
                 ->where('make_type', '<>', '')
                 ->select('make_type', DB::raw('count(*) as total'))
@@ -241,13 +249,11 @@ class ReportController extends Controller
                 ->get();
 
 
-
             $make_types = Tricycle::where('body_number', '<>', '')
                 ->select('make_type')
                 ->groupBy('make_type')
                 ->orderBy('make_type','DESC')
                 ->get();
-
 
 
             $first_body_number = Tricycle::orderBy('body_number')
@@ -258,6 +264,8 @@ class ReportController extends Controller
 
             $old_body_numbers = $first_body_number['body_number'] . '-' . ($system_settings->body_number_from - 1);
             $new_body_numbers = $system_settings->body_number_from . '-' . $system_settings->body_number_to;
+
+
 
 
 
@@ -314,7 +322,6 @@ class ReportController extends Controller
         {
 
             $report = array();
-
 
             $new_franchise = DB::table('m99')->select('body_number_from', 'body_number_to')->first();
 
@@ -395,6 +402,7 @@ class ReportController extends Controller
                 ->groupBy('month')
                 ->get();
 
+
             /* change both filter dates to the beginning day of the month */
 
 
@@ -404,38 +412,54 @@ class ReportController extends Controller
             $interval = \DateInterval::createFromDateString('1 month');
             $dates = new \DatePeriod($start_date, $interval, $end_date);
 
+            $count = 0;
 
             foreach($dates as $date)
             {
 
+                $date_value = $date->format('Y-m-d H:i:s' . '+08');
 
-                $application_key = $application->search(function($item, $key) use ($date) {
-                    return date('m-Y', strtotime($item->month)) == $date->format('m-Y');
-                });
+                $application_value = $application->where('month', $date_value);
+                $payment_value = $payment->where('month', $date_value);
+                $pending_value = $pending->where('month', $date_value);
+                $completed_value = $completed->where('month', $date_value);
 
+                $report[$date->format('F, Y')] = [
+                    'application' => $application_value->count() === 0 ? 0 : $application_value->first()->total,
+                    'payment' => $payment_value->count() === 0 ? 0 : $payment_value->first()->total,
+                    'pending' => $pending_value->count() === 0 ? 0 : $pending_value->first()->total,
+                    'completed' => $completed_value->count() === 0 ? 0 : $completed_value->first()->total
+                ];
 
-                $payment_key = $payment->search(function($item, $key) use ($date) {
-                    return date('m-Y', strtotime($item->month)) == $date->format('m-Y');
-                });
+                $count++;
 
-                $pending_key = $pending->search(function($item, $key) use ($date) {
-                    return date('m-Y', strtotime($item->month)) == $date->format('m-Y');
-                });
-
-
-                $completed_key = $completed->search(function($item, $key) use ($date) {
-                    return date('m-Y', strtotime($item->month)) == $date->format('m-Y');
-                });
-
-                array_push($report,
-                    [
-                        $date->format('F'),
-                        $application_key === false ? 0 : $application[$application_key]->total,
-                        $payment_key === false ? 0 : $payment[$payment_key]->total,
-                        $pending_key === false ? 0 : $pending[$pending_key]->total,
-                        $completed_key === false ? 0 : $completed[$completed_key]->total,
-                    ]
-                );
+//                $application_key = $application->search(function($item, $key) use ($date) {
+//                    return date('m-Y', strtotime($item->month)) == $date->format('m-Y');
+//                });
+//
+//
+//                $payment_key = $payment->search(function($item, $key) use ($date) {
+//                    return date('m-Y', strtotime($item->month)) == $date->format('m-Y');
+//                });
+//
+//                $pending_key = $pending->search(function($item, $key) use ($date) {
+//                    return date('m-Y', strtotime($item->month)) == $date->format('m-Y');
+//                });
+//
+//
+//                $completed_key = $completed->search(function($item, $key) use ($date) {
+//                    return date('m-Y', strtotime($item->month)) == $date->format('m-Y');
+//                });
+//
+//                array_push($report,
+//                    [
+//                        $date->format('F'),
+//                        $application_key === false ? 0 : $application[$application_key]->total,
+//                        $payment_key === false ? 0 : $payment[$payment_key]->total,
+//                        $pending_key === false ? 0 : $pending[$pending_key]->total,
+//                        $completed_key === false ? 0 : $completed[$completed_key]->total,
+//                    ]
+//                );
             }
 
             return $report;
@@ -455,37 +479,79 @@ class ReportController extends Controller
             $report = array();
 
 
+//            $data = Tricycle::leftJoin('mtop_applications', 'mtop_applications.body_number', 'tricycles.body_number')
+//                ->leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
+//                ->leftJoin('taxpayer', 'taxpayer.id', 'tricycles.operator_id')
+//                ->where('tricycles.body_number', $body_number)
+//                ->select(
+//                    'tricycles.*',
+//                    'mtop_applications.transact_date',
+//                    'mtop_applications.approve_date',
+//                    'mtop_applications.status',
+//                    'colhdr.trnx_date',
+//                    'taxpayer.full_name',
+//                    'taxpayer.address1 as address',
+//                    'taxpayer.mobile'
+//                )
+//                ->first();
+
+
+
             for($i = (int)$new_franchise->body_number_from; $i <= (int)$new_franchise->body_number_to; $i++)
             {
 
                 /* adding zeros in the front of the number */
                 $body_number = str_pad($i, $get_body_number_length, '0', STR_PAD_LEFT);
 
-                $data = Tricycle::leftJoin('mtop_applications', 'mtop_applications.body_number', 'tricycles.body_number')
+
+                $data = MtopApplication::leftJoin('taxpayer', 'taxpayer.id', 'mtop_applications.taxpayer_id')
                     ->leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
-                    ->leftJoin('taxpayer', 'taxpayer.id', 'tricycles.operator_id')
-                    ->where('tricycles.body_number', $body_number)
+                    ->leftJoin('tricycles', 'tricycles.body_number', 'mtop_applications.body_number')
+                    ->whereDate('mtop_applications.transact_date', '<=' , $to)
+                    ->where('mtop_applications.body_number', $body_number)
                     ->select(
-                        'tricycles.*',
                         'mtop_applications.transact_date',
                         'mtop_applications.approve_date',
                         'mtop_applications.status',
+                        'mtop_applications.make_type',
+                        'tricycles.created_at as date_issued',
                         'colhdr.trnx_date',
                         'taxpayer.full_name',
                         'taxpayer.address1 as address',
-                        'taxpayer.mobile'
+                        'taxpayer.mobile',
+                        DB::raw("(mtop_applications.validity_date + INTERVAL '-2 years') as payment_date")
                     )
+                    ->orderBy('mtop_applications.id', 'desc')
                     ->first();
 
-                array_push($report, [$body_number,$data]);
-            }
+//                array_push($report, [$body_number,$data]);
 
+                $report[$body_number] = [
+                    'full_name' => $data['full_name'],
+                    'date_issued' => !empty($data['date_issued']) ? date('m-d-Y', strtotime($data['date_issued'])) : '',
+                    'address' => $data['address'],
+                    'mobile' => $data['mobile'],
+                    'transact_date' =>  !empty($data['transact_date']) ? date('m-d-Y', strtotime($data['transact_date'])) : '',
+                    'payment_date' =>  !empty($data['payment_date']) ? date('m-d-Y', strtotime($data['payment_date'])) : '',
+                    'approve_date' => !empty($data['approve_date']) ? date('m-d-Y', strtotime($data['approve_date'])) : '',
+                    'make_type' => $data['make_type'],
+                    'status' => $this->get_status($data['status'])
+                ];
+            }
         }
+
+        return compact('report', 'from', 'to');
 
         /* END */
 
-        return $report;
+//        return $report;
+//
+
+//
+//        array_push($report, $from, $to);
+//
     }
+
 
     public function export($type, $from, $to, $barangay_id) {
 

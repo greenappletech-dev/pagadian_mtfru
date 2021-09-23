@@ -118,13 +118,14 @@ export default {
 
     data() {
         return {
-            columns: ['body_number', 'mtfrb_case_no', 'full_name','transact_date','validity_date', 'transact_type', 'make_type', 'engine_motor_no', 'chassis_no', 'plate_no', 'approve_date', 'or_no', 'amount'],
+            columns: ['body_number', 'mtfrb_case_no', 'full_name','date_issued','transact_date','validity_date', 'transact_type', 'make_type', 'engine_motor_no', 'chassis_no', 'plate_no', 'approve_date', 'payment_date', 'or_no', 'amount'],
             tableData: [],
             options: {
                 headings: {
                     body_number         :       'Body Number',
-                    mtfrb_case_no       :       'Case Number',
+                    mtfrb_case_no       :       'MFTRB Case Number',
                     full_name           :       'Operator',
+                    date_issued         :       'Issued Date',
                     transact_date       :       'Transaction Date',
                     validity_date       :       'Expire On',
                     transact_type       :       'Status',
@@ -133,21 +134,29 @@ export default {
                     chassis_no          :       'Chassis #',
                     plate_no            :       'Plate #',
                     approve_date        :       'Approve Date',
+                    payment_date        :       'OR Date',
                     or_no               :       'OR #',
                     amount              :       'Amount',
                 },
-                sortable: ['body_number', 'mtfrb_case_no', 'full_name'],
-                filterable: ['body_number', 'mtfrb_case_no', 'full_name'],
+
+                sortable: ['body_number', 'full_name'],
+                filterable: ['body_number', 'full_name'],
                 templates: {
-                    hol_date: function(h, row) {
-                        return row.hol_date !== null ? moment(row.hol_date).format('YYYY-MM-DD') : null;
+                    date_issued: function(h, row) {
+                        return row.date_issued !== null ? moment(row.date_issued).format('MM-DD-YYYY') : null;
                     },
-                    created_at: function(h, row) {
-                        return row.created_at !== null ? moment(row.created_at).format('YYYY-MM-DD hh:mm:ss') : null;
+                    transact_date: function(h, row) {
+                        return row.transact_date !== null ? moment(row.transact_date).format('MM-DD-YYYY') : null;
                     },
-                    updated_at: function(h, row) {
-                        return row.updated_at !== null ? moment(row.updated_at).format('YYYY-MM-DD hh:mm:ss') : null;
-                    }
+                    approve_date: function(h, row) {
+                        return row.approve_date !== null ? moment(row.approve_date).format('MM-DD-YYYY') : null;
+                    },
+                    validity_date: function(h, row) {
+                        return row.validity_date !== null ? moment(row.validity_date).format('MM-DD-YYYY') : null;
+                    },
+                    payment_date: function(h, row) {
+                        return row.payment_date !== null ? moment(row.payment_date).format('MM-DD-YYYY') : null;
+                    },
                 },
                 texts : {
                     filter: 'Search:',

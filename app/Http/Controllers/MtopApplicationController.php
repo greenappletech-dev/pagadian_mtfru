@@ -384,7 +384,7 @@ class MtopApplicationController extends Controller
 
                     /* add 2 year to the validity date */
 
-                    $validity_date = date('m/d/Y', strtotime('+2 years', strtotime($paid_applications->trnx_date)));;
+                    $validity_date = date('m/d/Y', strtotime('+2 years', strtotime($paid_applications->trnx_date)));
 
 
 

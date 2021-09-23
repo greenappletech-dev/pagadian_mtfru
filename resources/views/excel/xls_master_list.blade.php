@@ -54,7 +54,7 @@
                     <td>{{ $application['mtfrb_case_no'] }}</td>
                     <td>{{ $application['address1'] }}</td>
                     <td>{{ $application['mobile'] }}</td>
-                    <td>{{ $application['trnx_date']}}</td>
+                    <td>{{ $application['date_issued'] == null ? '' : date('Y-m-d' , strtotime($application['date_issued']))}}</td>
                     <td>{{ $application['validity_date'] }}</td>
                     <td>{{ $application['transact_type'] }}</td>
                     <td>{{ $application['transact_date'] == null ? '' : $application['transact_date'] }}</td>
@@ -65,21 +65,14 @@
                     <td>{{ $application['approve_date'] }}</td>
                     <td>{{ $application['charges'] }}</td>
                     <td>{{ $application['or_no'] }}</td>
-                    <td>
-                        @if($application['or_no'] != null)
-                            PAGADIAN CITY
-                        @else
-                        @endif
-                    </td>
-                    <td>{{ $application['trnx_date'] }}</td>
+                    <td>PAGADIAN CITY</td>
+                    <td>{{ $application['payment_date'] }}</td>
                     <td>{{ $application['amount'] }}</td>
                     <td></td>
                 </tr>
             @endforeach
         </tbody>
-
     </table>
-
 </body>
 
 

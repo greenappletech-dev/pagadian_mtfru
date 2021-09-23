@@ -43,17 +43,18 @@
     @foreach($array as $key=>$value)
 
         <tr>
-            <td style="text-align: left">{{ date('F', strtotime($value[0])) }}</td>
-            <td style="text-align: center">{{ $value[1] }}</td>
-            <td style="text-align: center">{{ $value[2] }}</td>
-            <td style="text-align: center">{{ $value[3] }}</td>
-            <td style="text-align: center">{{ $value[4] }}</td>
+            <td style="text-align: left">{{ date('F', strtotime($key)) }}</td>
+            <td style="text-align: center">{{ $value['application'] }}</td>
+            <td style="text-align: center">{{ $value['payment'] }}</td>
+            <td style="text-align: center">{{ $value['pending'] }}</td>
+            <td style="text-align: center">{{ $value['completed'] }}</td>
         </tr>
 
-        {{ $total_application += $value[1] }}
-        {{ $total_payment += $value[2] }}
-        {{ $total_pending += $value[3] }}
-        {{ $total_complete += $value[4] }}
+        {{ $total_application += $value['application'] }}
+        {{ $total_payment += $value['payment'] }}
+        {{ $total_pending += $value['pending'] }}
+        {{ $total_complete += $value['completed'] }}
+
 
     @endforeach
 

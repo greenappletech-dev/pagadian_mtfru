@@ -57,15 +57,16 @@
 
                         <div id="filter_options_1">
 
-                            <label for="barangay" class="mt-1">Specific Barangay</label>
-                                <select id="barangay" class="form-control" v-model="barangay.id">
-                                    <option value=""></option>
-                                    <option v-for="data in barangay"
-                                            v-bind:value="data.id">
-                                        {{ data.brgy_code + '-' + data.brgy_desc }}
-                                    </option>
-                                </select>
-
+                            <div v-if="report.type !== '4'">
+                                <label for="barangay" class="mt-1">Specific Barangay</label>
+                                    <select id="barangay" class="form-control" v-model="barangay.id">
+                                        <option value=""></option>
+                                        <option v-for="data in barangay"
+                                                v-bind:value="data.id">
+                                            {{ data.brgy_code + '-' + data.brgy_desc }}
+                                        </option>
+                                    </select>
+                            </div>
 
                             <div class="row mt-1">
                                 <div class="col">
@@ -176,7 +177,7 @@ export default {
 
         selectChange(e)
         {
-            const wout_range = ['2', '4'];
+            const wout_range = ['2'];
 
             if(wout_range.indexOf(this.report.type) < 0)
             {
@@ -214,7 +215,7 @@ export default {
 
             }
 
-            const wout_range = ['2', '4'];
+            const wout_range = ['2'];
 
             if(wout_range.indexOf(this.report.type) < 0)
             {
@@ -254,7 +255,7 @@ export default {
 
             }
 
-            const wout_range = ['2', '4'];
+            const wout_range = ['2'];
 
             if(wout_range.indexOf(this.report.type) < 0)
             {
