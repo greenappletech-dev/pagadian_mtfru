@@ -107,7 +107,7 @@
             <th class="datetime">{{ date('m/d/Y h:i:s A') }}</th>
         </tr>
         <tr>
-            <th style="font-weight: bold">{{ 'FROM: ' . date('m/d/Y', strtotime($generated_report['from'])) . ' TO: ' . date('m/d/Y', strtotime($generated_report['to'])) }}</th>
+            <th style="font-weight: bold">{{ 'FROM: ' . date('m/d/Y', strtotime($from)) . ' TO: ' . date('m/d/Y', strtotime($to)) }}</th>
         </tr>
     </table>
 </header>
@@ -143,7 +143,7 @@
 
         <tbody>
 
-            @foreach($generated_report['report'] as $key=>$value)
+            @foreach($generated_report as $key=>$value)
 
                 <tr>
                     <td>{{ $key }}</td>

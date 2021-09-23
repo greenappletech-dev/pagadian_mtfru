@@ -541,9 +541,10 @@ class ReportController extends Controller
 
 
             }
+
         }
 
-        return compact('report', 'from', 'to');
+        return $report;
 
         /* END */
 
