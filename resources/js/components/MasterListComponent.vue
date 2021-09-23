@@ -118,7 +118,7 @@ export default {
 
     data() {
         return {
-            columns: ['body_number', 'mtfrb_case_no', 'full_name','date_registered','date_issued','transact_date','validity_date', 'transact_type', 'make_type', 'engine_motor_no', 'chassis_no', 'plate_no', 'approve_date', 'payment_date', 'or_no', 'amount'],
+            columns: ['body_number', 'mtfrb_case_no', 'full_name','date_registered','transact_date','validity_date', 'transact_type', 'make_type', 'engine_motor_no', 'chassis_no', 'plate_no', 'approve_date', 'payment_date', 'or_no', 'amount'],
             tableData: [],
             options: {
                 headings: {
@@ -142,7 +142,7 @@ export default {
                 sortable: ['body_number', 'full_name'],
                 filterable: ['body_number', 'full_name'],
                 templates: {
-                    date_issued: function(h, row) {
+                    date_registered: function(h, row) {
                         return row.date_registered !== null ? moment(row.date_issued).format('MM-DD-YYYY') : null;
                     },
                     transact_date: function(h, row) {
