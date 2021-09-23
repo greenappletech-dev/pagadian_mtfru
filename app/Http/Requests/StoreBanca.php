@@ -28,11 +28,11 @@ class StoreBanca extends FormRequest
 
         if($this->getMethod() == 'POST') {
             $rules += ['body_number' => ['unique:bancas,body_number']];
-            $rules += ['engine_motor_no' => ['unique:bancas,engine_motor_no', 'nullable']];
+//            $rules += ['engine_motor_no' => ['unique:bancas,engine_motor_no', 'nullable']];
         }
         else {
             $rules += ['body_number' => ['unique:bancas,body_number,' . request('id'), 'required']];
-            $rules += ['engine_motor_no' => ['unique:bancas,engine_motor_no,' . request('id'), 'nullable']];
+//            $rules += ['engine_motor_no' => ['unique:bancas,engine_motor_no,' . request('id'), 'nullable']];
         }
 
         return $rules;

@@ -26,7 +26,7 @@ class StoreFVRApplication extends FormRequest
         return [
             'boat_name' => ['required'],
             'boat_color' => ['required'],
-            'engine_motor_no' => ['unique:bancas,engine_motor_no,' . request('banca_id'), 'nullable']
+//            'engine_motor_no' => ['unique:bancas,engine_motor_no,' . request('banca_id'), 'nullable']
         ];
     }
 }
