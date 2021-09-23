@@ -38,7 +38,7 @@ class BoatCaptainController extends Controller
         $data->last_name = strtoupper($request->last_name);
         $data->first_name = strtoupper($request->first_name);
         $data->middle_name = strtoupper($request->middle_name);
-        $data->full_name = strtoupper($request->last_name . ', ' . $request->first_name . ' ' . $request->middle_name . '.');
+        $data->full_name = strtoupper($request->last_name . ', ' . $request->first_name . ' ' . $request->middle_name);
         $data->license_number = strtoupper($request->license_number);
         $data->banca_id = $request->banca_id;
         return !$data->save()

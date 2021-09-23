@@ -1013,8 +1013,8 @@
 
             <table class="table-2">
                 <tr>
-                    <th>{{ $data[0]['full_name'] }}</th>
-                    <th>{{ $data[0]['address'] }}</th>
+                    <th width="50%">{{ $data[0]['full_name'] }}</th>
+                    <th width="50%">{{ $data[0]['address'] }}</th>
                 </tr>
             </table>
 
