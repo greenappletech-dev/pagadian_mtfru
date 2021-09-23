@@ -79,7 +79,6 @@
             font-weight: normal;
         }
 
-        main table tbody tr td:nth-child(3),
         main table tbody tr td:nth-child(5),
         main table tbody tr td:nth-child(6),
         main table tbody tr td:nth-child(7),

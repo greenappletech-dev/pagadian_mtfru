@@ -529,12 +529,12 @@ class ReportController extends Controller
 
                 $report[$body_number] = [
                     'full_name' => $data === null ? '' : $data['full_name'],
-                    'date_registered' => $data === null ? '' : !empty($data['date_registered']) ? date('m-d-Y', strtotime($data['date_registered'])) : '',
+                    'date_registered' => $data === null ? '' : ((!empty($data['date_registered'])) ? date('m-d-Y', strtotime($data['date_registered'])) : ''),
                     'address' => $data === null ? '' : $data['address'],
                     'mobile' => $data === null ? '' : $data['mobile'],
-                    'transact_date' =>  $data === null ? '' : !empty($data['transact_date']) ? date('m-d-Y', strtotime($data['transact_date'])) : '',
-                    'payment_date' =>  $data === null ? '' : !empty($data['payment_date']) ? date('m-d-Y', strtotime($data['payment_date'])) : '',
-                    'approve_date' => $data === null ? '' : !empty($data['approve_date']) ? date('m-d-Y', strtotime($data['approve_date'])) : '',
+                    'transact_date' =>  $data === null ? '' : ((!empty($data['transact_date'])) ? date('m-d-Y', strtotime($data['transact_date'])) : ''),
+                    'payment_date' =>  $data === null ? '' : ((!empty($data['payment_date'])) ? date('m-d-Y', strtotime($data['payment_date'])) : ''),
+                    'approve_date' => $data === null ? '' : ((!empty($data['approve_date'])) ? date('m-d-Y', strtotime($data['approve_date'])) : ''),
                     'make_type' => $data === null ? '' : $data['make_type'],
                     'status' => $data === null ? '' : $this->get_status($data['status'])
                 ];
