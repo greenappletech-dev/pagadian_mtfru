@@ -131,7 +131,7 @@
                 <th>OPERATOR</th>
                 <th>ADDRESS</th>
                 <th>CONTACT #</th>
-                <th>DATE ISSUED</th>
+                <th>DATE REGISTERED</th>
                 <th>DATE APPLY</th>
                 <th>DATE OF PAYMENT</th>
                 <th>DATE COMPLETED</th>
@@ -151,7 +151,7 @@
                     <td>{{ $value['full_name'] }}</td>
                     <td>{{ $value['address'] }}</td>
                     <td>{{ $value['mobile'] }}</td>
-                    <td>{{ $value['date_issued'] }}</td>
+                    <td>{{ $value['date_registered'] }}</td>
                     <td>{{ $value['transact_date'] }}</td>
                     <td>{{ $value['payment_date'] }}</td>
                     <td>{{ $value['approve_date'] }}</td>

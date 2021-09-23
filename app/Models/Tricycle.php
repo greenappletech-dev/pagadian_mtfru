@@ -58,7 +58,7 @@ class Tricycle extends Model
             'tricycles.engine_motor_no',
             'tricycles.chassis_no',
             'tricycles.plate_no',
-            'tricycles.created_at as date_issued',
+            'tricycles.created_at as date_registered',
             'taxpayer.full_name',
             'taxpayer.address1',
             'taxpayer.mobile',

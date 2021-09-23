@@ -1,6 +1,6 @@
     <html>
 <head>
-    <title>Excel Report Export Sample</title>
+    <title>MTOP Master List</title>
 </head>
 
 <style>
@@ -54,7 +54,7 @@
                     <td>{{ $application['mtfrb_case_no'] }}</td>
                     <td>{{ $application['address1'] }}</td>
                     <td>{{ $application['mobile'] }}</td>
-                    <td>{{ $application['date_issued'] == null ? '' : date('Y-m-d' , strtotime($application['date_issued']))}}</td>
+                    <td>{{ $application['date_registered'] == null ? '' : date('Y-m-d' , strtotime($application['date_registered']))}}</td>
                     <td>{{ $application['validity_date'] }}</td>
                     <td>{{ $application['transact_type'] }}</td>
                     <td>{{ $application['transact_date'] == null ? '' : $application['transact_date'] }}</td>

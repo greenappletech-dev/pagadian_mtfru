@@ -66,7 +66,7 @@
                 <td>{{ $value['full_name'] }}</td>
                 <td>{{ $value['address'] }}</td>
                 <td>{{ $value['mobile'] }}</td>
-                <td>{{ $value['date_issued'] }}</td>
+                <td>{{ $value['date_registered'] }}</td>
                 <td>{{ $value['transact_date'] }}</td>
                 <td>{{ $value['payment_date'] }}</td>
                 <td>{{ $value['approve_date'] }}</td>

@@ -50,7 +50,7 @@ class ReportController extends Controller
                 'payment_date' => $data->payment_date,
                 'body_number' => $data->body_number,
                 'make_type' => $data->make_type,
-                'date_issued' => $data->date_issued,
+                'date_registered' => $data->date_registered,
                 'engine_motor_no' => $data->engine_motor_no,
                 'chassis_no' => $data->chassis_no,
                 'plate_no' => $data->plate_no,
@@ -514,7 +514,7 @@ class ReportController extends Controller
                         'mtop_applications.approve_date',
                         'mtop_applications.status',
                         'mtop_applications.make_type',
-                        'tricycles.created_at as date_issued',
+                        'tricycles.created_at as date_registered',
                         'colhdr.trnx_date',
                         'taxpayer.full_name',
                         'taxpayer.address1 as address',
@@ -526,17 +526,20 @@ class ReportController extends Controller
 
 //                array_push($report, [$body_number,$data]);
 
+
                 $report[$body_number] = [
-                    'full_name' => $data['full_name'],
-                    'date_issued' => !empty($data['date_issued']) ? date('m-d-Y', strtotime($data['date_issued'])) : '',
-                    'address' => $data['address'],
-                    'mobile' => $data['mobile'],
-                    'transact_date' =>  !empty($data['transact_date']) ? date('m-d-Y', strtotime($data['transact_date'])) : '',
-                    'payment_date' =>  !empty($data['payment_date']) ? date('m-d-Y', strtotime($data['payment_date'])) : '',
-                    'approve_date' => !empty($data['approve_date']) ? date('m-d-Y', strtotime($data['approve_date'])) : '',
-                    'make_type' => $data['make_type'],
-                    'status' => $this->get_status($data['status'])
+                    'full_name' => $data === null ? '' : $data['full_name'],
+                    'date_registered' => $data === null ? '' : !empty($data['date_registered']) ? date('m-d-Y', strtotime($data['date_registered'])) : '',
+                    'address' => $data === null ? '' : $data['address'],
+                    'mobile' => $data === null ? '' : $data['mobile'],
+                    'transact_date' =>  $data === null ? '' : !empty($data['transact_date']) ? date('m-d-Y', strtotime($data['transact_date'])) : '',
+                    'payment_date' =>  $data === null ? '' : !empty($data['payment_date']) ? date('m-d-Y', strtotime($data['payment_date'])) : '',
+                    'approve_date' => $data === null ? '' : !empty($data['approve_date']) ? date('m-d-Y', strtotime($data['approve_date'])) : '',
+                    'make_type' => $data === null ? '' : $data['make_type'],
+                    'status' => $data === null ? '' : $this->get_status($data['status'])
                 ];
+
+
             }
         }
 

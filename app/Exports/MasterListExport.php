@@ -55,7 +55,7 @@ class MasterListExport implements FromView, WithStyles,  WithColumnFormatting
                     'make_type' => $data->make_type,
                     'engine_motor_no' => $data->engine_motor_no,
                     'chassis_no' => $data->chassis_no,
-                    'date_issued' => !empty($data->date_issued) ? date('m-d-Y', strtotime($data->date_issued)) : '',
+                    'date_registered' => !empty($data->date_registered) ? date('m-d-Y', strtotime($data->date_registered)) : '',
                     'plate_no' => $data->plate_no,
                     'full_name' => $data->full_name,
                     'address1' => $data->address1,
