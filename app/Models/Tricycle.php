@@ -10,6 +10,8 @@ class Tricycle extends Model
 {
     use HasFactory;
 
+    public $timestamps = true;
+
     public function fetchData() {
         return Tricycle::leftJoin('taxpayer', 'taxpayer.id', 'tricycles.operator_id')
             ->select('tricycles.*', 'taxpayer.full_name as operator')
@@ -98,6 +100,7 @@ class Tricycle extends Model
         'engine_motor_no' => ['unique:tricycles','nullable'],
         'chassis_no' => ['unique:tricycles','nullable'],
         'plate_no' => ['unique:tricycles','nullable'],
+        'created_at' => ['nullable'],
     ];
 
 }

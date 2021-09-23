@@ -36,6 +36,8 @@ class StoreTricycle extends FormRequest
             $rules += ['body_number' => ['required','unique:tricycles,body_number', new CheckIfBodyNumberIsExceeded()]];
         }
 
+//        dd($rules);
+
         return $rules;
     }
 }

@@ -133,6 +133,11 @@
                             <label for="engine_no">Plate No</label>
                             <input type="text" style="text-transform: uppercase" v-model="plateNoValue" id="plate_no" class="form-control">
 
+                            <div v-if="!adding">
+                                <label for="date_registered">Date Registered</label>
+                                <input type="date" v-model="dateRegistered" id="date_registered" class="form-control">
+                            </div>
+
                         </div>
 
                     </div>
@@ -202,6 +207,7 @@ export default {
             engineNoValue: null,
             chassisNoValue: null,
             plateNoValue: null,
+            dateRegistered: null,
 
             //values
 
@@ -324,14 +330,17 @@ export default {
                 this.engineNoValue = response.data.tricycle.engine_motor_no;
                 this.chassisNoValue = response.data.tricycle.chassis_no;
                 this.plateNoValue = response.data.tricycle.plate_no;
-
+                this.dateRegistered = response.data.tricycle.created_at === null ? null : moment(response.data.tricycle.created_at).utc().format('YYYY-MM-DD');
                 $('#create-modal').modal('show');
                 this.adding = false;
             });
+
         },
 
         updateRecord(){
             this.loader = true;
+
+            console.log(this.dateRegistered);
             axios.patch('tricycle/update/' + this.tricycleIdValue, {
                 operator_id: this.operatorValue,
                 body_number: this.bodyNumberValue,
@@ -339,6 +348,7 @@ export default {
                 engine_motor_no: this.engineNoValue,
                 chassis_no: this.chassisNoValue,
                 plate_no: this.plateNoValue,
+                date_registered: this.dateRegistered
             })
             .then(response => {
                 this.returnSuccess(response);

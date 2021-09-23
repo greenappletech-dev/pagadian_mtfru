@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Exports\DriverExport;
 use App\Exports\TricycleExport;
-use App\Http\Middleware\TrustHosts;
 use App\Http\Requests\StoreTricycle;
 use App\Models\Taxpayer;
 use App\Models\Tricycle;
 use Illuminate\Http\Request;
 use Excel;
-use Illuminate\Support\Facades\DB;
 
 class TricycleController extends Controller
 {
@@ -52,6 +49,8 @@ class TricycleController extends Controller
         $tricycle->engine_motor_no = strtoupper($request->engine_motor_no);
         $tricycle->chassis_no = strtoupper($request->chassis_no);
         $tricycle->plate_no = strtoupper($request->plate_no);
+
+
         return !$tricycle->save()
 
         ? response()->json(
@@ -104,6 +103,7 @@ class TricycleController extends Controller
 
     public function update(StoreTricycle $request) {
         $tricycle = $this->tricycles->fetchDataById($request->id);
+        $tricycle->created_at = $request->date_registered;
         return $this->dbValues($tricycle, $request, 'Tricycle Updated Successfully');
     }
 
