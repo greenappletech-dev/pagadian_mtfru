@@ -640,7 +640,7 @@ export default {
 
             /* FETCH VALUES SO WE CAN TRIGGER THE FUNCTIONS */
 
-            this.renewal = this.transactionType.some(item => parseInt(item) === 1);
+            this.renewal = this.transactionType.some(item => parseInt(item) === 1 || parsetInt(item) === 4);
             this.newOperator = this.transactionType.some(item => parseInt(item) === 2);
             this.changeUnit = this.transactionType.some(item => parseInt(item) === 3);
 

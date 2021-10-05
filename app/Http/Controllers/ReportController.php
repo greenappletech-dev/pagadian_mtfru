@@ -152,7 +152,8 @@ class ReportController extends Controller
                     'taxpayer.address1',
                     'taxpayer.mobile',
                     'colhdr.or_number',
-                    'mtop_applications.transact_type'
+                    'mtop_applications.transact_type',
+                    'mtop_applications.id as id',
                 )
                 ->selectRaw('SUM(collne2.price) as total_amount')
                 ->groupBy(
@@ -163,7 +164,8 @@ class ReportController extends Controller
                     'taxpayer.address1',
                     'taxpayer.mobile',
                     'colhdr.or_number',
-                    'mtop_applications.transact_type'
+                    'mtop_applications.transact_type',
+                    'mtop_applications.id'
                 )
                 ->orderBy('transact_type')
                 ->get();
@@ -183,7 +185,8 @@ class ReportController extends Controller
                             $data['total_amount'],
                             $transact[1],
                             $data['transact_type'],
-                            $data['transact_date']
+                            $data['transact_date'],
+                            $data['id'],
                         ]);
 
                 }
@@ -205,7 +208,7 @@ class ReportController extends Controller
                     }
 
 
-                    if($value[0] == $value2[0])
+                    if($value[0] == $value2[0] && $value[9] == $value2[9])
                     {
                         array_push($report[$key2], 'W/ ' . strtoupper($value[6]));
                         $report[$key2][5] = 0.00;
@@ -213,6 +216,8 @@ class ReportController extends Controller
                 }
 
             }
+
+            return $report;
 
         }
 
@@ -479,72 +484,100 @@ class ReportController extends Controller
             $report = array();
 
 
-//            $data = Tricycle::leftJoin('mtop_applications', 'mtop_applications.body_number', 'tricycles.body_number')
-//                ->leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
-//                ->leftJoin('taxpayer', 'taxpayer.id', 'tricycles.operator_id')
-//                ->where('tricycles.body_number', $body_number)
-//                ->select(
-//                    'tricycles.*',
-//                    'mtop_applications.transact_date',
-//                    'mtop_applications.approve_date',
-//                    'mtop_applications.status',
-//                    'colhdr.trnx_date',
-//                    'taxpayer.full_name',
-//                    'taxpayer.address1 as address',
-//                    'taxpayer.mobile'
-//                )
-//                ->first();
+            $data = MtopApplication::leftJoin('taxpayer', 'taxpayer.id', 'mtop_applications.taxpayer_id')
+                ->leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
+                ->leftJoin('tricycles', 'tricycles.body_number', 'mtop_applications.body_number')
+                ->whereDate('mtop_applications.transact_date', '<=' , $to)
+                ->whereBetween('mtop_applications.body_number', [$new_franchise->body_number_from, $new_franchise->body_number_to])
+                ->select(
+                    DB::raw("mtop_applications.body_number::INTEGER"),
+                    'taxpayer.full_name',
+                    'taxpayer.address1 as address',
+                    'taxpayer.mobile',
+                    'tricycles.created_at as date_registered',
+                    'mtop_applications.transact_date',
+                    DB::raw("(mtop_applications.validity_date + INTERVAL '-2 years') as payment_date"),
+                    'mtop_applications.approve_date',
+                    'mtop_applications.make_type',
+                    'mtop_applications.status'
+                )
+                ->orderBy('mtop_applications.body_number')
+                ->get()
+                ->each(function($item, $index) {
+                    $item->status = $this->get_status($item->status);
+                })
+                ->toArray();
+
+            $arr2 = range((int)$new_franchise->body_number_from,(int)$new_franchise->body_number_to);
+            $no_data = array_diff($arr2, array_column($data, 'body_number'));
 
 
-
-            for($i = (int)$new_franchise->body_number_from; $i <= (int)$new_franchise->body_number_to; $i++)
-            {
-
-                /* adding zeros in the front of the number */
-                $body_number = str_pad($i, $get_body_number_length, '0', STR_PAD_LEFT);
-
-
-                $data = MtopApplication::leftJoin('taxpayer', 'taxpayer.id', 'mtop_applications.taxpayer_id')
-                    ->leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
-                    ->leftJoin('tricycles', 'tricycles.body_number', 'mtop_applications.body_number')
-                    ->whereDate('mtop_applications.transact_date', '<=' , $to)
-                    ->where('mtop_applications.body_number', $body_number)
-                    ->select(
-                        'mtop_applications.transact_date',
-                        'mtop_applications.approve_date',
-                        'mtop_applications.status',
-                        'mtop_applications.make_type',
-                        'tricycles.created_at as date_registered',
-                        'colhdr.trnx_date',
-                        'taxpayer.full_name',
-                        'taxpayer.address1 as address',
-                        'taxpayer.mobile',
-                        DB::raw("(mtop_applications.validity_date + INTERVAL '-2 years') as payment_date")
-                    )
-                    ->orderBy('mtop_applications.id', 'desc')
-                    ->first();
-
-//                array_push($report, [$body_number,$data]);
-
-
-                $report[$body_number] = [
-                    'full_name' => $data === null ? '' : $data['full_name'],
-                    'date_registered' => $data === null ? '' : ((!empty($data['date_registered'])) ? date('m-d-Y', strtotime($data['date_registered'])) : ''),
-                    'address' => $data === null ? '' : $data['address'],
-                    'mobile' => $data === null ? '' : $data['mobile'],
-                    'transact_date' =>  $data === null ? '' : ((!empty($data['transact_date'])) ? date('m-d-Y', strtotime($data['transact_date'])) : ''),
-                    'payment_date' =>  $data === null ? '' : ((!empty($data['payment_date'])) ? date('m-d-Y', strtotime($data['payment_date'])) : ''),
-                    'approve_date' => $data === null ? '' : ((!empty($data['approve_date'])) ? date('m-d-Y', strtotime($data['approve_date'])) : ''),
-                    'make_type' => $data === null ? '' : $data['make_type'],
-                    'status' => $data === null ? '' : $this->get_status($data['status'])
-                ];
-
-
+            foreach($no_data as $missing) {
+                array_push($data, [
+                    'body_number' => $missing,
+                    'full_name' => '',
+                    'date_registered' => '',
+                    'address' => '',
+                    'mobile' => '',
+                    'transact_date' => '',
+                    'payment_date' => '',
+                    'approve_date' => '',
+                    'make_type' => '',
+                    'status' => '',
+                ]);
             }
 
-        }
+            return collect($data)->sortBy('body_number')->toArray();
 
-        return $report;
+
+//            for($i = (int)$new_franchise->body_number_from; $i <= (int)$new_franchise->body_number_to; $i++)
+//            {
+//
+//                /* adding zeros in the front of the number */
+//                $body_number = str_pad($i, $get_body_number_length, '0', STR_PAD_LEFT);
+//
+//
+//                $data = MtopApplication::leftJoin('taxpayer', 'taxpayer.id', 'mtop_applications.taxpayer_id')
+//                    ->leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
+//                    ->leftJoin('tricycles', 'tricycles.body_number', 'mtop_applications.body_number')
+//                    ->whereDate('mtop_applications.transact_date', '<=' , $to)
+//                    ->where('mtop_applications.body_number', $body_number)
+//                    ->select(
+//                        'mtop_applications.transact_date',
+//                        'mtop_applications.approve_date',
+//                        'mtop_applications.status',
+//                        'mtop_applications.make_type',
+//                        'tricycles.created_at as date_registered',
+//                        'colhdr.trnx_date',
+//                        'taxpayer.full_name',
+//                        'taxpayer.address1 as address',
+//                        'taxpayer.mobile',
+//                        DB::raw("(mtop_applications.validity_date + INTERVAL '-2 years') as payment_date")
+//                    )
+//                    ->orderBy('mtop_applications.id', 'desc')
+//                    ->first();
+//
+////                array_push($report, [$body_number,$data]);
+//
+//
+//                $report[$body_number] = [
+//                    'full_name' => $data === null ? '' : $data['full_name'],
+//                    'date_registered' => $data === null ? '' : ((!empty($data['date_registered'])) ? date('m-d-Y', strtotime($data['date_registered'])) : ''),
+//                    'address' => $data === null ? '' : $data['address'],
+//                    'mobile' => $data === null ? '' : $data['mobile'],
+//                    'transact_date' =>  $data === null ? '' : ((!empty($data['transact_date'])) ? date('m-d-Y', strtotime($data['transact_date'])) : ''),
+//                    'payment_date' =>  $data === null ? '' : ((!empty($data['payment_date'])) ? date('m-d-Y', strtotime($data['payment_date'])) : ''),
+//                    'approve_date' => $data === null ? '' : ((!empty($data['approve_date'])) ? date('m-d-Y', strtotime($data['approve_date'])) : ''),
+//                    'make_type' => $data === null ? '' : $data['make_type'],
+//                    'status' => $data === null ? '' : $this->get_status($data['status'])
+//                ];
+//
+//
+//            }
+
+        }
+//
+//        return $report;
 
         /* END */
 

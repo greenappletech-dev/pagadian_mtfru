@@ -199,7 +199,7 @@
             @endif
 
             <tr>
-                <td style="font-size: 10px; font-weight: bold">@if(!empty($value[9])) {{ $value[9] }} @endif</td>
+                <td style="font-size: 10px; font-weight: bold">@if(!empty($value[10])) {{ $value[10] }} @endif</td>
                 <td style="padding: 5px 0; text-align: center">{{ date('m/d/Y', strtotime($value[8])) }}</td>
                 <td style="padding: 5px 0;">{{ $value[0] }}</td>
                 <td>{{ $value[1] }}</td>
