@@ -495,8 +495,11 @@
                         <span slot="price" slot-scope="{row}">
                             {{ formatPrice(row.price) }}
                         </span>
+                        <span slot="tot_amnt" slot-scope="{row}">
+                            {{ formatPrice(row.tot_amnt) }}
+                        </span>
                         <span slot="action" slot-scope="props">
-                            <button v-on:click="removeCharges(props.index, props.row.price)" class="btn btn-danger mb-2" style="font-size: 12px">Remove</button>
+                            <button v-on:click="removeCharges(props.index, props.row.tot_amnt)" class="btn btn-danger mb-2" style="font-size: 12px">Remove</button>
                         </span>
                     </v-client-table>
                 </div>
@@ -528,6 +531,10 @@
                         </div>
 
                         <div class="form group" v-if="addCharges">
+
+                            <label for="qty">Quantity</label>
+                            <input type="number" id="qty" class="form-control" v-model="qty">
+ 
                             <v-client-table style="font-size: 15px"
                                             :data="chargesTableData"
                                             :columns="charges_column"
@@ -684,12 +691,14 @@ export default {
                 },
             },
 
-            selected_charge_column: ['name','price', 'action'],
+            selected_charge_column: ['name','price', 'qty', 'tot_amnt','action'],
             selectedChargesTableData: this.fvr_application_charges,
             selected_charge_option: {
                 headings: {
                     name: 'Charge Name',
                     price: 'Price',
+                    qty: 'Quantity',
+                    tot_amnt: 'Total Amount',
                     action: 'Action',
                 },
                 filterable: false,
@@ -705,6 +714,7 @@ export default {
             banca: this.fvr_application,
             auxiliary: [],
             new_operator: [],
+            qty: 1,
 
             searchedValue: null,
             searchNewValue: null,
@@ -765,6 +775,7 @@ export default {
         },
 
         openModalToAddCharges() {
+            this.qty = 1;
             this.addCharges = true;
             $('#search-modal').modal('show');
         },
@@ -772,11 +783,25 @@ export default {
         selectCharges(id) {
             let arr = [];
             let total;
+            let compute_qty;
+            let qty = this.qty;
+
+
             this.chargesTableData.forEach(function(item, index) {
 
                 if(parseInt(item['id']) === parseInt(id)) {
-                    arr.push(item);
-                    total = parseFloat(item['price']);
+
+                    compute_qty = item['price'] * qty;
+
+                    arr.push({
+                        id: id,
+                        name: item['name'],
+                        price: item['price'],
+                        qty: qty,
+                        tot_amnt: compute_qty,
+                    }); 
+
+                    total = parseFloat(compute_qty);
                 }
 
             });
@@ -786,8 +811,8 @@ export default {
             $('#search-modal').modal('hide');
         },
 
-        removeCharges(id, price) {
-            this.transactionTotals -= parseFloat(price);
+        removeCharges(id, tot_amnt) {
+            this.transactionTotals -= parseFloat(tot_amnt);
             this.selectedChargesTableData.splice(id - 1,1);
         },
 
@@ -1083,12 +1108,9 @@ export default {
         /* REMOVING LAST 6 CHARACTER THAT REPRESENT THE PAYMENT MONTH OF THE TRANSACTION */
 
         const date = new Date();
-
         let month = (date.getMonth() + 1).toString().padStart(2, "0");
         let year = date.getFullYear().toString().substr(-2);
-
         this.banca.body_number = this.fvr_application.body_number.slice(0, -6) + '-' + month + '-' + year;
-
         this.disableFields(true);
         this.initialData();
     }

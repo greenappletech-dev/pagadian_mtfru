@@ -18,7 +18,7 @@ class FvrApplicationCharge extends Model
 
     public function fetchDataByForeignIdForRenewal($id) {
         return FvrApplicationCharge::leftJoin('otherinc', 'otherinc.id', 'fvr_application_charges.otherinc_id')
-            ->select('otherinc.inc_desc as name', 'fvr_application_charges.otherinc_id as id', 'otherinc.price')
+            ->select('otherinc.inc_desc as name', 'fvr_application_charges.otherinc_id as id', 'otherinc.price', 'fvr_application_charges.qty', 'fvr_application_charges.tot_amnt')
             ->where('fvr_application_charges.fvr_application_id' , $id)
             ->get();
     }

@@ -323,8 +323,10 @@ class FvrApplicationController extends Controller
             foreach($request->charges as $charge) {
                 $charges = new FvrApplicationCharge();
                 $charges->fvr_application_id = $fvr_application->id;
-                $charges->otherinc_id = $charge['id'] ;
+                $charges->otherinc_id = $charge['id'];
                 $charges->price = $charge['price'];
+                $charges->qty = $charge['qty'];
+                $charges->tot_amnt = $charge['tot_amnt'];
                 $charges->save();
             }
 
@@ -355,7 +357,7 @@ class FvrApplicationController extends Controller
 
 
         foreach($fvr_application_charges as $charges) {
-            $total_charges += $charges->price;
+            $total_charges += $charges->tot_amnt;
         }
 
         return view('fvr.fvr_edit', compact('fvr_application', 'banca_master_data', 'fvr_auxiliary_engine', 'fvr_application_charges', 'total_charges'));
@@ -648,7 +650,7 @@ class FvrApplicationController extends Controller
         $total_charges = 0;
 
         foreach($prev_charges as $charges) {
-            $total_charges += $charges['price'];
+            $total_charges += $charges['tot_amnt'];
         }
 
 

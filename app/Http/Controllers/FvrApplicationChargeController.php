@@ -21,6 +21,8 @@ class FvrApplicationChargeController extends Controller
         $fvr_charges->fvr_application_id = $request->fvr_application_id;
         $fvr_charges->otherinc_id = $request->id;
         $fvr_charges->price = $request->price;
+        $fvr_charges->qty = $request->qty;
+        $fvr_charges->tot_amnt = $request->tot_amnt;
         $fvr_charges->save();
         return $this->update_charges($request->fvr_application_id);
     }

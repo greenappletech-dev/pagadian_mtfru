@@ -495,8 +495,11 @@
                         <span slot="price" slot-scope="{row}">
                             {{ formatPrice(row.price) }}
                         </span>
+                        <span slot="tot_amnt" slot-scope="{row}">
+                            {{ formatPrice(row.tot_amnt) }}
+                        </span>
                         <span slot="action" slot-scope="props">
-                            <button v-on:click="removeCharges(props.index, props.row.id, props.row.price)" class="btn btn-danger mb-2" style="font-size: 12px">Remove</button>
+                            <button v-on:click="removeCharges(props.index, props.row.id, props.row.tot_amnt)" class="btn btn-danger mb-2" style="font-size: 12px">Remove</button>
                         </span>
                     </v-client-table>
                 </div>
@@ -528,6 +531,11 @@
                         </div>
 
                         <div class="form group" v-if="addCharges">
+
+                            <label for="qty">Quantity</label>
+                            <input type="number" id="qty" class="form-control" v-model="qty">
+
+
                             <v-client-table style="font-size: 15px"
                                             :data="chargesTableData"
                                             :columns="charges_column"
@@ -684,12 +692,14 @@ export default {
                 },
             },
 
-            selected_charge_column: ['name','price', 'action'],
+            selected_charge_column: ['name','price', 'qty', 'tot_amnt','action'],
             selectedChargesTableData: this.fvr_application_charges,
             selected_charge_option: {
                 headings: {
                     name: 'Charge Name',
                     price: 'Price',
+                    qty: 'Quantity',
+                    tot_amnt: 'Total Amount',
                     action: 'Action',
                 },
                 filterable: false,
@@ -715,6 +725,7 @@ export default {
 
             edit_toggled: null,
             rowindex: null,
+            qty: 1,
 
             err: false,
             suc: false,
@@ -769,6 +780,7 @@ export default {
         },
 
         openModalToAddCharges() {
+            this.qty = 1;
             this.addCharges = true;
             $('#search-modal').modal('show');
         },
@@ -778,13 +790,24 @@ export default {
             let total;
             let charge_id;
             let price;
+            let compute_qty;
+            let qty = this.qty;
 
             this.chargesTableData.forEach(function(item, index) {
                 if(parseInt(item['id']) === parseInt(id)) {
-                    arr.push(item);
+
+                    compute_qty = item['price'] * qty;
+                     arr.push({
+                        id: id,
+                        name: item['name'],
+                        price: item['price'],
+                        qty: qty,
+                        tot_amnt: compute_qty,
+                    }); 
+
                     charge_id = item['id'];
                     price = item['price'];
-                    total = parseFloat(item['price']);
+                    total = parseFloat(compute_qty);
                 }
             });
 
@@ -794,14 +817,16 @@ export default {
                 fvr_application_id: this.banca.id,
                 id: charge_id,
                 price: price,
+                qty: qty,
+                tot_amnt: compute_qty,
             }).then(response => {
                 this.selectedChargesTableData = response.data.fvr_charges;
                 $('#search-modal').modal('hide');
             });
         },
 
-        removeCharges(index ,id, price) {
-            this.transactionTotals -= parseFloat(price);
+        removeCharges(index ,id, tot_amnt) {
+            this.transactionTotals -= parseFloat(tot_amnt);
             axios.get('fvr_update/delete_charges/' + id);
             this.selectedChargesTableData.splice(index - 1, 1);
         },
@@ -819,8 +844,7 @@ export default {
             })
 
             /* FETCH VALUES SO WE CAN TRIGGER THE FUNCTIONS */
-
-            this.renewal = this.transactionType.some(item => parseInt(item) === 1);
+            this.renewal = this.transactionType.some(item => parseInt(item) === 1 || parseInt(item) === 4);
             this.newOperator = this.transactionType.some(item => parseInt(item) === 2);
             this.changeUnit = this.transactionType.some(item => parseInt(item) === 3);
 

@@ -199,7 +199,15 @@ export default {
         filter() {
             axios.get('mtop_charges_list/filter/' + this.filters.body_number)
             .then(response => {
-                this.tableData = response.data.charges
+
+                if(response.data.charges.length === 0) {
+                    this.err_msg = 'No record found!';
+                    this.err = true;
+                    return;
+                }
+
+                this.tableData = response.data.charges;
+
             })
             .finally(() => {
                 this.loader = false;

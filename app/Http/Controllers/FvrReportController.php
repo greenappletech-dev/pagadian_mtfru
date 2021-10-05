@@ -55,7 +55,7 @@ class FvrReportController extends Controller
             'fvr_applications.or_number',
             'fvr_applications.or_date',
             'fvr_applications.transact_type',
-            DB::raw("SUM(fvr_application_charges.price) as collection"),
+            DB::raw("SUM(fvr_application_charges.tot_amnt) as collection"),
             'bancas.engine_motor_no',
             'bancas.fishing_gear'
         )
