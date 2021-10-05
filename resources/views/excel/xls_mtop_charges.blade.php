@@ -17,33 +17,35 @@
 
 <body>
 
-<table>
-
-    <thead>
-        <tr>
-            <th style="width: 10%">DATE</th>
-            <th style="width: 15%">TAX DATE</th>
-            <th>OPERATOR</th>
-            <th style="width: 10%">OR NUMBER</th>
-            <th style="width: 15%">MTFRB CASE NO</th>
-            <th style="width: 10%">VALIDITY DATE</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        @foreach($data as $charge)
+    <table>
+        <thead>
             <tr>
-                <td>{{ $charge->trnx_date }}</td>
-                <td>{{ $charge->inc_desc }}</td>
-                <td style="text-align: left">{{ $charge->operator }}</td>
-                <td>{{ $charge->or_number }}</td>
-                <td>{{ $charge->mtfrb_case_no }}</td>
-                <td>{{ $charge->validity_date }}</td>
+                <th style="width: 5%">BODY NUMBER</th>
+                <th>DATE</th>
+                <th>TAX YEAR</th>
+                <th>OPERATOR</th>
+                <th>OR NUMBER</th>
+                <th>AMOUNT</th>
+                <th>MTFRB CASE NO</th>
+                <th>VALIDITY DATE</th>
             </tr>
-        @endforeach
-    </tbody>
+        </thead>
 
-</table>
+        <tbody>
+            @foreach($data as $charge)
+                <tr>
+                    <td style="text-align: center">{{ $charge['body_number'] }}</td>
+                    <td style="text-align: center">{{ $charge['trnx_date'] }}</td>
+                    <td>{{ $charge['inc_desc'] }}</td>
+                    <td style="text-align: left">{{ $charge['operator'] }}</td>
+                    <td>{{ $charge['or_number'] }}</td>
+                    <td style="text-align: right">{{ $charge['amount'] }}</td>
+                    <td>{{ $charge['mtfrb_case_no'] }}</td>
+                    <td style="text-align: center">{{ $charge['validity_date'] }}</td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
 
 </body>
 

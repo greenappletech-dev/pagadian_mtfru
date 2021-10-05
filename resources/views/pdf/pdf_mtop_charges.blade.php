@@ -53,7 +53,6 @@
 
         main table thead tr th {
             padding: 5px 0px;
-            text-align: center;
             font-weight: normal;
         }
 
@@ -66,8 +65,7 @@
         }
 
         main table tbody tr td {
-            padding: 2px 0px;
-            text-align: center;
+            padding: 2px 2px;
         }
 
         main table tbody tr td:first-child {
@@ -110,24 +108,28 @@
     <table width="100%">
         <thead>
             <tr>
-                <th style="width: 10%">DATE</th>
-                <th style="width: 15%">TAX DATE</th>
-                <th style="text-align: left">OPERATOR</th>
-                <th style="width: 10%">OR NUMBER</th>
-                <th style="width: 15%">MTFRB CASE NO</th>
-                <th style="width: 10%">VALIDITY DATE</th>
+                <th style="width: 5%">BODY NUMBER</th>
+                <th>DATE</th>
+                <th>TAX YEAR</th>
+                <th>OPERATOR</th>
+                <th>OR NUMBER</th>
+                <th>AMOUNT</th>
+                <th>MTFRB CASE NO</th>
+                <th>VALIDITY DATE</th>
             </tr>
         </thead>
 
         <tbody>
             @foreach($mtop_charges as $charge)
                 <tr>
-                    <td>{{ $charge->trnx_date }}</td>
-                    <td>{{ $charge->inc_desc }}</td>
-                    <td style="text-align: left">{{ $charge->operator }}</td>
-                    <td>{{ $charge->or_number }}</td>
-                    <td>{{ $charge->mtfrb_case_no }}</td>
-                    <td>{{ $charge->validity_date }}</td>
+                    <td style="text-align: center">{{ $charge['body_number'] }}</td>
+                    <td style="text-align: center">{{ $charge['trnx_date'] }}</td>
+                    <td>{{ $charge['inc_desc'] }}</td>
+                    <td style="text-align: left">{{ $charge['operator'] }}</td>
+                    <td>{{ $charge['or_number'] }}</td>
+                    <td style="text-align: right">{{ $charge['amount'] }}</td>
+                    <td>{{ $charge['mtfrb_case_no'] }}</td>
+                    <td style="text-align: center">{{ $charge['validity_date'] }}</td>
                 </tr>
             @endforeach
         </tbody>

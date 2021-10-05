@@ -22,7 +22,10 @@ use \App\Http\Controllers\HomeController;
 use App\Http\Controllers\BancaController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\FvrReportController;
+use App\Http\Controllers\PatchController;
 use Illuminate\Support\Facades\Route;
+
+
 
 
 /*
@@ -152,9 +155,9 @@ Route::group(['middleware'=> 'auth'], function() {
 
         /* MTOP Charges List */
         Route::get('mtop_charges_list', [MTOPChargeListController::class, 'index']);
-        Route::get('mtop_charges_list/filter/{operator}/{year}', [MTOPChargeListController::class, 'filter']);
-        Route::get('mtop_charges_list/pdf/{operator}/{year}/{size}/{orientation}', [MTOPChargeListController::class, 'pdf']);
-        Route::get('mtop_charges_list/export/{operator}/{year}', [MTOPChargeListController::class, 'export']);
+        Route::get('mtop_charges_list/filter/{body_number}', [MTOPChargeListController::class, 'filter']);
+        Route::get('mtop_charges_list/pdf/{body_number}/{size}/{orientation}', [MTOPChargeListController::class, 'pdf']);
+        Route::get('mtop_charges_list/export/{body_number}', [MTOPChargeListController::class, 'export']);
 
         /* MTOP Reports */
         Route::get('mtop_report', [ReportController::class, 'index']);
@@ -245,6 +248,11 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('fvr_report/getdata', [FvrReportController::class, 'getdata']);
         Route::get('fvr_report/pdf/{from}/{to}/{barangay_id}/{size}/{orientation}', [FvrReportController::class, 'pdf']);
         Route::get('fvr_report/export/{from}/{to}/{barangay_id}', [FvrReportController::class, 'export']);
+
+
+        Route::get('patch/fix', [PatchController::class, 'change_old_status_to_transact_type']);
+        Route::get('patch/update', [PatchController::class, 'update_old_application']);
+
     });
 
 });

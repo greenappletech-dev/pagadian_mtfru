@@ -43,12 +43,10 @@
         <div class="main-content">
             <div class="row">
                 <div class="col-12 col-xl-6 mb-2">
-                    <label style="font-size: 14px; margin: 0" for="operator">Specific Operator/OR Number</label>
-                        <input style="text-transform: uppercase" type="text" id="operator" class="form-control" v-model="filters.operator">
-                    <label style="font-size: 14px; margin: 0" for="year">Annual Tax Year</label>
 
+                    <label style="font-size: 14px; margin: 0" for="year">Body Number</label>
                     <div style="position: relative;" class="input-group">
-                        <input type="text" id="year" maxlength="4" class="form-control text-uppercase" v-model="filters.year">
+                        <input type="text" id="year" maxlength="4" class="form-control text-uppercase" v-model="filters.body_number">
                         <div class="input-group-append">
                             <button v-on:click="filter" style="margin: 0; width: 50px; font-size: 14px;" class="btn-info rounded-right border-0 p-1">
                                 <i class="fas fa-sync-alt"></i>
@@ -130,19 +128,21 @@ export default {
 
     data() {
         return {
-            columns: ['trnx_date', 'or_number', 'inc_desc', 'operator','mtfrb_case_no', 'validity_date'],
+            columns: ['body_number', 'trnx_date', 'or_number', 'inc_desc', 'amount', 'operator','mtfrb_case_no', 'validity_date'],
             tableData: [],
             options: {
                 headings: {
+                    body_number         :       'Body Number',
                     trnx_date           :       'Transaction Date',
                     or_number           :       'OR Number',
                     inc_desc            :       'Charge',
+                    amount              :       'Amount',
                     operator            :       'Operator',
                     mtfrb_case_no       :       'MTFRB Case #',
                     validity_date       :       'Validity Date'
 
                 },
-                sortable: ['trnx_date', 'or_number', 'inc_desc', 'operator'],
+                sortable: ['body_number', 'trnx_date', 'or_number', 'inc_desc', 'operator', 'mtfrb_case_no'],
                 filterable: false,
                 templates: {
                     trnx_date: function(h, row) {
@@ -196,47 +196,14 @@ export default {
             this.suc_msg = '';
         },
 
-        validation(operator, tax_year) {
-
-            const year_format = new RegExp(/^[0-9]{4}$/);
-
-            if(operator === 'null' && tax_year === 'null') {
-                this.err = true;
-                this.err_msg = 'Select Atleast 1 Filter Option';
-                this.tableData = [];
-                this.loader = false;
-                return false;
-            }
-
-
-            if(year_format.exec(tax_year) == null && tax_year !== 'null') {
-                this.err = true;
-                this.err_msg = 'Invalid Year Format';
-                this.tableData = [];
-                this.loader = false;
-                return false;
-            }
-
-            return true;
-        },
-
         filter() {
-            this.loader = true;
-            let operator = this.filters.operator == null || this.filters.operator === '' ? 'null' : this.filters.operator;
-            let tax_year = this.filters.year == null || this.filters.year === '' ? 'null' : this.filters.year;
-
-
-            if(this.validation(operator, tax_year)) {
-
-                    axios.get('mtop_charges_list/filter/' + operator + '/' + tax_year)
-                    .then(response => {
-                        this.tableData = response.data.charges
-                    })
-                    .finally(() => {
-                        this.loader = false;
-                    });
-
-            }
+            axios.get('mtop_charges_list/filter/' + this.filters.body_number)
+            .then(response => {
+                this.tableData = response.data.charges
+            })
+            .finally(() => {
+                this.loader = false;
+            });
         },
 
 
@@ -247,32 +214,18 @@ export default {
         },
 
         pdfPrint() {
-            let operator = this.filters.operator == null || this.filters.operator === '' ? 'null' : this.filters.operator;
-            let tax_year = this.filters.year == null || this.filters.year === '' ? 'null' : this.filters.year;
-
-            if(this.validation(operator, tax_year)) {
-                window.open('mtop_charges_list/pdf/' + operator + '/' + tax_year + '/' + this.paperSize + '/' + this.paperOrientation);
-                $('#create-modal').modal('hide');
-                this.print = false;
-                return;
-            }
-
+            window.open('mtop_charges_list/pdf/' +  this.filters.body_number + '/'  + this.paperSize + '/' + this.paperOrientation);
             $('#create-modal').modal('hide');
+            this.print = false;
         },
 
         exportExcel(){
-            let operator = this.filters.operator == null || this.filters.operator === '' ? 'null' : this.filters.operator;
-            let tax_year = this.filters.year == null || this.filters.year === '' ? 'null' : this.filters.year;
-
-            if(this.validation(operator, tax_year)) {
-                window.open('mtop_charges_list/export/' + operator + '/' + tax_year);
-            }
-
+            window.open('mtop_charges_list/export/' +  this.filters.body_number);
         },
     },
 
     mounted() {
-
+        
     }
 }
 </script>
