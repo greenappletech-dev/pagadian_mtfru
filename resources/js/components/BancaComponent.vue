@@ -250,7 +250,7 @@ export default {
 
         destroyRecord(id) {
             let confirmBox = confirm("Do you really want to delete this record?");
-            if(confirmBox === true){
+            if(confirmBox === true) {
                 this.loader = true;
                 axios.get('banca/destroy/' + id)
                 .then(response => {
@@ -275,7 +275,7 @@ export default {
         //     this.print = false;
         // },
 
-        exportExcel(){
+        exportExcel() {
 
             window.open('banca/export');
         },

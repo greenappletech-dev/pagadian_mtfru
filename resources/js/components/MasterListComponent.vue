@@ -143,7 +143,7 @@ export default {
                 filterable: ['body_number', 'full_name'],
                 templates: {
                     date_registered: function(h, row) {
-                        return row.date_registered !== null ? moment(row.date_issued).format('MM-DD-YYYY') : null;
+                        return row.date_registered !== null ? moment(row.date_registered).format('MM-DD-YYYY') : null;
                     },
                     transact_date: function(h, row) {
                         return row.transact_date !== null ? moment(row.transact_date).format('MM-DD-YYYY') : null;

@@ -272,8 +272,6 @@ class ReportController extends Controller
 
 
 
-
-
             foreach($make_types as $make_type)
             {
 
@@ -483,30 +481,29 @@ class ReportController extends Controller
             $get_body_number_length = strlen($new_franchise->body_number_from);
             $report = array();
 
-
             $data = MtopApplication::leftJoin('taxpayer', 'taxpayer.id', 'mtop_applications.taxpayer_id')
-                ->leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
-                ->leftJoin('tricycles', 'tricycles.body_number', 'mtop_applications.body_number')
-                ->whereDate('mtop_applications.transact_date', '<=' , $to)
-                ->whereBetween('mtop_applications.body_number', [$new_franchise->body_number_from, $new_franchise->body_number_to])
-                ->select(
-                    DB::raw("mtop_applications.body_number::INTEGER"),
-                    'taxpayer.full_name',
-                    'taxpayer.address1 as address',
-                    'taxpayer.mobile',
-                    'tricycles.created_at as date_registered',
-                    'mtop_applications.transact_date',
-                    DB::raw("(mtop_applications.validity_date + INTERVAL '-2 years') as payment_date"),
-                    'mtop_applications.approve_date',
-                    'mtop_applications.make_type',
-                    'mtop_applications.status'
-                )
-                ->orderBy('mtop_applications.body_number')
-                ->get()
-                ->each(function($item, $index) {
-                    $item->status = $this->get_status($item->status);
-                })
-                ->toArray();
+                    ->leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
+                    ->leftJoin('tricycles', 'tricycles.body_number', 'mtop_applications.body_number')
+                    ->whereDate('mtop_applications.transact_date', '<=' , $to)
+                    ->whereBetween('mtop_applications.body_number', [$new_franchise->body_number_from, $new_franchise->body_number_to])
+                    ->select(
+                        DB::raw("mtop_applications.body_number::INTEGER"),
+                        'taxpayer.full_name',
+                        'taxpayer.address1 as address',
+                        'taxpayer.mobile',
+                        'tricycles.created_at as date_registered',
+                        'mtop_applications.transact_date',
+                        DB::raw("(mtop_applications.validity_date + INTERVAL '-2 years') as payment_date"),
+                        'mtop_applications.approve_date',
+                        'mtop_applications.make_type',
+                        'mtop_applications.status'
+                    )
+                    ->orderBy('mtop_applications.body_number')
+                    ->get()
+                    ->each(function($item, $index) {
+                        $item->status = $this->get_status($item->status);
+                    })
+                    ->toArray();
 
             $arr2 = range((int)$new_franchise->body_number_from,(int)$new_franchise->body_number_to);
             $no_data = array_diff($arr2, array_column($data, 'body_number'));
