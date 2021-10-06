@@ -15,6 +15,8 @@
     }
 </style>
 
+
+
 <body>
     <table>
         <thead>
@@ -26,7 +28,7 @@
                 <th rowspan="2">CONTACT NO.</th>
                 <th rowspan="2">DATE ISSUED</th>
                 <th rowspan="2">EXPIRE ON</th>
-                <th rowspan="2">STATUS</th>
+                <th rowspan="2">STATUS</th> 
                 <th rowspan="2">DATE APPLY</th>
                 <th rowspan="2">MAKE/TYPE</th>
                 <th rowspan="2">ENGINE MOTOR NO</th>
@@ -54,10 +56,10 @@
                     <td>{{ $application['mtfrb_case_no'] }}</td>
                     <td>{{ $application['address1'] }}</td>
                     <td>{{ $application['mobile'] }}</td>
-                    <td>{{ $application['date_registered'] == null ? '' : date('Y-m-d' , strtotime($application['date_registered']))}}</td>
+                    <td>{{ $application['date_registered'] }}</td>
                     <td>{{ $application['validity_date'] }}</td>
                     <td>{{ $application['transact_type'] }}</td>
-                    <td>{{ $application['transact_date'] == null ? '' : $application['transact_date'] }}</td>
+                    <td>{{ $application['transact_date'] }}</td>
                     <td>{{ $application['make_type'] }}</td>
                     <td>{{ $application['engine_motor_no'] }}</td>
                     <td>{{ $application['chassis_no'] }}</td>
