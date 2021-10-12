@@ -20,7 +20,10 @@ class FvrApplicationCharge extends Model
         return FvrApplicationCharge::leftJoin('otherinc', 'otherinc.id', 'fvr_application_charges.otherinc_id')
             ->select('otherinc.inc_desc as name', 'fvr_application_charges.otherinc_id as id', 'otherinc.price', 'fvr_application_charges.qty', 'fvr_application_charges.tot_amnt')
             ->where('fvr_application_charges.fvr_application_id' , $id)
-            ->get();
+            ->get()
+            ->each(function($item, $index) {
+                $item->price = $item->price == 0 ? ($item->tot_amnt / $item->qty) : $item->price;
+            });
     }
 
     public function fetchDataForReport($barangay_id, $from, $to) {

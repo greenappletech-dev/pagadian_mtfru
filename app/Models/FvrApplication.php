@@ -87,7 +87,7 @@ class FvrApplication extends Model
                 'fvr_applications.*',
                 'taxpayer.full_name as operator',
                 DB::raw("CONCAT(fvr_applications.name,' / ', fvr_applications.color) as boat_desc"),
-                DB::raw('SUM(fvr_application_charges.price) as amount'),
+                DB::raw('SUM(fvr_application_charges.tot_amnt) as amount'),
             )->where(function($query) use ($barangay_id) {
                 if($barangay_id !== 'null') {
                     $query->where('fvr_applications.barangay_id', $barangay_id);

@@ -541,11 +541,12 @@
                                             :columns="charges_column"
                                             :options="charges_option">
                                     <span slot="price" slot-scope="{row}">
-                                        {{ formatPrice(row.price) }}
+                                        <input v-if="row.price == 0" type="number" class="form-control" v-model="other_price">
+                                        <span v-else>{{ formatPrice(row.price) }}</span>
                                     </span>
-                                <span slot="action" slot-scope="{row}">
-                                    <button v-on:click="selectCharges(row.id)" class="btn btn-primary mb-2" style="font-size: 12px">Select</button>
-                                </span>
+                                    <span slot="action" slot-scope="{row}">
+                                        <button v-on:click="selectCharges(row.id)" class="btn btn-primary mb-2" style="font-size: 12px">Select</button>
+                                    </span>
                             </v-client-table>
                         </div>
 
@@ -731,6 +732,7 @@ export default {
             suc: false,
             err_msg: '',
             suc_msg: '',
+            other_price: 0,
 
             searchNewOperator: false,
             droppingValue: false,
@@ -789,29 +791,32 @@ export default {
             let arr = [];
             let total;
             let charge_id;
-            let price;
             let compute_qty;
             let qty = this.qty;
+            let price = this.other_price;
+
 
             this.chargesTableData.forEach(function(item, index) {
                 if(parseInt(item['id']) === parseInt(id)) {
 
-                    compute_qty = item['price'] * qty;
+                    if(item['price'] != 0) { 
+                        price = item['price']; 
+                    }
+
+                    compute_qty = price * qty;
+
                      arr.push({
                         id: id,
                         name: item['name'],
-                        price: item['price'],
+                        price: price,
                         qty: qty,
                         tot_amnt: compute_qty,
                     }); 
 
                     charge_id = item['id'];
-                    price = item['price'];
                     total = parseFloat(compute_qty);
                 }
             });
-
-            this.transactionTotals += total;
 
             axios.post('fvr_update/add_charges', {
                 fvr_application_id: this.banca.id,
@@ -823,6 +828,9 @@ export default {
                 this.selectedChargesTableData = response.data.fvr_charges;
                 $('#search-modal').modal('hide');
             });
+
+            this.transactionTotals += total;
+            this.other_price = 0;
         },
 
         removeCharges(index ,id, tot_amnt) {
