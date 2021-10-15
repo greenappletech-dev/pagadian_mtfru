@@ -187,7 +187,7 @@ class MTOPReportExport implements FromView, WithStyles, WithColumnFormatting
         if($this->type == 1)
         {
             return [
-                'G' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
+                'K' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
             ];
         }
 

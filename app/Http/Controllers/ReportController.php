@@ -114,7 +114,6 @@ class ReportController extends Controller
 
             foreach($transact_type as $transact)
             {
-
                 $mtop_applications = MtopApplication::leftJoin(
                     'taxpayer',
                     'taxpayer.id',
@@ -148,14 +147,17 @@ class ReportController extends Controller
                 ->select(
                     'mtop_applications.transact_date',
                     'mtop_applications.body_number',
+                    'mtop_applications.make_type',
                     'taxpayer.full_name',
                     'taxpayer.address1',
                     'taxpayer.mobile',
                     'colhdr.or_number',
+                    'colhdr.trnx_date',
                     'mtop_applications.transact_type',
+                    'mtop_applications.transact_type as status',
                     'mtop_applications.id as id',
                 )
-                ->selectRaw('SUM(collne2.price) as total_amount')
+                ->selectRaw('SUM(collne2.ln_amnt) as total_amount')
                 ->groupBy(
                     'mtop_applications.transact_date',
                     'mtop_applications.body_number',
@@ -164,11 +166,44 @@ class ReportController extends Controller
                     'taxpayer.address1',
                     'taxpayer.mobile',
                     'colhdr.or_number',
+                    'colhdr.trnx_date',
                     'mtop_applications.transact_type',
                     'mtop_applications.id'
                 )
                 ->orderBy('transact_type')
-                ->get();
+                ->get()
+                ->each(function($item, $index) {
+
+                    $transact_type = explode(',', $item->status);
+                    $transact_type_to_string = array();
+
+                    foreach($transact_type as $type) 
+                    {  
+
+                        if($type == 1)
+                        {
+                            array_push($transact_type_to_string, 'R');
+                        }
+
+                        if($type == 2)
+                        {
+                            array_push($transact_type_to_string, 'T');
+                        }
+
+                        if($type == 3)
+                        {
+                            array_push($transact_type_to_string, 'CU');
+                        }
+
+                        if($type == 4) 
+                        {
+                            array_push($transact_type_to_string, 'N');
+                        }
+
+                    }
+
+                    $item->status = implode('|', $transact_type_to_string);
+                });
 
 
                 foreach($mtop_applications as $data)
@@ -183,10 +218,13 @@ class ReportController extends Controller
                             $data['mobile'],
                             $data['or_number'],
                             $data['total_amount'],
-                            $transact[1],
+                            $transact[1], /* still on the foreach getting the value of the transact type */
                             $data['transact_type'],
                             $data['transact_date'],
                             $data['id'],
+                            $data['make_type'],
+                            $data['status'],
+                            $data['trnx_date'],
                         ]);
 
                 }
