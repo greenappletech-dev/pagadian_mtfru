@@ -488,8 +488,15 @@
                 </div>
 
                 <div class="card-body">
+
+                    <label for="or_group">Select Charge Group:</label>
+                    <select id="or_group" class="form-control mb-2" v-model="or_group" v-on:change="filterORGroup(or_group)">
+                        <option value="A">Charge A</option>
+                        <option value="B">Charge B</option>
+                    </select>
+
                     <v-client-table
-                        :data="selectedChargesTableData"
+                        :data="filteredChargesTableData"
                         :columns="selected_charge_column"
                         :options="selected_charge_option">
                         <span slot="price" slot-scope="{row}">
@@ -534,7 +541,7 @@
 
                             <label for="qty">Quantity</label>
                             <input type="number" id="qty" class="form-control" v-model="qty">
- 
+
 
                             <v-client-table style="font-size: 15px"
                                             :data="chargesTableData"
@@ -693,6 +700,7 @@ export default {
 
             selected_charge_column: ['name','price', 'qty', 'tot_amnt','action'],
             selectedChargesTableData: [],
+            filteredChargesTableData: [],
             selected_charge_option: {
                 headings: {
                     name: 'Charge Name',
@@ -722,6 +730,7 @@ export default {
             edit_toggled: null,
             rowindex: null,
             other_price: 0,
+            or_group: 'A',
 
             err: false,
             suc: false,
@@ -767,12 +776,16 @@ export default {
         },
 
         closeMessageBox() {
+            if(this.suc === true) {
+                window.location.href = 'fvr';
+            }
+
             this.err = false;
-            this.suc = false;
-            this.adding = false;
-            this.print = false;
             this.err_msg = '';
-            this.suc_msg = '';
+            // this.suc = false;
+            // this.adding = false;
+            // this.print = false;
+            // this.suc_msg = '';
         },
 
         openModalToAddCharges() {
@@ -787,14 +800,15 @@ export default {
             let compute_qty;
             let qty = this.qty;
             let price = this.other_price;
+            let or_group = this.or_group;
 
 
             this.chargesTableData.forEach(function(item, index) {
-                
+
                 if(parseInt(item['id']) === parseInt(id)) {
 
-                    if(item['price'] != 0) { 
-                        price = item['price']; 
+                    if(item['price'] != 0) {
+                        price = item['price'];
                     }
 
                     compute_qty = price * qty;
@@ -805,7 +819,8 @@ export default {
                         price: price,
                         qty: qty,
                         tot_amnt: compute_qty,
-                    }); 
+                        or_group: or_group,
+                    });
 
                     total = parseFloat(compute_qty);
                 }
@@ -815,11 +830,17 @@ export default {
             this.selectedChargesTableData.push(arr[0]);
             $('#search-modal').modal('hide');
             this.other_price = 0;
+
+
+            /* filter the data to display */
+           this.filterORGroup(this.or_group);
+
         },
 
         removeCharges(id, tot_amnt) {
             this.transactionTotals -= parseFloat(tot_amnt);
             this.selectedChargesTableData.splice(id - 1,1);
+            this.filterORGroup(this.or_group);
         },
 
         clearInput() {
@@ -1114,6 +1135,10 @@ export default {
             .finally(
                 () => this.loader = false
             );
+        },
+
+        filterORGroup(or_group) {
+            this.filteredChargesTableData = this.selectedChargesTableData.filter(function(item) { return item.or_group === or_group; });
         }
     },
 

@@ -23,13 +23,17 @@ class FvrApplicationChargeController extends Controller
         $fvr_charges->price = $request->price;
         $fvr_charges->qty = $request->qty;
         $fvr_charges->tot_amnt = $request->tot_amnt;
+        $fvr_charges->or_group = $request->or_group;
         $fvr_charges->save();
         return $this->update_charges($request->fvr_application_id);
     }
 
     public function destroy($id) {
         $fvr_charge = FvrApplicationCharge::where('id', $id)->first();
+        $id = $fvr_charge->fvr_application_id;
         $fvr_charge->delete();
+
+        return $this->update_charges($id);
     }
 
     public function update_charges($id) {

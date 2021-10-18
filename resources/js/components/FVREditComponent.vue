@@ -488,8 +488,15 @@
                 </div>
 
                 <div class="card-body">
+
+                    <label for="or_group">Select Charge Group:</label>
+                    <select id="or_group" class="form-control mb-2" v-model="or_group" v-on:change="filterORGroup(or_group)">
+                        <option value="A">Charge A</option>
+                        <option value="B">Charge B</option>
+                    </select>
+
                     <v-client-table
-                        :data="selectedChargesTableData"
+                        :data="filteredChargesTableData"
                         :columns="selected_charge_column"
                         :options="selected_charge_option">
                         <span slot="price" slot-scope="{row}">
@@ -695,6 +702,7 @@ export default {
 
             selected_charge_column: ['name','price', 'qty', 'tot_amnt','action'],
             selectedChargesTableData: this.fvr_application_charges,
+            filteredChargesTableData: [],
             selected_charge_option: {
                 headings: {
                     name: 'Charge Name',
@@ -704,6 +712,7 @@ export default {
                     action: 'Action',
                 },
                 filterable: false,
+                sortable: [],
                 texts : {
                     filter: 'Search:',
                 },
@@ -733,6 +742,7 @@ export default {
             err_msg: '',
             suc_msg: '',
             other_price: 0,
+            or_group: 'A',
 
             searchNewOperator: false,
             droppingValue: false,
@@ -794,6 +804,8 @@ export default {
             let compute_qty;
             let qty = this.qty;
             let price = this.other_price;
+            let or_group = this.or_group;
+            this.filteredChargesTableData = [];
 
 
             this.chargesTableData.forEach(function(item, index) {
@@ -811,6 +823,7 @@ export default {
                         price: price,
                         qty: qty,
                         tot_amnt: compute_qty,
+                        or_group: or_group,
                     }); 
 
                     charge_id = item['id'];
@@ -824,8 +837,12 @@ export default {
                 price: price,
                 qty: qty,
                 tot_amnt: compute_qty,
+                or_group: or_group,
             }).then(response => {
                 this.selectedChargesTableData = response.data.fvr_charges;
+                 /* filter the data to display */
+                this.filterORGroup(this.or_group);
+
                 $('#search-modal').modal('hide');
             });
 
@@ -833,10 +850,10 @@ export default {
             this.other_price = 0;
         },
 
-        removeCharges(index ,id, tot_amnt) {
+        removeCharges(index,id, tot_amnt) {
+            let or_group = this.or_group;
             this.transactionTotals -= parseFloat(tot_amnt);
-            axios.get('fvr_update/delete_charges/' + id);
-            this.selectedChargesTableData.splice(index - 1, 1);
+            axios.get('fvr_update/delete_charges/' + id).then(response => { this.selectedChargesTableData = response.data.fvr_charges; this.filterORGroup(or_group); });
         },
 
         clearInput() {
@@ -1082,6 +1099,8 @@ export default {
 
         removeAuxiliary(index) {
             this.auxiliaryTableData.splice(index - 1, 1);
+             /* filter the data to display */
+           this.filterORGroup(this.or_group);
         },
 
         updateRecord() {
@@ -1155,12 +1174,17 @@ export default {
             .finally(
                 () => this.loader = false
             );
+        },
+
+        filterORGroup(or_group) {
+            this.filteredChargesTableData = this.selectedChargesTableData.filter(function(item) { return item.or_group === or_group; });
         }
     },
 
     mounted() {
         this.disableFields(true);
         this.initialData();
+        this.filterORGroup('A');
     }
 }
 </script>

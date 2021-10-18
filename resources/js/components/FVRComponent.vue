@@ -142,8 +142,16 @@
                         <div class="form-group" v-else>
 
                             <div class="form-group" v-if="payment">
-                                <label for="or_no">OR Number:</label>
-                                <input type="text" class="form-control" id="or_no" v-model="ORNumber" maxlength="20">
+                                <div v-if="orGroupA">
+                                    <label for="or_no">OR Number A:</label>
+                                    <input type="text" class="form-control" id="or_no" v-model="ORNumber" maxlength="20">
+                                </div>
+
+                                <div v-if="orGroupB">
+                                    <label for="or_no">OR Number B:</label>
+                                    <input type="text" class="form-control" id="or_no" v-model="ORNumber2" maxlength="20">
+                                </div>
+                                
 
                                 <label for="or_date">OR Date:</label>
                                 <input type="date" class="form-control" id="or_date" v-model="ORDate">
@@ -250,6 +258,7 @@ export default {
             barangayCodeValue: '',
             statusValue: '',
             ORNumber: null,
+            ORNumber2: null,
             ORDate: null,
 
             err_msg: '',
@@ -257,6 +266,9 @@ export default {
             suc_msg: '',
             suc: false,
 
+
+            orGroupA: false,
+            orGroupB: false,
             payment: false,
             loader: false,
             adding: false,
@@ -314,7 +326,7 @@ export default {
         },
 
         returnSuccess(response) {
-            $('#create-modal').modal('hide');
+            $('#print-modal').modal('hide');
             this.suc = true;
             this.suc_msg = response.data.message;
         },
@@ -323,7 +335,7 @@ export default {
             if(error.response.data.err_msg) {
                 this.err = true;
                 this.err_msg = error.response.data.err_msg;
-                $('#create-modal').modal('hide');
+                $('#print-modal').modal('hide');
                 return;
             }
             this.errors = [];
@@ -376,6 +388,27 @@ export default {
 
         openModalForPayment(id) {
             this.applicationIdValue = id;
+            this.orGroupA = false;
+            this.orGroupB = false;
+            this.errors = [];
+
+            axios.get('fvr/checkorgroup/' + id).then(response => { 
+                response.data.or_group.forEach((item) => {
+                    this.fetchOrGroup(item.or_group, item.count);
+                })
+            });
+        },
+
+        fetchOrGroup(group, count) {
+
+            if(group === "A" && count > 0) {
+                this.orGroupA = true;
+            }
+
+            if(group === "B" && count > 0) {
+                this.orGroupB = true;
+            }
+
             this.payment = true;
             this.print = false;
             $('#print-modal').modal('show');
@@ -390,6 +423,9 @@ export default {
                 axios.patch('fvr/payment', {
                     id: this.applicationIdValue,
                     or_number: this.ORNumber,
+                    or_number_2: this.ORNumber2,
+                    or_group_a: this.orGroupA,
+                    or_group_b: this.orGroupB,
                     or_date: this.ORDate,
                 }).then(response => {
                     this.returnSuccess(response);
@@ -398,8 +434,6 @@ export default {
                     this.returnFailed(error);
                 })
                 .finally(() => this.loader = false);
-
-                $('#print-modal').modal('hide');
             }
         },
 

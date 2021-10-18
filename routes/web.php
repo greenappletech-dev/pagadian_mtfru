@@ -210,6 +210,7 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::patch('fvr/approve/{id}', [FvrApplicationController::class, 'approve']);
         Route::get('fvr/pdf_application/{id}/{form_to_print}', [FvrApplicationController::class, 'pdfApplication']);
         Route::get('fvr/pdf/{size}/{orientation}/{from}/{to}/{barangay_id}', [FvrApplicationController::class, 'pdf']);
+        Route::get('fvr/checkorgroup/{id}', [FvrApplicationController::class, 'or_group']);
 
 
         /* FVR ENTRY */

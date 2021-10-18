@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exports\SampleExport;
-use App\Models\FvrApplication;
+use \App\Models\FvrApplication;
 use App\Models\MtopApplication;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;

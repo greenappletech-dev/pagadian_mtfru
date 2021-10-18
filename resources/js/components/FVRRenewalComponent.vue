@@ -488,8 +488,15 @@
                 </div>
 
                 <div class="card-body">
+
+                    <label for="or_group">Select Charge Group:</label>
+                    <select id="or_group" class="form-control mb-2" v-model="or_group" v-on:change="filterORGroup(or_group)">
+                        <option value="A">Charge A</option>
+                        <option value="B">Charge B</option>
+                    </select>
+
                     <v-client-table
-                        :data="selectedChargesTableData"
+                        :data="filteredChargesTableData"
                         :columns="selected_charge_column"
                         :options="selected_charge_option">
                         <span slot="price" slot-scope="{row}">
@@ -534,7 +541,7 @@
 
                             <label for="qty">Quantity</label>
                             <input type="number" id="qty" class="form-control" v-model="qty">
- 
+
                             <v-client-table style="font-size: 15px"
                                             :data="chargesTableData"
                                             :columns="charges_column"
@@ -694,6 +701,7 @@ export default {
 
             selected_charge_column: ['name','price', 'qty', 'tot_amnt','action'],
             selectedChargesTableData: this.fvr_application_charges,
+            filteredChargesTableData: [],
             selected_charge_option: {
                 headings: {
                     name: 'Charge Name',
@@ -716,6 +724,7 @@ export default {
             auxiliary: [],
             new_operator: [],
             qty: 1,
+            or_group: 'A',
 
             searchedValue: null,
             searchNewValue: null,
@@ -788,14 +797,15 @@ export default {
             let compute_qty;
             let qty = this.qty;
             let price = this.other_price;
+            let or_group = this.or_group;
 
 
             this.chargesTableData.forEach(function(item, index) {
 
                 if(parseInt(item['id']) === parseInt(id)) {
 
-                    if(item['price'] != 0) { 
-                        price = item['price']; 
+                    if(item['price'] != 0) {
+                        price = item['price'];
                     }
 
                     compute_qty = price * qty;
@@ -806,7 +816,8 @@ export default {
                         price: price,
                         qty: qty,
                         tot_amnt: compute_qty,
-                    }); 
+                        or_group: or_group,
+                    });
 
                     total = parseFloat(compute_qty);
                 }
@@ -817,11 +828,15 @@ export default {
             this.transactionTotals += total;
             this.selectedChargesTableData.push(arr[0]);
             $('#search-modal').modal('hide');
+
+            /* filter the data to display */
+            this.filterORGroup(this.or_group);
         },
 
         removeCharges(id, tot_amnt) {
             this.transactionTotals -= parseFloat(tot_amnt);
             this.selectedChargesTableData.splice(id - 1,1);
+            this.filterORGroup(this.or_group);
         },
 
         clearInput() {
@@ -889,9 +904,12 @@ export default {
         },
 
         openModalToAdd() {
-            this.add_engine = true;
-            this.addCharges = false;
-            $('#search-modal').modal('show');
+            if(this.suc === true) {
+                window.location.href = 'fvr';
+            }
+
+            this.err = false;
+            this.err_msg = '';
         },
 
         addEngine() {
@@ -1108,6 +1126,10 @@ export default {
             .finally(
                 () => this.loader = false
             );
+        },
+
+        filterORGroup(or_group) {
+            this.filteredChargesTableData = this.selectedChargesTableData.filter(function(item) { return item.or_group === or_group; });
         }
     },
 
@@ -1121,6 +1143,9 @@ export default {
         this.banca.body_number = this.fvr_application.body_number.slice(0, -6) + '-' + month + '-' + year;
         this.disableFields(true);
         this.initialData();
+        this.filterORGroup('A');
+
+        console.log(this.fvr_application_charges);
     }
 }
 </script>
