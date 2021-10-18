@@ -45,7 +45,7 @@ class PatchController extends Controller
 
     public function change_old_status_to_transact_type() {
         $tricycles = Tricycle::orderBy('id')->get();
-        
+
         $test = array();
         foreach($tricycles as $tricycle) {
             Tricycle::where('id', $tricycle['id'])->first();
@@ -65,5 +65,14 @@ class PatchController extends Controller
         }
 
         return 'Success!';
+    }
+
+    public function updateMobileNumber() {
+        $tricycles = Tricycle::whereNotNull('mobile')->orderBy('body_number')->get();
+
+        foreach($tricycles as $tricycle) {
+            DB::table('taxpayer')->where('taxpayer_id', $tricycle->operator_id)
+            ->update(['mobile' => $tricycles['mobile']]);
+        }
     }
 }

@@ -616,11 +616,21 @@ export default {
         },
 
         closeMessageBox() {
-            this.initialData();
+            // this.initialData();
+            // this.err = false;
+            // this.suc = false;
+            // this.err_msg = '';
+            // this.suc_msg = '';
+
+            if(this.suc === true) {
+                let pathname = window.location.pathname.split('/').splice(1, 2).join('/').replace('mtop_edit', 'mtop');
+                location.replace(window.location.origin + '/' + pathname);
+            }
+
+            this.adding = false;
+            this.print = false;
             this.err = false;
-            this.suc = false;
             this.err_msg = '';
-            this.suc_msg = '';
         },
 
 

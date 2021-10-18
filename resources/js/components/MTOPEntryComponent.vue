@@ -686,10 +686,12 @@ export default {
         },
 
         closeMessageBox() {
+            if(this.suc === true) {
+                window.location.href = 'mtop';
+            }
+
             this.err = false;
-            this.suc = false;
             this.err_msg = '';
-            this.suc_msg = '';
         },
 
         uploadImage(event) {

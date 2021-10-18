@@ -777,12 +777,15 @@ export default {
         },
 
         closeMessageBox() {
-            this.err = false;
-            this.suc = false;
+            if(this.suc === true) {
+                let pathname = window.location.pathname.split('/').splice(1, 2).join('/').replace('fvr_entry', 'fvr');
+                location.replace(window.location.origin + '/' + pathname);
+            }
+
             this.adding = false;
             this.print = false;
+            this.err = false;
             this.err_msg = '';
-            this.suc_msg = '';
         },
 
         openModalToAddCharges() {
@@ -904,12 +907,9 @@ export default {
         },
 
         openModalToAdd() {
-            if(this.suc === true) {
-                window.location.href = 'fvr';
-            }
-
-            this.err = false;
-            this.err_msg = '';
+            this.add_engine = true;
+            this.addCharges = false;
+            $('#search-modal').modal('show');
         },
 
         addEngine() {

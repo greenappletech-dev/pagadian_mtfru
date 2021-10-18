@@ -783,12 +783,15 @@ export default {
         },
 
         closeMessageBox() {
-            this.err = false;
-            this.suc = false;
+            if(this.suc === true) {
+                let pathname = window.location.pathname.split('/').splice(1, 2).join('/').replace('fvr_edit', 'fvr');
+                location.replace(window.location.origin + '/' + pathname);
+            }
+
             this.adding = false;
             this.print = false;
+            this.err = false;
             this.err_msg = '';
-            this.suc_msg = '';
         },
 
         openModalToAddCharges() {
@@ -811,8 +814,8 @@ export default {
             this.chargesTableData.forEach(function(item, index) {
                 if(parseInt(item['id']) === parseInt(id)) {
 
-                    if(item['price'] != 0) { 
-                        price = item['price']; 
+                    if(item['price'] != 0) {
+                        price = item['price'];
                     }
 
                     compute_qty = price * qty;
@@ -824,7 +827,7 @@ export default {
                         qty: qty,
                         tot_amnt: compute_qty,
                         or_group: or_group,
-                    }); 
+                    });
 
                     charge_id = item['id'];
                     total = parseFloat(compute_qty);

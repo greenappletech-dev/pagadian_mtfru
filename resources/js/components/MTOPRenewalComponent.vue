@@ -623,8 +623,13 @@ export default {
         },
 
         closeMessageBox() {
-            this.initialData();
-            this.clearInputs();
+            if(this.suc === true) {
+                let pathname = window.location.pathname.split('/').splice(1, 2).join('/').replace('mtop_entry', 'mtop');
+                location.replace(window.location.origin + '/' + pathname);
+            }
+
+            this.err = false;
+            this.err_msg = '';
         },
 
         initialData() {
