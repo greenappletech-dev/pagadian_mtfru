@@ -96,7 +96,7 @@
                 <td style="text-align: left">{{ $report->address }}</td>
                 <td>{{ $report->make_type }}</td>
                 <td>{{ $report->horsepower }}</td>
-                <td>{{ $report->or_number }}</td>
+                <td>{{ $report->or_number }} <br> {{ $report->or_number_2 }}</td>
                 <td>{{ $report->or_date }}</td>
                 <td>{{ $report->transact_type }}</td>
                 <td>{{ number_format($report->collection, 2) }}</td>

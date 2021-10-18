@@ -782,10 +782,6 @@ export default {
 
             this.err = false;
             this.err_msg = '';
-            // this.suc = false;
-            // this.adding = false;
-            // this.print = false;
-            // this.suc_msg = '';
         },
 
         openModalToAddCharges() {
