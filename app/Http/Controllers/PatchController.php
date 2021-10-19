@@ -67,12 +67,14 @@ class PatchController extends Controller
         return 'Success!';
     }
 
-    public function updateMobileNumber() {
-        $tricycles = Tricycle::whereNotNull('mobile')->orderBy('body_number')->get();
+    public function update_mobile_number() {
+        $tricycles = Tricycle::whereNotNull('mobile')->where('mobile','!=','')->select('operator_id', 'mobile')->orderBy('body_number')->get();
 
         foreach($tricycles as $tricycle) {
-            DB::table('taxpayer')->where('taxpayer_id', $tricycle->operator_id)
-            ->update(['mobile' => $tricycles['mobile']]);
+            DB::table('taxpayer')->where('id', $tricycle->operator_id)
+            ->update(['mobile' => $tricycle->mobile]);
         }
+
+        return 'Success!';
     }
 }
