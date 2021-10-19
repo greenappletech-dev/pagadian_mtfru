@@ -136,6 +136,7 @@
                 <th>DATE COMPLETED</th>
                 <th>MAKE/TYPE</th>
                 <th>REMARKS</th>
+                <th>STATUS</th>
             </tr>
 
 
@@ -150,12 +151,13 @@
                     <td>{{ $value['full_name'] }}</td>
                     <td>{{ $value['address'] }}</td>
                     <td>{{ $value['mobile'] }}</td>
-                    <td>{{ $value['date_registered'] == null ? '' : date('m-d-Y', strtotime($value['date_registered'])); }}</td>
-                    <td>{{ $value['transact_date'] == null ? '' : date('m-d-Y', strtotime($value['transact_date'])) }}</td>
-                    <td>{{ $value['payment_date'] == null ? '' : date('m-d-Y', strtotime($value['payment_date'])) }}</td>
-                    <td>{{ $value['approve_date'] == null ? '' : date('m-d-Y', strtotime($value['approve_date'])) }}</td>
+                    <td>{{ $value['date_registered'] == null ? '' : date('m/d/Y', strtotime($value['date_registered'])); }}</td>
+                    <td>{{ $value['transact_date'] == null ? '' : date('m/d/Y', strtotime($value['transact_date'])) }}</td>
+                    <td>{{ $value['payment_date'] == null ? '' : date('m/d/Y', strtotime($value['payment_date'])) }}</td>
+                    <td>{{ $value['approve_date'] == null ? '' : date('m/d/Y', strtotime($value['approve_date'])) }}</td>
                     <td>{{ $value['make_type'] }}</td>
                     <td>{{ $value['status'] }}</td>
+                    <td style="text-align: center">{{ $value['transact_type'] }}</td>
                 </tr>
 
             @endforeach
@@ -164,7 +166,7 @@
 
     </table>
 
-   
+
 
 </main>
 </body>

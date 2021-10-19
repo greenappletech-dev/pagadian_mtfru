@@ -94,6 +94,38 @@ class ReportController extends Controller
         return false;
     }
 
+    public function get_transaction_type($transact_type) : string {
+        $transact_type = explode(',', $transact_type);
+        $transact_type_to_string = array();
+
+        foreach($transact_type as $type)
+        {
+
+            if($type == 1)
+            {
+                array_push($transact_type_to_string, 'R');
+            }
+
+            if($type == 2)
+            {
+                array_push($transact_type_to_string, 'T');
+            }
+
+            if($type == 3)
+            {
+                array_push($transact_type_to_string, 'CU');
+            }
+
+            if($type == 4)
+            {
+                array_push($transact_type_to_string, 'N');
+            }
+
+        }
+
+        return implode('|', $transact_type_to_string);
+    }
+
     public function generate_report($type, $from, $to, $barangay_id) {
         /* generate old new franchise. group report per body number */
 
@@ -172,37 +204,8 @@ class ReportController extends Controller
                 )
                 ->orderBy('transact_type')
                 ->get()
-                ->each(function($item, $index) {
-
-                    $transact_type = explode(',', $item->status);
-                    $transact_type_to_string = array();
-
-                    foreach($transact_type as $type) 
-                    {  
-
-                        if($type == 1)
-                        {
-                            array_push($transact_type_to_string, 'R');
-                        }
-
-                        if($type == 2)
-                        {
-                            array_push($transact_type_to_string, 'T');
-                        }
-
-                        if($type == 3)
-                        {
-                            array_push($transact_type_to_string, 'CU');
-                        }
-
-                        if($type == 4) 
-                        {
-                            array_push($transact_type_to_string, 'N');
-                        }
-
-                    }
-
-                    $item->status = implode('|', $transact_type_to_string);
+                ->each(function($item) {
+                    $item->status = $this->get_transaction_type($item->status);
                 });
 
 
@@ -350,6 +353,7 @@ class ReportController extends Controller
 
             array_push($report, [$old_body_numbers, $new_body_numbers]);
 
+            return $report;
         }
 
 
@@ -534,12 +538,14 @@ class ReportController extends Controller
                         DB::raw("(mtop_applications.validity_date + INTERVAL '-2 years') as payment_date"),
                         'mtop_applications.approve_date',
                         'mtop_applications.make_type',
-                        'mtop_applications.status'
+                        'mtop_applications.status',
+                        'mtop_applications.transact_type',
                     )
                     ->orderBy('mtop_applications.body_number')
                     ->get()
                     ->each(function($item, $index) {
                         $item->status = $this->get_status($item->status);
+                        $item->transact_type = $this->get_transaction_type($item->transact_type);
                     })
                     ->toArray();
 
@@ -559,69 +565,14 @@ class ReportController extends Controller
                     'approve_date' => '',
                     'make_type' => '',
                     'status' => '',
+                    'transact_type' => '',
                 ]);
             }
 
             return collect($data)->sortBy('body_number')->toArray();
 
-
-//            for($i = (int)$new_franchise->body_number_from; $i <= (int)$new_franchise->body_number_to; $i++)
-//            {
-//
-//                /* adding zeros in the front of the number */
-//                $body_number = str_pad($i, $get_body_number_length, '0', STR_PAD_LEFT);
-//
-//
-//                $data = MtopApplication::leftJoin('taxpayer', 'taxpayer.id', 'mtop_applications.taxpayer_id')
-//                    ->leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
-//                    ->leftJoin('tricycles', 'tricycles.body_number', 'mtop_applications.body_number')
-//                    ->whereDate('mtop_applications.transact_date', '<=' , $to)
-//                    ->where('mtop_applications.body_number', $body_number)
-//                    ->select(
-//                        'mtop_applications.transact_date',
-//                        'mtop_applications.approve_date',
-//                        'mtop_applications.status',
-//                        'mtop_applications.make_type',
-//                        'tricycles.created_at as date_registered',
-//                        'colhdr.trnx_date',
-//                        'taxpayer.full_name',
-//                        'taxpayer.address1 as address',
-//                        'taxpayer.mobile',
-//                        DB::raw("(mtop_applications.validity_date + INTERVAL '-2 years') as payment_date")
-//                    )
-//                    ->orderBy('mtop_applications.id', 'desc')
-//                    ->first();
-//
-////                array_push($report, [$body_number,$data]);
-//
-//
-//                $report[$body_number] = [
-//                    'full_name' => $data === null ? '' : $data['full_name'],
-//                    'date_registered' => $data === null ? '' : ((!empty($data['date_registered'])) ? date('m-d-Y', strtotime($data['date_registered'])) : ''),
-//                    'address' => $data === null ? '' : $data['address'],
-//                    'mobile' => $data === null ? '' : $data['mobile'],
-//                    'transact_date' =>  $data === null ? '' : ((!empty($data['transact_date'])) ? date('m-d-Y', strtotime($data['transact_date'])) : ''),
-//                    'payment_date' =>  $data === null ? '' : ((!empty($data['payment_date'])) ? date('m-d-Y', strtotime($data['payment_date'])) : ''),
-//                    'approve_date' => $data === null ? '' : ((!empty($data['approve_date'])) ? date('m-d-Y', strtotime($data['approve_date'])) : ''),
-//                    'make_type' => $data === null ? '' : $data['make_type'],
-//                    'status' => $data === null ? '' : $this->get_status($data['status'])
-//                ];
-//
-//
-//            }
-
         }
-//
-//        return $report;
 
-        /* END */
-
-//        return $report;
-//
-
-//
-//        array_push($report, $from, $to);
-//
     }
 
 

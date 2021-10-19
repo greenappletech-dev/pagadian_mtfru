@@ -104,6 +104,7 @@
 {{--</footer>--}}
 
 <!-- Wrap the content of your PDF inside a main tag -->
+
 <main>
     <table style="width: 100%">
 
