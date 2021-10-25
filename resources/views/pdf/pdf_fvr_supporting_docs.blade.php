@@ -269,7 +269,7 @@
 
     .cert_numbers .or_number {
         position: absolute;
-        bottom: 158px;
+        bottom: 150px;
         left: 200px;
         text-align: center;
         font-size: 13px;
