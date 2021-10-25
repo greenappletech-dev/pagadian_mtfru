@@ -14,8 +14,7 @@
             :mtop_application="{{ $mtop_application }}"
             :mtop_charges="{{ $mtop_charges }}"
             :total_charges="{{ $total_charges }}"
-            :tricycle_current_record = "{{ $tricycle_current_record }}"
-        >
+            :tricycle_current_record = "{{ $tricycle_current_record }}">
         </mtop_edit-component>
     </div>
 
