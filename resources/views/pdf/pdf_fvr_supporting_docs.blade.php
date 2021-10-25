@@ -1075,7 +1075,7 @@
 
             <div class="validity_date">{{ date('F d, Y', strtotime($data[0]['validity_date'])) }}</div>
 
-            <div class="or_number">{{ $data[0]['or_number'] . ' ' . $data[0]['or_number_2'] }}</div>
+            <div class="or_number">{{ $data[0]['or_number'] . '</br>' . $data[0]['or_number_2'] }}</div>
 
         </div>
     </div>
@@ -1215,7 +1215,7 @@
 
             <div class="validity_date">{{ date('F d, Y', strtotime($data[0]['validity_date'])) }}</div>
 
-            <div class="or_number">{{ $data[0]['or_number']. ' ' . $data[0]['or_number_2'] }}</div>
+            <div class="or_number">{{ $data[0]['or_number'] . '</br>' . $data[0]['or_number_2'] }}</div>
 
         </div>
     </div>
@@ -1261,7 +1261,7 @@
             <div class="issue_year">{{ date('y' , strtotime($data[0]['or_date'])) }}</div>
             <div class="validity_date">{{ date('F d Y' , strtotime($data[0]['validity_date'])) }}</div>
 
-            <div class="or_number">{{ $data[0]['or_number'] . ' ' . $data[0]['or_number_2'] }}</div>
+            <div class="or_number">{{ $data[0]['or_number'] . '</br>' . $data[0]['or_number_2'] }}</div>
 
         </div>
     </div>
@@ -1312,7 +1312,7 @@
 
         <div class="validity_date">{{ date('F d Y' , strtotime($data[0]['validity_date'])) }}</div>
 
-        <div class="or_number">{{ $data[0]['or_number'] . ' ' . $data[0]['or_number_2'] }}</div>
+        <div class="or_number">{{ $data[0]['or_number'] . '</br>' . $data[0]['or_number_2'] }}</div>
 
     </div>
 </div>
@@ -1369,7 +1369,7 @@
 
         <div class="validity_date">{{ date('F d Y' , strtotime($data[0]['validity_date'])) }}</div>
 
-        <div class="or_number">{{ $data[0]['or_number'] . ' ' . $data[0]['or_number_2'] }}</div>
+        <div class="or_number">{{ $data[0]['or_number'] . '</br>' . $data[0]['or_number_2'] }}</div>
 
     </div>
 </div>
