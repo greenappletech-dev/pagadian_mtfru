@@ -71,6 +71,16 @@ class MTOPReportExport implements FromView, WithStyles, WithColumnFormatting
             ]);
         }
 
+        if($this->type == 5)
+        {
+            return view('excel.xls_mtop_accomplishment_report',
+            [
+                'array' => $this->array,
+                'from' => $this->from,
+                'to' => $this->to,
+            ]);
+        }
+
     }
 
     public function styles(Worksheet $sheet)
@@ -104,7 +114,6 @@ class MTOPReportExport implements FromView, WithStyles, WithColumnFormatting
             ->getAlignment()
             ->applyFromArray(array('horizontal' => 'right', 'vertical' => 'center'));
         }
-
 
         if($this->type == 2)
         {
@@ -178,11 +187,41 @@ class MTOPReportExport implements FromView, WithStyles, WithColumnFormatting
             ->getFont()
             ->setBold(true);
         }
+
+        if($this->type == 5)
+        {
+
+            $cells = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+
+            foreach($cells as $cell)
+            {
+
+                $sheet->getColumnDimension($cell)
+                    ->setAutoSize('true');
+
+            }
+
+            $sheet->getStyle('A1:G1')
+                ->getFont()
+                ->setBold(true);
+
+            $sheet->getStyle('A2:G2')
+                ->getFont()
+                ->setBold(true);
+
+            $sheet->getStyle('A:F')
+                ->getAlignment()
+                ->applyFromArray(array('horizontal' => 'left', 'vertical' => 'center'));
+
+            $sheet->getStyle('G')
+                ->getAlignment()
+                ->applyFromArray(array('horizontal' => 'right', 'vertical' => 'center'));
+        }
     }
 
     public function columnFormats(): array
     {
-        $arr = [2, 3, 4];
+        $arr = [2, 3, 4, 5];
 
         if($this->type == 1)
         {

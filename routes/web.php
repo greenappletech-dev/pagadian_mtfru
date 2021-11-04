@@ -255,6 +255,9 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('patch/update', [PatchController::class, 'update_old_application']);
         Route::get('patch/update_mobile', [PatchController::class, 'update_mobile_number']);
 
+
+        Route::get('test/{from}/{to}', [ReportController::class, 'monthly_accomplishment_report']);
+
     });
 
 });

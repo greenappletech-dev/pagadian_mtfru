@@ -309,7 +309,6 @@ export default {
 
         onChangeUpload(e) {
             this.imageFileValue = e.target.files[0];
-
         },
 
         uploadImageFile(e) {

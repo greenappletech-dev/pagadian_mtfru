@@ -53,11 +53,12 @@
                         <option value="4">New Franchise Report - (Range)</option>
                         <option value="3">New Franchise Summary Per Month - (Range)</option>
                         <option value="2">Summary Report Per Make/Type</option>
+                        <option value="5">Monthly Accomplishment Report</option>
                     </select>
 
                         <div id="filter_options_1">
 
-                            <div v-if="report.type !== '4'">
+                            <div v-if="report.type !== '4' && report.type !== '5'">
                                 <label for="barangay" class="mt-1">Specific Barangay</label>
                                     <select id="barangay" class="form-control" v-model="barangay.id">
                                         <option value=""></option>
