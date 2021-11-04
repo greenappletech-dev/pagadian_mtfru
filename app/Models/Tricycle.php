@@ -91,6 +91,7 @@ class Tricycle extends Model
             'colhdr.or_number',
             'colhdr.or_code',
         )
+        ->whereNull('colhdr.canc_date')
         ->get();
     }
 
