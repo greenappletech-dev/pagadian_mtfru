@@ -66,7 +66,7 @@ class MasterListExport implements FromView, WithStyles,  WithColumnFormatting
                     'amount' => $data->amount,
                     'transact_type' => !empty($data->transact_type) ? $transact_type : '',
                     'charges' => $get_charges,
-                    'driver' => isset($driver_details['driver']) ?? '',
+                    'driver' => $driver_details['driver'] ?? '',
                 ]);
         }
 
