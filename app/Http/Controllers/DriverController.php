@@ -78,4 +78,6 @@ class DriverController extends Controller
         return Excel::download(new TricycleExport(), 'drivers_' . date('mdy') . '.xlsx');
     }
 
+
+
 }

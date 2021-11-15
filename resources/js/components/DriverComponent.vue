@@ -328,7 +328,6 @@ export default {
         openModalToEdit(id) {
             axios.get('drivers/edit/' + id)
             .then(response => {
-
                 this.driverIdValue = response.data.driver.driver_id;
                 this.lastNameValue = response.data.driver.last_name;
                 this.firstNameValue = response.data.driver.first_name;
@@ -341,7 +340,6 @@ export default {
                 this.chassisNoValue = response.data.driver.chassis_no;
                 this.plateNoValue = response.data.driver.plate_no;
                 this.operatorValue = response.data.driver.full_name;
-
                 $('#create-modal').modal('show');
                 this.adding = false;
             });
@@ -408,7 +406,7 @@ export default {
         },
 
         exportExcel(){
-            window.open('tricycle/export');
+            window.open('drivers/export');
         },
 
         // pdfModal() {

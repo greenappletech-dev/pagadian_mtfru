@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Driver;
 use Illuminate\Http\Request;
 use App\Models\Tricycle;
 use App\Models\MtopApplication;
@@ -42,7 +43,6 @@ class PatchController extends Controller
         return implode(',', $transact_type);
     }
 
-
     public function change_old_status_to_transact_type() {
         $tricycles = Tricycle::orderBy('id')->get();
 
@@ -77,4 +77,39 @@ class PatchController extends Controller
 
         return 'Success!';
     }
+
+    public function separate_driver_fullname() {
+
+        DB::beginTransaction();
+
+        try
+        {
+            $drivers = Driver::get();
+
+            foreach($drivers as $data)
+            {
+                if($data->last_name == null)
+                {
+                    $explode_str = str_replace('.', '', $data->full_name);
+                    $explode_str = explode(',', $explode_str);
+                    $update_driver_info = Driver::where('id', $data->id)->first();
+                    $update_driver_info->last_name = isset($explode_str[0]) ? trim($explode_str[0]) : '';
+                    $update_driver_info->first_name = isset($explode_str[1]) ? trim($explode_str[1]) : '';
+                    $update_driver_info->save();
+                }
+            }
+        }
+        catch(\Illuminate\Database\QueryException $ex)
+        {
+            DB::rollBack();
+            return $ex;
+        }
+
+        DB::commit();
+        return 'Successfully!';
+
+
+
+    }
+
 }
