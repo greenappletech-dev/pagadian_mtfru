@@ -62,7 +62,7 @@ class ReportController extends Controller
                 'or_no' => $data->or_no,
                 'amount' => $data->amount,
                 'transact_type' => !empty($data->transact_type) ? $transact_type : '',
-                'driver' => $driver_details['driver']
+                'driver' => isset($driver_details['driver']) ?? '',
             ]);
 
         }
