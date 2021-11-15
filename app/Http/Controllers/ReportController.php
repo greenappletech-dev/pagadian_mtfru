@@ -41,7 +41,7 @@ class ReportController extends Controller
         foreach($master_list as $data) {
 
             $transact_type = $this->mtop_applications->getApplicationType(explode(',', $data->transact_type));
-            $driver_details = Driver::where('tricycle_id', $data->id)->select('full_name as driver')->orderBy('created_at', 'DESC')->first();
+            $driver_details = Driver::where('tricycle_id', $data->id)->select('full_name as driver', 'driver_license_no')->orderBy('created_at', 'DESC')->first();
 
             array_push($arr,
             [
@@ -63,6 +63,7 @@ class ReportController extends Controller
                 'amount' => $data->amount,
                 'transact_type' => !empty($data->transact_type) ? $transact_type : '',
                 'driver' => $driver_details['driver'] ?? '',
+                'driver_license_no' => $driver_details['driver_license_no'] ?? '',
             ]);
 
         }

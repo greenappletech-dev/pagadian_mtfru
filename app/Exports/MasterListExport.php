@@ -44,7 +44,8 @@ class MasterListExport implements FromView, WithStyles,  WithColumnFormatting
 
             $transact_type = $this->mtop_applications->getApplicationType(explode(',', $data->transact_type));
             $get_charges = DB::table('collne2')->where('or_code', $data->or_code)->select('inc_desc')->get()->implode('inc_desc', '|');
-            $driver_details = Driver::where('tricycle_id', $data->id)->select('full_name as driver')->orderBy('created_at', 'DESC')->first();
+            $driver_details = Driver::where('tricycle_id', $data->id)->select('full_name as driver', 'driver_license_no')->orderBy('created_at', 'DESC')->first();
+
 
             array_push($arr,
                 [
@@ -67,6 +68,7 @@ class MasterListExport implements FromView, WithStyles,  WithColumnFormatting
                     'transact_type' => !empty($data->transact_type) ? $transact_type : '',
                     'charges' => $get_charges,
                     'driver' => $driver_details['driver'] ?? '',
+                    'driver_license_no' => $driver_details['driver_license_no'] ?? '',
                 ]);
         }
 

@@ -118,7 +118,7 @@ export default {
 
     data() {
         return {
-            columns: ['body_number', 'mtfrb_case_no', 'full_name', 'driver', 'date_registered','transact_date','validity_date', 'transact_type', 'make_type', 'engine_motor_no', 'chassis_no', 'plate_no', 'approve_date', 'payment_date', 'or_no', 'amount'],
+            columns: ['body_number', 'mtfrb_case_no', 'full_name', 'driver', 'driver_license_no', 'date_registered','transact_date','validity_date', 'transact_type', 'make_type', 'engine_motor_no', 'chassis_no', 'plate_no', 'approve_date', 'payment_date', 'or_no', 'amount'],
             tableData: [],
             options: {
                 headings: {
@@ -126,6 +126,7 @@ export default {
                     mtfrb_case_no       :       'MFTRB Case Number',
                     full_name           :       'Operator',
                     driver              :       'Driver',
+                    driver_license_no   :       'License No',
                     date_registered     :       'Date Registered',
                     transact_date       :       'Transaction Date',
                     validity_date       :       'Expire On',
