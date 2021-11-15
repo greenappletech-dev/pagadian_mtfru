@@ -151,7 +151,11 @@
                                     <label for="or_no">OR Number B:</label>
                                     <input type="text" class="form-control" id="or_no" v-model="ORNumber2" maxlength="20">
                                 </div>
-                                
+
+                                <div v-if="orGroupC">
+                                    <label for="or_no">OR Number C:</label>
+                                    <input type="text" class="form-control" id="or_no" v-model="ORNumber3" maxlength="20">
+                                </div>
 
                                 <label for="or_date">OR Date:</label>
                                 <input type="date" class="form-control" id="or_date" v-model="ORDate">
@@ -259,6 +263,7 @@ export default {
             statusValue: '',
             ORNumber: null,
             ORNumber2: null,
+            ORNumber3: null,
             ORDate: null,
 
             err_msg: '',
@@ -266,9 +271,9 @@ export default {
             suc_msg: '',
             suc: false,
 
-
             orGroupA: false,
             orGroupB: false,
+            orGroupC: false,
             payment: false,
             loader: false,
             adding: false,
@@ -390,9 +395,10 @@ export default {
             this.applicationIdValue = id;
             this.orGroupA = false;
             this.orGroupB = false;
+            this.orGroupC = false;
             this.errors = [];
 
-            axios.get('fvr/checkorgroup/' + id).then(response => { 
+            axios.get('fvr/checkorgroup/' + id).then(response => {
                 response.data.or_group.forEach((item) => {
                     this.fetchOrGroup(item.or_group, item.count);
                 })
@@ -407,6 +413,10 @@ export default {
 
             if(group === "B" && count > 0) {
                 this.orGroupB = true;
+            }
+
+            if(group === "C" && count > 0) {
+                this.orGroupC = true;
             }
 
             this.payment = true;
@@ -424,8 +434,10 @@ export default {
                     id: this.applicationIdValue,
                     or_number: this.ORNumber,
                     or_number_2: this.ORNumber2,
+                    or_number_3: this.ORNumber3,
                     or_group_a: this.orGroupA,
                     or_group_b: this.orGroupB,
+                    or_group_c: this.orGroupC,
                     or_date: this.ORDate,
                 }).then(response => {
                     this.returnSuccess(response);

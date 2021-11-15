@@ -74,11 +74,15 @@ class FvrApplicationController extends Controller
 
         $rules = ['or_date' => ['required']];
         if($request->or_group_a === true) {
-            $rules += ['or_number' => ['required', 'unique:fvr_applications,or_number', 'unique:fvr_applications,or_number_2', 'max:20', 'nullable']];
+            $rules += ['or_number' => ['required', 'unique:fvr_applications,or_number', 'unique:fvr_applications,or_number_2', 'unique:fvr_applications,or_number_3', 'max:20', 'nullable']];
         }
 
         if($request->or_group_b === true) {
-            $rules += ['or_number_2' => ['required', 'unique:fvr_applications,or_number', 'unique:fvr_applications,or_number_2', 'max:20', 'nullable']];
+            $rules += ['or_number_2' => ['required', 'unique:fvr_applications,or_number', 'unique:fvr_applications,or_number_2', 'unique:fvr_applications,or_number_3', 'max:20', 'nullable']];
+        }
+
+        if($request->or_group_c === true) {
+            $rules += ['or_number_3' => ['required', 'unique:fvr_applications,or_number', 'unique:fvr_applications,or_number_2', 'unique:fvr_applications,or_number_3', 'max:20', 'nullable']];
         }
 
         $request->validate($rules);
@@ -89,6 +93,7 @@ class FvrApplicationController extends Controller
         $fvr_application = $this->fvr_application->fetchDataById($request->id);
         $fvr_application->or_number = $request->or_number === null ? null : $request->or_number;
         $fvr_application->or_number_2 = $request->or_number_2 === null ? null : $request->or_number_2;
+        $fvr_application->or_number_3 = $request->or_number_3 === null ? null : $request->or_number_3;
         $fvr_application->or_date = $request->or_date;
 //        $fvr_application->body_number = $fvr_application->body_number . '-' . date('d', strtotime($request->or_date)) . '-' . date('y', strtotime($request->or_date));
         $fvr_application->status = 2;
@@ -684,7 +689,7 @@ class FvrApplicationController extends Controller
         return $pdf->stream();
     }
 
-    
+
     /* or group */
 
     public function or_group($id) {

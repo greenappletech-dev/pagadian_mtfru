@@ -55,6 +55,7 @@ class Tricycle extends Model
             'mtop_applications.transact_type',
             'mtop_applications.approve_date',
             DB::raw("(mtop_applications.validity_date + INTERVAL '-2 years') as payment_date"),
+            'tricycles.id',
             'tricycles.body_number',
             'tricycles.make_type',
             'tricycles.engine_motor_no',
@@ -70,7 +71,6 @@ class Tricycle extends Model
             DB::raw('SUM(collne2.ln_amnt) as amount')
         )
         ->groupBy(
-            'tricycles.body_number',
             'mtop_applications.mtfrb_case_no',
             'mtop_applications.transact_date',
             'mtop_applications.validity_date',
@@ -78,6 +78,7 @@ class Tricycle extends Model
             'mtop_applications.approve_date',
             'payment_date',
             'colhdr.trnx_date',
+            'tricycles.id',
             'tricycles.body_number',
             'tricycles.make_type',
             'tricycles.engine_motor_no',

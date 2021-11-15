@@ -493,6 +493,7 @@
                     <select id="or_group" class="form-control mb-2" v-model="or_group" v-on:change="filterORGroup(or_group)">
                         <option value="A">Charge A</option>
                         <option value="B">Charge B</option>
+                        <option value="C">Charge C</option>
                     </select>
 
                     <v-client-table
@@ -1144,8 +1145,6 @@ export default {
         this.disableFields(true);
         this.initialData();
         this.filterORGroup('A');
-
-        console.log(this.fvr_application_charges);
     }
 }
 </script>

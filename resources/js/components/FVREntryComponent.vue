@@ -493,6 +493,7 @@
                     <select id="or_group" class="form-control mb-2" v-model="or_group" v-on:change="filterORGroup(or_group)">
                         <option value="A">Charge A</option>
                         <option value="B">Charge B</option>
+                        <option value="C">Charge C</option>
                     </select>
 
                     <v-client-table
@@ -862,8 +863,6 @@ export default {
 
         find() {
             axios.get('fvr/search/'+ this.searchedValue.toUpperCase()).then(response => {
-
-                console.log(response);
                 this.operatorTableData = response.data.operator;
                 this.auxiliaryTableData = response.data.auxiliary;
             });
@@ -876,8 +875,6 @@ export default {
 
             let month = (date.getMonth() + 1).toString().padStart(2, "0");
             let year = date.getFullYear().toString().substr(-2);
-
-            console.log(year);
 
             this.operatorTableData.forEach(function(item, index) {
                 if(parseInt(item['taxpayer_id']) === parseInt(id)) {

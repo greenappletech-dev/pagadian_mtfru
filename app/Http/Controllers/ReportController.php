@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exports\MasterListExport;
 use App\Exports\MTOPReportExport;
 use App\Models\Barangay;
+use App\Models\Driver;
 use App\Models\MtopApplication;
 use App\Models\Tricycle;
 use Illuminate\Support\Arr;
@@ -40,6 +41,7 @@ class ReportController extends Controller
         foreach($master_list as $data) {
 
             $transact_type = $this->mtop_applications->getApplicationType(explode(',', $data->transact_type));
+            $driver_details = Driver::where('tricycle_id', $data->id)->select('full_name as driver')->orderBy('created_at', 'DESC')->first();
 
             array_push($arr,
             [
@@ -60,6 +62,7 @@ class ReportController extends Controller
                 'or_no' => $data->or_no,
                 'amount' => $data->amount,
                 'transact_type' => !empty($data->transact_type) ? $transact_type : '',
+                'driver' => $driver_details['driver']
             ]);
 
         }
@@ -137,26 +140,10 @@ class ReportController extends Controller
 
         foreach($transact_type as $transact)
         {
-            $mtop_applications = MtopApplication::leftJoin(
-                'taxpayer',
-                'taxpayer.id',
-                'mtop_applications.taxpayer_id'
-            )
-                ->leftJoin(
-                    'barangay',
-                    'barangay.id',
-                    'mtop_applications.barangay_id'
-                )
-                ->leftJoin(
-                    'colhdr',
-                    'colhdr.mtop_application_id',
-                    'mtop_applications.id'
-                )
-                ->leftJoin(
-                    'collne2',
-                    'collne2.or_code',
-                    'colhdr.or_code'
-                )
+            $mtop_applications = MtopApplication::leftJoin('taxpayer', 'taxpayer.id', 'mtop_applications.taxpayer_id')
+                ->leftJoin('barangay', 'barangay.id', 'mtop_applications.barangay_id')
+                ->leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
+                ->leftJoin('collne2', 'collne2.or_code', 'colhdr.or_code')
                 ->where(function($query) use ($barangay_id)
                 {
                     if($barangay_id !== 'null')
@@ -191,9 +178,12 @@ class ReportController extends Controller
                     'colhdr.or_number',
                     'colhdr.trnx_date',
                     'mtop_applications.transact_type',
-                    'mtop_applications.id'
+                    'mtop_applications.id',
+                    'barangay.brgy_desc'
                 )
-                ->orderBy('transact_type')
+//                ->orderBy('transact_type')
+                ->orderBy('barangay.brgy_desc')
+                ->orderBy('mtop_applications.transact_date')
                 ->get()
                 ->each(function($item) {
                     $item->status = $this->get_transaction_type($item->status);
