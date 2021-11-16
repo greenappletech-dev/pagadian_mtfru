@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\DriverExport;
+use App\Exports\TricycleExport;
 use App\Http\Requests\StoreDriver;
 use App\Models\Driver;
 use App\Models\Tricycle;
@@ -74,8 +76,8 @@ class DriverController extends Controller
         : response()->json([ 'message' => 'Driver Successfully Deleted!'],200);
     }
 
-    public function export($id) {
-        return Excel::download(new TricycleExport(), 'drivers_' . date('mdy') . '.xlsx');
+    public function export() {
+        return Excel::download(new DriverExport(), 'drivers_' . date('mdy') . '.xlsx');
     }
 
 
