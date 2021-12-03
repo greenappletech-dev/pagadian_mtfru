@@ -164,6 +164,26 @@
                 </div>
             </div>
 
+
+            <div class="card">
+                <div class="card-header">
+                    CTC Information
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="ctc_no">CTC No:.</label>
+                            <input type="text" id="ctc_no" class="form-control" v-model="banca.ctc_no">
+                        </div>
+                        <div class="col-6">
+                            <label for="ctc_date">CTC Date</label>
+                            <input type="date" id="ctc_date" class="form-control" v-model="banca.ctc_date">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <div class="card">
                 <div class="card-header">
                     <h2 style="font-size: 17px; margin: 0;">Engine Information</h2>
@@ -268,10 +288,30 @@
                 <div class="card-body">
 
 
+                    <!--- FOR NEW --->
+
+
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-start">
+                            <label class="d-flex justify-content-start" for="chk_new" style="width: 100%;
+                            height: 100%;
+                            margin: 0">
+                                <input type="checkbox" v-model="newTransaction" v-on:click="checkNew" style="display: none" id="chk_new">
+                                <span style="position: relative; width: 20px; height: 20px;" class="border rounded mr-2"><i id="new_check_icon" class="fas fa-check" style="display: none;
+                                        position: absolute;
+                                        top: 50%;
+                                        left: 55%;
+                                        transform: translate(-50%, -50%);
+                                        font-size: 15px;
+                                        color: #3ae374;"></i></span>
+                                <h2 style="font-size: 17px; margin: 0;">New</h2>
+                            </label>
+                        </div>
+                    </div>
+
+
 
                     <!--      FOR RENEWALS           -->
-
-
 
 
                     <div class="card">
@@ -297,7 +337,7 @@
                                     height: 20px;"
                                     class="border rounded mr-2">
                                         <i
-                                            id="new_check_icon"
+                                            id="renew_check_icon"
                                             class="fas fa-check"
                                             style="display: none;
                                             position: absolute;
@@ -309,7 +349,7 @@
                                         </i>
                                 </span>
 
-                                <h2 style="font-size: 17px; margin: 0;">New/Renewal</h2>
+                                <h2 style="font-size: 17px; margin: 0;">Renewal</h2>
 
                             </label>
                         </div>
@@ -456,9 +496,34 @@
                             </label>
                         </div>
                     </div>
+                </div>
+            </div>
 
 
 
+            <div class="card" v-if="this.banca.status > 1">
+                <div class="card-header">
+                    OR Numbers
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-3">
+                            <label>OR Number A</label>
+                            <input type="text" class="form-control" id="or_number_a" maxlength="20" v-model="banca.or_number">
+                        </div>
+                        <div class="col-3">
+                            <label>OR Number B</label>
+                            <input type="text" class="form-control" id="or_number_b" maxlength="20" v-model="banca.or_number_2">
+                        </div>
+                        <div class="col-3">
+                            <label>OR Number C</label>
+                            <input type="text" class="form-control" id="or_number_c" maxlength="20" v-model="banca.or_number_3">
+                        </div>
+                        <div class="col-3">
+                            <label>OR Date</label>
+                            <input type="date" class="form-control" id="or_number_date" maxlength="20" v-model="banca.or_date">
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -749,6 +814,7 @@ export default {
             droppingValue: false,
             changeUnitValue: false,
             addCharges: false,
+            newTransaction: false,
             renewal: false,
             loader: false,
             add_engine: false,
@@ -763,11 +829,19 @@ export default {
 
             /* fix element attributes */
 
-            $('#operator').attr("readonly", true);
-            $('#text_search').attr("readonly",false);
-            $('#new_operator').attr("readonly", true);
-            $('#new_operator_address').attr("readonly", true);
-            $('#new_operator_barangay').attr("readonly", true);
+            $('#operator').attr('readonly', true);
+            $('#new_operator').attr('readonly', true);
+            $('#new_operator_address').attr('readonly', true);
+            $('#new_operator_barangay').attr('readonly', true);
+
+            $('#ctc_no').attr('readonly', false);
+            $('#ctc_date').attr('readonly', false);
+            $('#text_search').attr('readonly',false);
+            $('#body_number').attr('readonly', false);
+            $('#or_number_a').attr('readonly', false);
+            $('#or_number_b').attr('readonly', false);
+            $('#or_number_c').attr('readonly', false);
+            $('#or_number_date').attr('readonly', false);
         },
 
         formatPrice(value) {
@@ -867,21 +941,32 @@ export default {
         },
 
         initialData() {
+
             axios.get('fvr/getdata').then(response => {
                 this.boatTypeTabldeData = response.data.boat_types;
                 this.chargesTableData = response.data.charges;
             })
 
             /* FETCH VALUES SO WE CAN TRIGGER THE FUNCTIONS */
-            this.renewal = this.transactionType.some(item => parseInt(item) === 1 || parseInt(item) === 4);
+
+            this.renewal = this.transactionType.some(item => parseInt(item) === 1);
             this.newOperator = this.transactionType.some(item => parseInt(item) === 2);
             this.changeUnit = this.transactionType.some(item => parseInt(item) === 3);
+            this.newTransaction = this.transactionType.some(item => parseInt(item) === 4);
 
-            if(this.renewal) {
+
+            if(this.newTransaction)
+            {
                 $('#new_check_icon').show();
             }
 
-            if(this.newOperator) {
+            if(this.renewal)
+            {
+                $('#renew_check_icon').show();
+            }
+
+            if(this.newOperator)
+            {
                 $('#dropping_details').show();
                 $('#drop_check_icon').show();
 
@@ -899,7 +984,8 @@ export default {
                 this.banca.barangay_id = this.banca_master_data.barangay_id;
             }
 
-            if(this.changeUnit) {
+            if(this.changeUnit)
+            {
                 $('#change_unit_details').show();
                 $('#change_unit_icon').show();
                 this.changeUnitValue = true;
@@ -993,14 +1079,39 @@ export default {
             this.errors = this.errorHandler(error.response.data.errors);
         },
 
+        /* NEW */
+
+        checkNew(e)
+        {
+            if(e.target.checked)
+            {
+                this.newTransaction = true;
+                this.renewal = false;
+                this.newOperator = false;
+                this.changeUnit = false;
+                $('#new_check_icon').show();
+                $('#renew_check_icon').hide();
+                $('#drop_check_icon').hide();
+                $('#dropping_details').hide();
+                $('#change_unit_icon').hide();
+
+                return;
+            }
+
+            this.newTransaction = false;
+            $('#new_check_icon').hide();
+        },
+
         /* RENEWALS */
 
         checkRenewal(e) {
             if(e.target.checked) {
                 this.renewal = true;
+                this.newTransaction = false;
                 this.newOperator = false;
 
-                $('#new_check_icon').show();
+                $('#renew_check_icon').show();
+                $('#new_check_icon').hide();
                 $('#drop_check_icon').hide();
                 $('#dropping_details').hide();
                 return;
@@ -1019,19 +1130,40 @@ export default {
             if (e.target.checked) {
                 $('#dropping_details').show();
                 $('#drop_check_icon').show();
+                $('#renew_check_icon').hide();
                 $('#new_check_icon').hide();
+                this.newTransaction = false;
                 this.newOperator = true;
                 this.renewal = false;
                 return;
             }
 
             this.new_operator = [];
-
-            $('#drop_check_icon').hide();
-            $('#dropping_details').hide();
             this.newOperator = false;
 
+            $('#new_check_icon').hide();
+            $('#drop_check_icon').hide();
+            $('#dropping_details').hide();
         },
+
+        /* CHANGE UNIT */
+
+        checkChangeUnit(e) {
+            if (e.target.checked) {
+                $('#change_unit_icon').show();
+                $('#new_check_icon').hide();
+
+                this.new = false;
+                this.changeUnit = true;
+                this.disableFields(false);
+                return;
+            }
+
+            this.changeUnit = false;
+            this.disableFields(true);
+            $('#change_unit_icon').hide();
+        },
+
 
         openModalToSearchNewOperator() {
             this.searchNewOperator = true;
@@ -1067,23 +1199,6 @@ export default {
 
         /* END OF DROPPING */
 
-
-        /* CHANGE UNIT */
-
-
-        checkChangeUnit(e) {
-            if (e.target.checked) {
-                $('#change_unit_icon').show();
-                this.changeUnit = true;
-                this.disableFields(false);
-                return;
-            }
-
-            $('#change_unit_icon').hide();
-            this.changeUnit = false;
-            this.disableFields(true);
-        },
-
         updateAuxiliaryEngine() {
             this.auxiliaryTableData[this.rowindex-1].make_type = this.auxiliary.make_type;
             this.auxiliaryTableData[this.rowindex-1].horsepower = this.auxiliary.horsepower;
@@ -1115,7 +1230,7 @@ export default {
                 return;
             }
 
-            if(!this.renewal && !this.newOperator && !this.changeUnit) {
+            if(!this.renewal && !this.newOperator && !this.changeUnit && !this.newTransaction) {
                 this.err = true;
                 this.err_msg = 'You Must Select Transaction';
                 return;
@@ -1125,6 +1240,25 @@ export default {
                 this.err = true;
                 this.err_msg = 'Must Select Charges';
                 return;
+            }
+
+            /* if the status is not for payment must validate or numbers */
+
+            if(this.banca.status > 1)
+            {
+                if(!this.banca.or_number && !this.banca.or_number_2 && !this.banca.or_number_3)
+                {
+                    this.err = true;
+                    this.err_msg = 'OR number must have a value';
+                    return;
+                }
+
+                if(this.banca.or_date === '')
+                {
+                    this.err = true;
+                    this.err_msg = 'OR Date is required';
+                    return;
+                }
             }
 
             let dropping_details;
@@ -1143,31 +1277,39 @@ export default {
 
             axios.patch('fvr_edit/update', {
                 id: this.fvr_application.id,
-                taxpayer_id: this.banca.taxpayer_id,
-                barangay_id: this.banca.barangay_id,
-                banca_id: this.banca.banca_id,
-                boat_name: this.banca.boat_name,
-                boat_color: this.banca.boat_color,
-                length: this.banca.length,
-                width: this.banca.width,
-                dept: this.banca.dept,
-                gross_tonnage: this.banca.gross_tonnage,
-                net_tonnage: this.banca.net_tonnage,
-                make_type: this.banca.make_type,
-                horsepower: this.banca.horsepower,
-                engine_motor_no: this.banca.engine_motor_no,
-                cylinder: this.banca.cylinder,
-                boat_type_id: this.banca.boat_type_id,
-                fishing_gear: this.banca.fishing_gear,
-                manning_crew: this.banca.manning_crew,
-                body_number: this.banca.body_number,
-                address: this.banca.address,
-                auxiliary: this.auxiliaryTableData,
-                charges: this.selectedChargesTableData,
-                renewal: this.renewal,
-                dropping: this.newOperator,
-                change_unit: this.changeUnitValue,
-                dropping_details: dropping_details,
+                taxpayer_id             : this.banca.taxpayer_id,
+                barangay_id             : this.banca.barangay_id,
+                banca_id                : this.banca.banca_id,
+                boat_name               : this.banca.boat_name,
+                boat_color              : this.banca.boat_color,
+                length                  : this.banca.length,
+                width                   : this.banca.width,
+                dept                    : this.banca.dept,
+                gross_tonnage           : this.banca.gross_tonnage,
+                net_tonnage             : this.banca.net_tonnage,
+                make_type               : this.banca.make_type,
+                horsepower              : this.banca.horsepower,
+                engine_motor_no         : this.banca.engine_motor_no,
+                cylinder                : this.banca.cylinder,
+                boat_type_id            : this.banca.boat_type_id,
+                fishing_gear            : this.banca.fishing_gear,
+                manning_crew            : this.banca.manning_crew,
+                body_number             : this.banca.body_number,
+                ctc_no                  : this.banca.ctc_no,
+                ctc_date                : this.banca.ctc_date,
+                or_number               : this.banca.or_number,
+                or_number_2             : this.banca.or_number_2,
+                or_number_3             : this.banca.or_number_3,
+                status                  : this.banca.status,
+                or_date                 : this.banca.or_date,
+                address                 : this.banca.address,
+                auxiliary               : this.auxiliaryTableData,
+                charges                 : this.selectedChargesTableData,
+                new                     : this.newTransaction,
+                renewal                 : this.renewal,
+                dropping                : this.newOperator,
+                change_unit             : this.changeUnitValue,
+                dropping_details        : dropping_details,
             })
             .then(response => {
                 this.returnSuccess(response);

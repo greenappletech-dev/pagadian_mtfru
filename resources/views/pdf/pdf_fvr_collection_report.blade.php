@@ -47,6 +47,10 @@
             font-size: 10px;
         }
 
+        main table {
+            border-collapse: collapse;
+        }
+
         main table thead {
             border: 1px solid #000;
         }
@@ -62,7 +66,7 @@
         main table tbody tr td:nth-child(2),
         main table tbody tr td:nth-child(6)
         {
-            width: 10%;
+
             text-align: left;
         }
 
@@ -70,7 +74,7 @@
         main table thead tr th:nth-child(3),
         main table tbody tr td:nth-child(1),
         main table tbody tr td:nth-child(3) {
-            width: 15%;
+
             text-align: left;
         }
 
@@ -91,13 +95,13 @@
         main table tbody tr td:nth-child(10),
         main table tbody tr td:nth-child(11)
         {
-            width: 8%;
-            text-align: center;
+
+            text-align: left;
         }
 
 
         main table tbody tr td:nth-child(9) {
-            text-align: right;
+            text-align: left;
         }
 
 
@@ -110,7 +114,7 @@
 <header>
     <table class="table-header" width="100%;">
         <tr>
-            <th width="75%" class="company">MTFRU</th>
+            <th width="75%" class="company">FVR Collection Report</th>
             <th>User ID: <span class="username">{{ Auth::user()->name }}</span></th>
         </tr>
         <tr>
@@ -130,49 +134,71 @@
 
 <!-- Wrap the content of your PDF inside a main tag -->
 
+
+
 <main>
     <table width="100%">
         <thead>
             <tr>
                 <th>NAME</th>
+                <th style="width: 10%">BODY #</th>
                 <th>TRADE NAME</th>
                 <th>ADDRESS</th>
                 <th>ENGINE MAKE</th>
-                <th>HORSEPOWER</th>
-                <th>OR NUMBER</th>
-                <th>OR DATE</th>
+                <th>HP</th>
                 <th>REMARKS</th>
-                <th>AMOUNT COLLECTED</th>
-                <th>ENGINE NUMBER</th>
+                <th>ENGINE #</th>
                 <th>GEAR USE</th>
+                <th style="text-align: right">OR DATE</th>
+                <th style="text-align: right; width: 8%">OR A</th>
+                <th style="text-align: right; width: 8%">OR B</th>
+                <th style="text-align: right; width: 8%">OR C</th>
             </tr>
         </thead>
 
-        {{ $totals = 0 }}
-        <tbody>
-            @foreach($generated_report as $report)
-                <tr>
-                    <td>{{ $report->full_name }}</td>
-                    <td>{{ $report->boat_name }}</td>
-                    <td style="text-align: left">{{ $report->address }}</td>
-                    <td>{{ $report->make_type }}</td>
-                    <td>{{ $report->horsepower }}</td>
-                    <td>{{ $report->or_number }} <br> {{ $report->or_number_2 }}</td>
-                    <td>{{ $report->or_date }}</td>
-                    <td>{{ $report->transact_type }}</td>
-                    <td>{{ number_format($report->collection, 2) }}</td>
-                    <td>{{ $report->engine_motor_no }}</td>
-                    <td>{{ $report->fishing_gear }}</td>
-                </tr>
+        <?php
+            $totals = 0;
+        ?>
 
-                {{ $totals += $report->collection }}
-            @endforeach
+        <tbody>
+
+        @foreach($generated_report as $report)
+
+
+            <tr>
+                <td>{{ $report['full_name'] }}</td>
+                <td>{{ $report['body_number'] }}</td>
+                <td>{{ $report['boat_name'] }}</td>
+                <td style="text-align: left">{{ $report['address'] }}</td>
+                <td>{{ $report['make_type'] }}</td>
+                <td>{{ $report['horsepower'] }}</td>
+                <td>{{ $report['transact_type'] }}</td>
+                <td>{{ $report['engine_motor_no'] }}</td>
+                <td>{{ $report['fishing_gear'] }}</td>
+                <td style="text-align: right">{{ date('m/d/Y', strtotime($report['or_date'])) }}</td>
+                <td style="text-align: right">{{ $report['or_number'] }}</td>
+                <td style="text-align: right">{{ $report['or_number_2'] }}</td>
+                <td style="text-align: right">{{ $report['or_number_3'] }}</td>
+            </tr>
+            <tr>
+                <th colspan="10" style="text-align: right; border-top: 1px solid #000">TOTALS PER OR:</th>
+                <th style="text-align: right; border-top: 1px solid #000">{{ number_format($report['A'], 2) }}</th>
+                <th style="text-align: right; border-top: 1px solid #000">{{ number_format($report['B'], 2) }}</th>
+                <th style="text-align: right; border-top: 1px solid #000">{{ number_format($report['C'], 2) }}</th>
+            </tr>
+            <tr>
+                <th style="text-align: right" colspan="10">TOTAL PER TRANSACTION:</th>
+                <th style="text-align: right" colspan="3">{{ number_format($report['total'], 2) }}</th>
+            </tr>
+
+
+            {{ $totals += $report['A'] + $report['B'] + $report['C'] }}
+        @endforeach
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="8">TOTAL</td>
-                <td style="text-align: right">{{ number_format($totals, 2) }}</td>
-                <td colspan="3"></td>
+                <th colspan="10" style="text-align: right">GRAND TOTAL:</th>
+                <th colspan="3" style="text-align: right">{{ number_format($totals, 2) }}</th>
             </tr>
         </tfoot>
     </table>

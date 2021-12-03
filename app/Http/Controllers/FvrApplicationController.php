@@ -39,6 +39,8 @@ class FvrApplicationController extends Controller
 
     public function __construct()
     {
+
+
         $this->operators = new Taxpayer();
         $this->barangays = new Barangay();
         $this->bancas = new Banca();
@@ -50,6 +52,8 @@ class FvrApplicationController extends Controller
         $this->charges = new FvrCharges();
         $this->boat_captain = new BoatCaptain();
         $this->operator_img = new OperatorImage();
+
+
     }
 
     public function index() {
@@ -57,19 +61,40 @@ class FvrApplicationController extends Controller
     }
 
     public function getdata() {
+
+
+
         $barangays = $this->barangays->fetchData();
         $boat_types = $this->boat_types->fetchData();
         $charges = $this->charges->fetchData();
 
-        return response()->json(['barangays' => $barangays, 'boat_types' => $boat_types, 'charges' => $charges]);
+
+
+
+
+        return response()->json(['barangays' => $barangays, 'boat_types' => $boat_types, 'charges' => $charges, 'city_code' => DB::table('m99')->select('banca_city_code')->first()->banca_city_code]);
+
+
     }
 
     public function getdata_filtered($from, $to, $barangay_id) {
+
+
+
         $fvr_applications = $this->fvr_application->fetchFilteredData($from, $to, $barangay_id);
         return response()->json(['fvr_applications' => $fvr_applications]);
+
+
+
+
     }
 
     public function payment(Request $request) {
+
+
+
+
+
 
 
         $rules = ['or_date' => ['required']];
@@ -88,6 +113,12 @@ class FvrApplicationController extends Controller
         $request->validate($rules);
 
 
+
+
+
+
+
+
         // 'or_number' => ['required', 'unique:fvr_applications,or_number', 'max:20', 'nullable'],
 
         $fvr_application = $this->fvr_application->fetchDataById($request->id);
@@ -98,6 +129,22 @@ class FvrApplicationController extends Controller
 //        $fvr_application->body_number = $fvr_application->body_number . '-' . date('d', strtotime($request->or_date)) . '-' . date('y', strtotime($request->or_date));
         $fvr_application->status = 2;
         $fvr_application->validity_date = date('Y-m-d', strtotime("+1 year", strtotime($request->or_date)));
+
+
+
+
+
+
+        /* if the application is new save the or date to the bancas.or_new_application_date for reference when generating body number */
+
+        if($fvr_application->transact_type == 4)
+        {
+            DB::table('bancas')->where('id', $fvr_application->banca_id)->update(['or_new_application_date' => $request->or_date]);
+        }
+
+
+
+
 
         return $fvr_application->save()
         ? response()->json(['message' => 'OR Successfully Added!'], 200)
@@ -110,8 +157,17 @@ class FvrApplicationController extends Controller
 
         try {
 
+
+
+
             $fvr_application = $this->fvr_application->fetchDataById($id);;
             $fvr_application_auxiliary_engine  = $this->fvr_application_auxiliary_engine->fetchDataByForeignId($id);
+
+
+
+
+
+
 
             /* UPDATE BANCA */
 
@@ -134,6 +190,12 @@ class FvrApplicationController extends Controller
             $banca->fvr_application_id = $id;
             $banca->save();
 
+
+
+
+
+
+
             /* REMOVE ALL AUXILIARY ENGINE AND REPLACE BY NEW AUXILIARY ENGINE BASED ON THE APPLICATION */
 
             $auxiliary_engine = AuxiliaryEngine::where('banca_id', $fvr_application->banca_id)->delete();
@@ -147,6 +209,10 @@ class FvrApplicationController extends Controller
                 $auxiliary->banca_id = $fvr_application->banca_id;
                 $auxiliary->save();
             }
+
+
+
+
 
             $fvr_application->status = 3;
             $fvr_application->approve_date = date('Y-m-d');
@@ -163,6 +229,9 @@ class FvrApplicationController extends Controller
     }
 
     public function destroy($id) {
+
+
+
         $fvr_application = $this->fvr_application->fetchDataById($id);
         return $fvr_application->delete()
             ? response()->json(['message' => 'Application Deleted'], 200)
@@ -183,38 +252,71 @@ class FvrApplicationController extends Controller
     }
 
     public function search($string) {
-        $operator = $this->bancas->fetchDataByBodyNumber($string);
-        $auxiliary = $this->auxiliary_engine->fetchDataByForeignKey($operator[0]->id);
-        return response()->json(['operator' => $operator, 'auxiliary' => $auxiliary]);
+
+        $banca = $this->bancas->fetchDataByBodyNumber($string);
+
+
+        if(isset($banca[0]->id))
+        {
+            $auxiliary = $this->auxiliary_engine->fetchDataByForeignKey($banca[0]->id);
+            $banca[0]->body_number = implode('-', $this->getBancaApplicationBodyNumber($banca[0]));
+            return response()->json(['operator' => $banca, 'auxiliary' => $auxiliary]);
+        }
+
+    }
+
+    public function getBancaApplicationBodyNumber($banca) {
+
+        $date = $banca->or_new_application_date ?? Carbon::now()->format('Y-m-d');
+
+
+
+        return [
+            'city_code' => DB::table('m99')->select('banca_city_code')->first()->banca_city_code,
+            'brgy_code' => $banca->banca_code,
+            'code' => $banca->boat_type_code,
+            'body_number' => $banca->body_number,
+            'month' => str_pad(Carbon::parse($date)->format('m'), 2, 0, STR_PAD_LEFT),
+            'year' => Carbon::now()->format('y')
+        ];
+
+
+
+
+
     }
 
     public function search_new_operator($string) {
+
+
+
         $operator = $this->operators->fetchSearchedDataByName($string);
         return response()->json(['operator' => $operator], 200);
+
+
+
     }
 
     public function store(StoreFVRApplication $request) {
 
         $transaction_type = [];
 
-        $check_if_new = Banca::where('id', $request->banca_id)->whereNotNull('fvr_application_id')->count();
 
-        if(!$check_if_new) {
-            array_push($transaction_type, 4);
-        }
-        else
+//        $check_if_new = Banca::where('id', $request->banca_id)->whereNotNull('fvr_application_id')->count();
+//
+//        if(!$check_if_new) {
+//            array_push($transaction_type, 4);
+//        }
+//        else
+//        {
+//
+//        }
+
+        $transaction_type = $this->getTransaction($request);
+
+        if($transaction_type === false)
         {
-            if($request->renewal) {
-                array_push($transaction_type, 1);
-            }
-
-            if($request->dropping) {
-                array_push($transaction_type, 2);
-            }
-
-            if($request->change_unit) {
-                array_push($transaction_type, 3);
-            }
+            return response()->json(['err_msg' => 'This record already have previous transaction'], 401);
         }
 
         DB::beginTransaction();
@@ -247,6 +349,8 @@ class FvrApplicationController extends Controller
 
             $fvr_application->banca_id = $request->banca_id;
             $fvr_application->transact_date = date("M-d-y");
+            $fvr_application->ctc_no = $request->ctc_no;
+            $fvr_application->ctc_date = $request->ctc_date;
 
 
             /* CHANGE THIS DETAILS IF THE TRANSACTION HAS CHANGE UNIT */
@@ -309,6 +413,11 @@ class FvrApplicationController extends Controller
 
             $fvr_application->body_number = strtoupper($request->body_number);
 
+
+
+
+
+
             if($request->dropping) {
                 $banca_code = DB::table('barangay')->where('id', $request->dropping_details['new_barangay_id'])->get();
                 $check_banca_code = explode('-', $request->body_number);
@@ -316,10 +425,18 @@ class FvrApplicationController extends Controller
                 $fvr_application->body_number = implode('-', $check_banca_code);
             }
 
+
+
+
+
             $fvr_application->transact_type = implode(',', $transaction_type); // implode array to save the transaction type separated by comma
             $fvr_application->status = 1;
             $fvr_application->user_id = Auth::user()->name;
             $fvr_application->save();
+
+
+
+
 
 
             /* SAVE AUXILIARY TABLE CHECK ALSO IF THERE'S A CHANGE UNIT */
@@ -334,6 +451,12 @@ class FvrApplicationController extends Controller
                 $fvr_auxiliary_engine->save();
             }
 
+
+
+
+
+
+
             /* SAVE CHARGES */
 
             foreach($request->charges as $charge) {
@@ -346,6 +469,9 @@ class FvrApplicationController extends Controller
                 $charges->or_group = $charge['or_group'];
                 $charges->save();
             }
+
+
+
 
         }
         catch(\Illuminate\Database\QueryException $ex) {
@@ -372,7 +498,6 @@ class FvrApplicationController extends Controller
         $fvr_auxiliary_engine = $this->fvr_application_auxiliary_engine->fetchDataByForeignId($id);
         $fvr_application_charges = $this->fvr_application_charges->fetchDataByForeignId($id);
 
-
         foreach($fvr_application_charges as $charges) {
             $total_charges += $charges->tot_amnt;
         }
@@ -380,27 +505,83 @@ class FvrApplicationController extends Controller
         return view('fvr.fvr_edit', compact('fvr_application', 'banca_master_data', 'fvr_auxiliary_engine', 'fvr_application_charges', 'total_charges'));
     }
 
-    public function update(StoreFVRApplication $request) {
-        $transaction_type = [];
 
-        $check_if_new = Banca::where('id', $request->banca_id)->whereNotNull('fvr_application_id')->count();
+    public function getTransaction(Request $request)
+    {
+        $arr = [];
 
-        if(!$check_if_new) {
-            array_push($transaction_type, 4);
-        }
-        else
+        if($request->new)
         {
-            if($request->renewal) {
-                array_push($transaction_type, 1);
+            $applicationId = null;
+
+            if(isset($request->id))
+            {
+                $applicationId = $request->id;
             }
 
-            if($request->dropping) {
-                array_push($transaction_type, 2);
+            /* validate if the transaction is new. to qualified the transaction must have no previous records */
+            $checkIfHasPreviousRecord = FvrApplication::where('banca_id', $request->banca_id)
+                ->where(function($query) use ($applicationId) {
+                    if($applicationId != null)
+                    {
+                        $query->where('id', '!=', $applicationId);
+                    }
+                })
+                ->get();
+
+            if(count($checkIfHasPreviousRecord) != 0)
+            {
+                return false;
             }
 
-            if($request->change_unit) {
-                array_push($transaction_type, 3);
+            array_push($arr, 4);
+        }
+
+        if($request->renewal) {
+            array_push($arr, 1);
+        }
+
+        if($request->dropping) {
+            array_push($arr, 2);
+        }
+
+        if($request->change_unit) {
+            array_push($arr, 3);
+        }
+
+        return $arr;
+    }
+
+
+    public function update(StoreFVRApplication $request) {
+
+
+        $transaction_type = [];
+        $rules = [];
+
+
+        if($request->status != 1)
+        {
+            if($request->or_number != null) {
+                $rules += ['or_number' => ['unique:fvr_applications,or_number,' . request('id'), 'unique:fvr_applications,or_number_2,' . request('id'), 'unique:fvr_applications,or_number_3,' . request('id'), 'max:20', 'nullable']];
             }
+
+            if($request->or_number_2 != null) {
+                $rules += ['or_number_2' => ['unique:fvr_applications,or_number,' . request('id'), 'unique:fvr_applications,or_number_2,' . request('id'), 'unique:fvr_applications,or_number_3,' . request('id'), 'max:20', 'nullable']];
+            }
+
+            if($request->or_number_3 != null) {
+                $rules += ['or_number_3' => ['unique:fvr_applications,or_number,' . request('id'), 'unique:fvr_applications,or_number_2,' . request('id'), 'unique:fvr_applications,or_number_3,' . request('id'), 'max:20', 'nullable']];
+            }
+
+            $request->validate($rules);
+        }
+
+        $transaction_type = $this->getTransaction($request);
+
+        if($transaction_type === false)
+        {
+            return response()->json(['err_msg' => 'This record already have previous transaction'], 401);
         }
 
         DB::beginTransaction();
@@ -431,6 +612,8 @@ class FvrApplicationController extends Controller
             /* FIXED VALUE */
 
             $fvr_application->banca_id = $request->banca_id;
+            $fvr_application->ctc_no = $request->ctc_no;
+            $fvr_application->ctc_date = $request->ctc_date;
 
             /* CHANGE THIS DETAILS IF THE TRANSACTION HAS CHANGE UNIT */
 
@@ -494,17 +677,26 @@ class FvrApplicationController extends Controller
                 ? $master_banca_record->barangay_id
                 : $request->dropping_details['new_barangay_id'];
 
+
             $banca_code = DB::table('barangay')->where('id', $barangay_id)->get();
             $check_banca_code = explode('-', $request->body_number);
 
-            if($banca_code[0]->banca_code != $check_banca_code[1]) {
-                $check_banca_code[1] = $banca_code[0]->banca_code;
+//            if($banca_code[0]->banca_code != $check_banca_code[1]) {
+//                $check_banca_code[1] = $banca_code[0]->banca_code;
+//            }
+
+
+            if($request->status != 1)
+            {
+                $fvr_application->or_number = $request->or_number;
+                $fvr_application->or_number_2 = $request->or_number_2;
+                $fvr_application->or_number_3 = $request->or_number_3;
+                $fvr_application->or_date = $request->or_date;
             }
 
 
-            $fvr_application->body_number = implode('-', $check_banca_code);
+            $fvr_application->body_number = $request->body_number; //implode('-', $check_banca_code);
             $fvr_application->transact_type = implode(',', $transaction_type); // implode array to save the transaction type separated by comma
-            $fvr_application->status = 1;
             $fvr_application->user_id = Auth::user()->name;
             $fvr_application->save();
 
@@ -548,7 +740,7 @@ class FvrApplicationController extends Controller
 
                     $find = array_search($data['id'], array_column($request->auxiliary, 'id'));
 
-                    /* IF EQUALS TO FALSE IT MEANS THAT THE ID HAS BEEN DELETED */
+                    /* IF EQUALS TO FALSE IT MEANS THAT THE ID HAS BEEN DELETED MUST DELETE TO THE DATABASE */
 
                     if($find === false) {
                         $delete_auxiliary = FvrApplicationAuxiliaryEngine::where('id', $data['id'])->first();
@@ -588,10 +780,14 @@ class FvrApplicationController extends Controller
     }
 
     public function pdfApplication($id, $form_to_print) {
+
         $fvr_application = $this->fvr_application->fetchDataForPrinting($id);
         $fvr_auxiliary_engine = $this->fvr_application_auxiliary_engine->fetchDataByForeignId($id);
         $boat_captain = $this->boat_captain->fetchDataByBanca($fvr_application->banca_id);
         $operator_img = $this->operator_img->fetchDataById($fvr_application->taxpayer_id);
+        $m99 = DB::table('m99')->select('comp_addr', 'banca_trading')->first();
+        $company_address = $m99->comp_addr;
+        $trading = $m99->banca_trading;
 
         $engine_count = 1 + count($fvr_auxiliary_engine);
 
@@ -619,14 +815,16 @@ class FvrApplicationController extends Controller
 
 
         $data = [
-                $fvr_application,
-                $fvr_auxiliary_engine,
-                $license_number,
-                $transaction_type,
-                $boat_captain,
-                $operator_img,
-                $engine_count,
-                $birthdate
+                'application' => $fvr_application,
+                'auxiliary_engine' => $fvr_auxiliary_engine,
+                'license_num' => $license_number,
+                'transact_type' => $transaction_type,
+                'boat_captain' => $boat_captain,
+                'operator_img' => $operator_img,
+                'engine_count' => $engine_count,
+                'birthdate' => $birthdate,
+                'comp_address' => $company_address,
+                'trading' => $trading,
             ];
 
         if((int)$form_to_print === 0) {
@@ -643,6 +841,8 @@ class FvrApplicationController extends Controller
 
         $paper_size = (int)$form_to_print === 0 ? 'legal' : 'letter';
 
+//        dd($data);
+
         $pdf = \App::make('dompdf.wrapper');
         $pdf->getDomPDF()->set_option("enable_php", true);
         $pdf->loadView('pdf.' . $blade , compact('data'));
@@ -651,18 +851,14 @@ class FvrApplicationController extends Controller
     }
 
 
-
-
     /* RENEWAL FVR APPLICATION */
-
-
-
 
     public function renew($id) {
 
-        $prev_fvr_application = $this->fvr_application->fetchDataById($id);
+        $prev_fvr_application = $this->fvr_application->fetchDataByIdForRenewal($id);
         $prev_charges = $this->fvr_application_charges->fetchDataByForeignIdForRenewal($id);
         $prev_auxiliary = $this->fvr_application_auxiliary_engine->fetchDataByForeignId($id);
+        $prev_fvr_application->body_number = implode('-', $this->getBancaApplicationBodyNumber($prev_fvr_application));
 
         $total_charges = 0;
 

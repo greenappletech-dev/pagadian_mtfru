@@ -74,6 +74,7 @@ class OperatorController extends Controller
     }
 
     public function store(StoreOperator $request) {
+        DB::raw('LOCK TABLES taxpayer WRITE');
         $operator = new Taxpayer();
         $operator->tax_id = $this->getTaxId();
         $tax_id_value = (int)$this->getTaxId() + 1;

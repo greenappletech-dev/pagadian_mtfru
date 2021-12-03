@@ -153,10 +153,7 @@
                                     <label for="no_cylinder">Number of Cylinder</label>
                                     <input type="text" class="form-control" id="no_cylinder">
                                 </div>
-
-
                             </div>
-
                         </div>
 
                     </div>
@@ -176,7 +173,7 @@ export default {
 
     data() {
         return {
-            columns: ['operator', 'body_number', 'name', 'color', 'length', 'width', 'dept', 'make_type', 'engine_motor_no', 'boat_type','created_at', 'updated_at','actions'],
+            columns: ['operator', 'body_number', 'name', 'color', 'length', 'width', 'dept', 'make_type', 'engine_motor_no', 'boat_type', 'or_new_application_date','created_at', 'updated_at','actions'],
             tableData: [],
             options: {
                 headings: {
@@ -190,6 +187,7 @@ export default {
                     make_type: 'Model/Make',
                     engine_motor_no: 'Engine Serial',
                     boat_type: 'Boat Type',
+                    or_new_application_date: 'Issued Date',
                     created_at: 'Created At',
                     updated_at: 'Updated At',
                     action: 'Action',

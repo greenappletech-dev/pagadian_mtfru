@@ -114,6 +114,9 @@
                             <label for="boat_type">Boat Type</label>
                             <input type="text" id="boat_type" class="form-control" v-model="boat_type.name">
 
+                            <label for="boat_type_code">Code</label>
+                            <input type="text" id="boat_type_code" class="form-control" v-model="boat_type.code">
+
                             <label for="engine" class="form-control d-flex justify-content-between border-0">
                                 With Engine?
                                 <input type="checkbox" id="engine" v-model="boat_type.with_engine" class="mt-sm-1 align-middle">
@@ -139,11 +142,12 @@ export default {
 
     data() {
         return {
-            columns: ['name','with_engine','created_at', 'updated_at','actions'],
+            columns: ['name', 'boat_type_code','with_engine','created_at', 'updated_at','actions'],
             tableData: [],
             options: {
                 headings: {
                     name: 'Boat Type',
+                    boat_type_code: 'Code',
                     with_engine: 'With Engine',
                     created_at: 'Created At',
                     updated_at: 'Updated At',
@@ -257,7 +261,9 @@ export default {
         storeRecord() {
             this.loader = true;
             axios.post('boat_type/store', {
+
                 name: this.boat_type.name,
+                code: this.boat_type.code,
                 with_engine: this.boat_type.with_engine
 
             })
@@ -277,6 +283,7 @@ export default {
             axios.patch('boat_type/update/' + this.boat_type.id, {
 
                 name: this.boat_type.name,
+                code: this.boat_type.code,
                 with_engine: this.boat_type.with_engine
 
             })

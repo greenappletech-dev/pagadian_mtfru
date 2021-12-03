@@ -164,6 +164,26 @@
                 </div>
             </div>
 
+
+            <div class="card">
+                <div class="card-header">
+                    CTC Information
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <label for="ctc_no">CTC No:.</label>
+                            <input type="text" id="ctc_no" class="form-control" v-model="banca.ctc_no">
+                        </div>
+                        <div class="col-6">
+                            <label for="ctc_date">CTC Date</label>
+                            <input type="date" id="ctc_date" class="form-control" v-model="banca.ctc_date">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
             <div class="card">
                 <div class="card-header">
                     <h2 style="font-size: 17px; margin: 0;">Engine Information</h2>
@@ -267,200 +287,139 @@
 
                 <div class="card-body">
 
+                <!--- FOR NEW --->
 
 
-                <!--      FOR RENEWALS           -->
-
-
-
-
-                    <div class="card">
-                        <div class="card-header d-flex justify-content-start">
-
-                            <label
-                                class="d-flex justify-content-start"
-                                for="chk_renewal"
-                                style="width: 100%;
-                                height: 100%;
-                                margin: 0">
-
-                                <input
-                                    type="checkbox"
-                                    v-model="renewal"
-                                    v-on:click="checkRenewal"
-                                    style="display: none"
-                                    id="chk_renewal">
-
-                                <span
-                                    style="position: relative;
-                                    width: 20px;
-                                    height: 20px;"
-                                    class="border rounded mr-2">
-                                        <i
-                                            id="new_check_icon"
-                                            class="fas fa-check"
-                                            style="display: none;
-                                            position: absolute;
-                                            top: 50%;
-                                            left: 55%;
-                                            transform: translate(-50%, -50%);
-                                            font-size: 15px;
-                                            color: #3ae374;">
-                                        </i>
-                                </span>
-
-                                <h2 style="font-size: 17px; margin: 0;">New/Renewal</h2>
-
-                            </label>
-                        </div>
-                    </div>
-
-
-
-
-
-
-                    <!--         FOR DROPPING           -->
-
-
-
-
-
-                    <div class="card">
-                        <div class="card-header d-flex justify-content-start">
-
-                            <label
-                                class="d-flex justify-content-start"
-                                for="chk_dropping"
-                                style="width: 100%;
-                        height: 100%;
-                        margin: 0">
-
-                                <input
-                                    type="checkbox"
-                                    v-model="droppingValue"
-                                    v-on:click="checkDropping"
-                                    style="display: none"
-                                    id="chk_dropping">
-
-                                <span
-                                    style="position: relative;
-                            width: 20px;
-                            height: 20px;"
-                                    class="border rounded mr-2">
-                                    <i
-                                        id="drop_check_icon"
-                                        class="fas fa-check"
-                                        style="display: none;
+                <div class="card">
+                    <div class="card-header d-flex justify-content-start">
+                        <label class="d-flex justify-content-start" for="chk_new" style="width: 100%;
+                            height: 100%;
+                            margin: 0">
+                            <input type="checkbox" v-model="newTransaction" v-on:click="checkNew" style="display: none" id="chk_new">
+                            <span style="position: relative; width: 20px; height: 20px;" class="border rounded mr-2"><i id="new_check_icon" class="fas fa-check" style="display: none;
                                         position: absolute;
                                         top: 50%;
                                         left: 55%;
                                         transform: translate(-50%, -50%);
                                         font-size: 15px;
-                                        color: #3ae374;">
-                                    </i>
-                                </span>
-
-                                <h2 style="font-size: 17px; margin: 0;">Dropping</h2>
-
-                            </label>
-                        </div>
+                                        color: #3ae374;"></i></span>
+                            <h2 style="font-size: 17px; margin: 0;">New</h2>
+                        </label>
+                    </div>
+                </div>
 
 
-                        <div class="card-body" id="dropping_details" style="position: relative; display: none">
-                            <label>Please Select New Operator</label>
-                            <div class="form-group">
-                                <label for="new_operator">Operator Name</label>
-                                <input
-                                    id="new_operator"
-                                    type="text"
-                                    class="form-control"
-                                    v-model="new_operator.operator"
-                                    readonly="readonly">
+                <!--      FOR RENEWALS           -->
 
-                                <label for="new_operator_address">Address</label>
-                                <input
-                                    id="new_operator_address"
-                                    type="text"
-                                    class="form-control"
-                                    v-model="new_operator.address"
-                                    readonly="readonly">
 
-                                <label for="new_operator_barangay">Barangay</label>
-                                <input
-                                    id="new_operator_barangay"
-                                    type="text"
-                                    class="form-control"
-                                    v-model="new_operator.barangay"
-                                    readonly="readonly">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-start">
+                        <label class="d-flex justify-content-start" for="chk_renewal" style="width: 100%;
+                            height: 100%;
+                            margin: 0">
+                            <input type="checkbox" v-model="renewal" v-on:click="checkRenewal" style="display: none" id="chk_renewal">
+                            <span style="position: relative;
+                                width: 20px;
+                                height: 20px;" class="border rounded mr-2"><i id="renew_check_icon" class="fas fa-check" style="display: none;
+                                        position: absolute;
+                                        top: 50%;
+                                        left: 55%;
+                                        transform: translate(-50%, -50%);
+                                        font-size: 15px;
+                                        color: #3ae374;"></i></span>
+                            <h2 style="font-size: 17px; margin: 0;">Renewal</h2>
+                        </label>
+                    </div>
+                </div>
 
-                                <button
-                                    v-on:click="openModalToSearchNewOperator"
-                                    type="button"
-                                    style="position: absolute;
-                                    top: 10px;
-                                    right: 20px;
-                                    font-size: 14px;
-                                    color: #fff;
-                                    background: #357ec7"
-                                    class="p-1 pl-3 pr-3 rounded border-0">
-                                    Find New Operator
-                                </button>
-                            </div>
+
+                <!--         FOR DROPPING           -->
+
+
+                <div class="card">
+                    <div class="card-header d-flex justify-content-start">
+                        <label class="d-flex justify-content-start" for="chk_dropping" style="width: 100%;
+                    height: 100%;
+                    margin: 0">
+                            <input type="checkbox" v-model="droppingValue" v-on:click="checkDropping" style="display: none" id="chk_dropping">
+                            <span style="position: relative;
+                        width: 20px;
+                        height: 20px;" class="border rounded mr-2"><i id="drop_check_icon" class="fas fa-check" style="display: none;
+                                    position: absolute;
+                                    top: 50%;
+                                    left: 55%;
+                                    transform: translate(-50%, -50%);
+                                    font-size: 15px;
+                                    color: #3ae374;"></i></span>
+                            <h2 style="font-size: 17px; margin: 0;">Dropping</h2>
+                        </label>
+                    </div>
+                    <div class="card-body" id="dropping_details" style="position: relative; display: none">
+                        <label>Please Select New Operator</label>
+                        <div class="form-group">
+                            <label for="new_operator">Operator Name</label>
+                            <input
+                                id="new_operator"
+                                type="text"
+                                class="form-control"
+                                v-model="new_operator.operator"
+                                readonly="readonly">
+
+                            <label for="new_operator_address">Address</label>
+                            <input
+                                id="new_operator_address"
+                                type="text"
+                                class="form-control"
+                                v-model="new_operator.address"
+                                readonly="readonly">
+
+                            <label for="new_operator_barangay">Barangay</label>
+                            <input
+                                id="new_operator_barangay"
+                                type="text"
+                                class="form-control"
+                                v-model="new_operator.barangay"
+                                readonly="readonly">
+
+                            <button
+                                v-on:click="openModalToSearchNewOperator"
+                                type="button"
+                                style="position: absolute;
+                                top: 10px;
+                                right: 20px;
+                                font-size: 14px;
+                                color: #fff;
+                                background: #357ec7"
+                                class="p-1 pl-3 pr-3 rounded border-0">
+                                Find New Operator
+                            </button>
                         </div>
                     </div>
+                </div>
 
 
+                <!--        FOR CHANGE UNIT            -->
 
 
-
-
-                    <!--        FOR CHANGE UNIT            -->
-
-
-
-
-
-
-                    <div class="card">
-                        <div class="card-header d-flex justify-content-start">
-                            <label
-                                class="d-flex justify-content-start"
-                                for="chk_change_unit"
-                                style="width: 100%;
-                        height: 100%;
-                        margin: 0">
-
-                                <input type="checkbox"
-                                       v-model="changeUnitValue"
-                                       v-on:click="checkChangeUnit"
-                                       style="display: none"
-                                       id="chk_change_unit">
-
-
-                                <span style="position: relative; width: 20px; height: 20px;" class="border rounded mr-2">
-                                        <i
-                                            id="change_unit_icon"
-                                            class="fas fa-check"
-                                            style="display: none;
-                                            position: absolute;
-                                            top: 50%;
-                                            left: 55%;
-                                            transform: translate(-50%, -50%);
-                                            font-size: 15px;
-                                            color: #3ae374;">
-                                        </i>
-                                </span>
-
-                                <h2 style="font-size: 17px; margin: 0;">Change Unit</h2>
-                            </label>
-                        </div>
+                <div class="card">
+                    <div class="card-header d-flex justify-content-start">
+                        <label class="d-flex justify-content-start" for="chk_change_unit" style="width: 100%;
+                    height: 100%;
+                    margin: 0">
+                            <input type="checkbox" v-model="changeUnitValue" v-on:click="checkChangeUnit" style="display: none" id="chk_change_unit">
+                            <span style="position: relative; width: 20px; height: 20px;" class="border rounded mr-2"><i id="change_unit_icon" class="fas fa-check" style="display: none;
+                                        position: absolute;
+                                        top: 50%;
+                                        left: 55%;
+                                        transform: translate(-50%, -50%);
+                                        font-size: 15px;
+                                        color: #3ae374;"></i></span>
+                            <h2 style="font-size: 17px; margin: 0;">Change Unit</h2>
+                        </label>
                     </div>
-
-
-
                 </div>
             </div>
+        </div>
 
 
 
@@ -732,6 +691,8 @@ export default {
             rowindex: null,
             other_price: 0,
             or_group: 'A',
+            cityCode: '',
+            orMonthNewTransaction: '',
 
             err: false,
             suc: false,
@@ -743,6 +704,7 @@ export default {
             changeUnitValue: false,
             addCharges: false,
             renewal: false,
+            newTransaction: false,
             loader: false,
             add_engine: false,
         }
@@ -750,17 +712,23 @@ export default {
     methods: {
 
         disableFields(bool) {
-            $('input[type=text]').attr("readonly",bool);
-            $('#boat_type').attr("readonly",bool);
-            $('#btn_auxiliary').attr("disabled", bool);
+
+            $('input[type=text]').attr('readonly',bool);
+            $('input[type=date]').attr('readonly',bool);
+            $('#btn_auxiliary').attr('disabled', bool);
 
             /* fix element attributes */
 
-            $('#operator').attr("readonly", true);
-            $('#text_search').attr("readonly",false);
-            $('#new_operator').attr("readonly", true);
-            $('#new_operator_address').attr("readonly", true);
-            $('#new_operator_barangay').attr("readonly", true);
+            $('#operator').attr('readonly', true);
+            $('#new_operator').attr('readonly', true);
+            $('#new_operator_address').attr('readonly', true);
+            $('#new_operator_barangay').attr('readonly', true);
+
+            $('#ctc_no').attr('readonly', false);
+            $('#ctc_date').attr('readonly', false);
+            $('#text_search').attr('readonly',false);
+            $('#body_number').attr('readonly', false);
+
         },
 
         formatPrice(value) {
@@ -850,6 +818,7 @@ export default {
             axios.get('fvr/getdata').then(response => {
                 this.boatTypeTabldeData = response.data.boat_types;
                 this.chargesTableData = response.data.charges;
+                this.cityCode = response.data.city_code;
             })
         },
 
@@ -865,6 +834,7 @@ export default {
             axios.get('fvr/search/'+ this.searchedValue.toUpperCase()).then(response => {
                 this.operatorTableData = response.data.operator;
                 this.auxiliaryTableData = response.data.auxiliary;
+                // this.orMonthNewTransaction = response.data.new_application_or_date;
             });
         },
 
@@ -876,7 +846,7 @@ export default {
             let month = (date.getMonth() + 1).toString().padStart(2, "0");
             let year = date.getFullYear().toString().substr(-2);
 
-            this.operatorTableData.forEach(function(item, index) {
+            this.operatorTableData.forEach((item, index) => {
                 if(parseInt(item['taxpayer_id']) === parseInt(id)) {
 
                     banca.id = item['id'];
@@ -899,7 +869,10 @@ export default {
                     banca.barangay_code = item['banca_code'];
                     banca.barangay_id = item['barangay_id'];
                     banca.address = item['address'];
-                    banca.body_number = 'PAG-' + banca.barangay_code + '-MPB-' + item['body_number'] + '-' + month + '-' + year;
+                    banca.body_number = item['body_number'];
+
+                    // banca.body_number = [this.cityCode, banca.barangay_code, item['boat_type_code'], item['body_number'], this.orMonthNewTransaction, year].join('-');
+                    // banca.body_number =  this.cityCode  + '-' + banca.barangay_code + '-' + item['code'] + '-' + item['body_number'] + '-' + month + '-' + year;
                 }
             });
 
@@ -945,21 +918,47 @@ export default {
             this.errors = this.errorHandler(error.response.data.errors);
         },
 
+        /* NEW */
+
+        checkNew(e)
+        {
+            if(e.target.checked)
+            {
+                $('#new_check_icon').show();
+                $('#renew_check_icon').hide();
+                $('#drop_check_icon').hide();
+                $('#dropping_details').hide();
+                $('#change_unit_icon').hide();
+                this.newTransaction = true;
+                this.renewal = false;
+                this.newOperator = false;
+                this.changeUnit = false;
+                return;
+            }
+
+            this.newTransaction = false;
+            $('#new_check_icon').hide();
+        },
+
+
+
         /* RENEWALS */
 
         checkRenewal(e) {
             if(e.target.checked) {
                 this.renewal = true;
+                this.newTransaction = false;
                 this.newOperator = false;
 
-                $('#new_check_icon').show();
+                $('#renew_check_icon').show();
+                $('#new_check_icon').hide();
                 $('#drop_check_icon').hide();
                 $('#dropping_details').hide();
                 return;
             }
 
             this.renewal = false;
-            $('#new_check_icon').hide();
+            $('#renew_check_icon').hide();
         },
 
 
@@ -969,20 +968,41 @@ export default {
         checkDropping(e) {
 
             if (e.target.checked) {
+                $('#new_check_icon').hide();
                 $('#dropping_details').show();
                 $('#drop_check_icon').show();
-                $('#new_check_icon').hide();
+                $('#renew_check_icon').hide();
+                this.newTransaction = false;
                 this.newOperator = true;
                 this.renewal = false;
                 return;
             }
 
             this.new_operator = [];
-
-            $('#drop_check_icon').hide();
-            $('#dropping_details').hide();
             this.newOperator = false;
 
+            $('#new_check_icon').hide();
+            $('#drop_check_icon').hide();
+            $('#dropping_details').hide();
+        },
+
+        /* CHANGE UNIT */
+
+
+        checkChangeUnit(e) {
+            if (e.target.checked) {
+                $('#change_unit_icon').show();
+                $('#new_check_icon').hide();
+
+                this.new = false;
+                this.changeUnit = true;
+                this.disableFields(false);
+                return;
+            }
+
+            this.changeUnit = false;
+            this.disableFields(true);
+            $('#change_unit_icon').hide();
         },
 
         openModalToSearchNewOperator() {
@@ -1020,21 +1040,7 @@ export default {
         /* END OF DROPPING */
 
 
-        /* CHANGE UNIT */
 
-
-        checkChangeUnit(e) {
-            if (e.target.checked) {
-                $('#change_unit_icon').show();
-                this.changeUnit = true;
-                this.disableFields(false);
-                return;
-            }
-
-            $('#change_unit_icon').hide();
-            this.changeUnit = false;
-            this.disableFields(true);
-        },
 
         updateAuxiliaryEngine() {
             this.auxiliaryTableData[this.rowindex-1].make_type = this.auxiliary.make_type;
@@ -1066,7 +1072,7 @@ export default {
                 return;
             }
 
-            if(!this.renewal && !this.newOperator && !this.changeUnit) {
+            if(!this.renewal && !this.newOperator && !this.changeUnit && !this.newTransaction) {
                 this.err = true;
                 this.err_msg = 'You Must Select Transaction';
                 return;
@@ -1093,31 +1099,38 @@ export default {
             this.loader = true;
 
             axios.post('fvr/store', {
-                taxpayer_id: this.banca.taxpayer_id,
-                barangay_id: this.banca.barangay_id,
-                banca_id: this.banca.id,
-                boat_name: this.banca.boat_name,
-                boat_color: this.banca.boat_color,
-                length: this.banca.boat_length,
-                width: this.banca.width,
-                dept: this.banca.dept,
-                gross_tonnage: this.banca.gross_tonnage,
-                net_tonnage: this.banca.net_tonnage,
-                make_type: this.banca.make_type,
-                horsepower: this.banca.horsepower,
-                engine_motor_no: this.banca.engine_motor_no,
-                cylinder: this.banca.cylinder,
-                boat_type_id: this.banca.boat_type_id,
-                fishing_gear: this.banca.fishing_gear,
-                manning_crew: this.banca.manning_crew,
-                body_number: this.banca.body_number,
-                address: this.banca.address,
-                auxiliary: this.auxiliaryTableData,
-                charges: this.selectedChargesTableData,
-                renewal: this.renewal,
-                dropping: this.newOperator,
-                change_unit: this.changeUnitValue,
-                dropping_details: dropping_details,
+
+
+                taxpayer_id             : this.banca.taxpayer_id,
+                barangay_id             : this.banca.barangay_id,
+                banca_id                : this.banca.id,
+                boat_name               : this.banca.boat_name,
+                boat_color              : this.banca.boat_color,
+                length                  : this.banca.boat_length,
+                width                   : this.banca.width,
+                dept                    : this.banca.dept,
+                gross_tonnage           : this.banca.gross_tonnage,
+                net_tonnage             : this.banca.net_tonnage,
+                make_type               : this.banca.make_type,
+                horsepower              : this.banca.horsepower,
+                engine_motor_no         : this.banca.engine_motor_no,
+                cylinder                : this.banca.cylinder,
+                boat_type_id            : this.banca.boat_type_id,
+                fishing_gear            : this.banca.fishing_gear,
+                manning_crew            : this.banca.manning_crew,
+                body_number             : this.banca.body_number,
+                ctc_no                  : this.banca.ctc_no,
+                ctc_date                : this.banca.ctc_date,
+                address                 : this.banca.address,
+                auxiliary               : this.auxiliaryTableData,
+                charges                 : this.selectedChargesTableData,
+                new                     : this.newTransaction,
+                renewal                 : this.renewal,
+                dropping                : this.newOperator,
+                change_unit             : this.changeUnitValue,
+                dropping_details        : dropping_details,
+
+
             })
             .then(response => {
                 this.returnSuccess(response);

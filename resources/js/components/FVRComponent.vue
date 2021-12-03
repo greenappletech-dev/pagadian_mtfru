@@ -77,7 +77,6 @@
                         <button v-on:click="openToCreate" class="p-2 pl-4 mr-1 pr-4 rounded border-0 d-inline-block form-control" style="background: rgba(255, 120, 31, 1); color: #fff; font-size: 14px; box-shadow: 2px 2px 2px rgba(165, 165, 165, 1)">New Application</button>
                         <button v-on:click="openModalToPrintReport" class="p-2 pl-4 pr-4 rounded border-0 d-inline-block form-control" style="background: #1abc9c; color: #fff; font-size: 14px; box-shadow: 2px 2px 2px rgba(165, 165, 165, 1)">Print Report</button>
                     </div>
-
                     <button v-on:click="openViewRenewal" class="p-2 pl-4 pr-4 mt-1 rounded border-0 form-control" style="font-size: 14px; color: #fff; background: #1abc9c; box-shadow: 2px 2px 2px rgba(165, 165, 165, 1)">View Renewal</button>
                 </div>
             </div>
@@ -143,18 +142,18 @@
 
                             <div class="form-group" v-if="payment">
                                 <div v-if="orGroupA">
-                                    <label for="or_no">OR Number A:</label>
-                                    <input type="text" class="form-control" id="or_no" v-model="ORNumber" maxlength="20">
+                                    <label for="or_no_1">OR Number A:</label>
+                                    <input type="text" class="form-control" id="or_no_1" v-model="ORNumber" maxlength="20">
                                 </div>
 
                                 <div v-if="orGroupB">
-                                    <label for="or_no">OR Number B:</label>
-                                    <input type="text" class="form-control" id="or_no" v-model="ORNumber2" maxlength="20">
+                                    <label for="or_no_2">OR Number B:</label>
+                                    <input type="text" class="form-control" id="or_no_2" v-model="ORNumber2" maxlength="20">
                                 </div>
 
                                 <div v-if="orGroupC">
-                                    <label for="or_no">OR Number C:</label>
-                                    <input type="text" class="form-control" id="or_no" v-model="ORNumber3" maxlength="20">
+                                    <label for="or_no_3">OR Number C:</label>
+                                    <input type="text" class="form-control" id="or_no_3" v-model="ORNumber3" maxlength="20">
                                 </div>
 
                                 <label for="or_date">OR Date:</label>
@@ -376,19 +375,37 @@ export default {
         },
 
         printApplicationForm() {
-            if(parseInt(this.formToPrint) <= parseInt(this.statusValue)) {
-                window.open('fvr/pdf_application/' + this.applicationIdValue + '/' + this.formToPrint);
-                this.print = false;
-                this.formToPrint = '';
-                $('#print-modal').modal('hide');
-                setTimeout(function(){ $('#filter').click(); }  , 1000);
-            }
-            else
+
+            if(this.statusValue === 1)
             {
-                if(parseInt(this.formToPrint) === 2) {
+                if(this.formToPrint == 2 || this.formToPrint == 0) {
                     this.errors = this.errorHandler({ invalid: ['This Transaction is not yet Paid'] });
+                    return;
                 }
             }
+
+            window.open('fvr/pdf_application/' + this.applicationIdValue + '/' + this.formToPrint);
+
+            this.print = false;
+            this.formToPrint = '';
+            $('#print-modal').modal('hide');
+            setTimeout(function(){ $('#filter').click(); }  , 1000);
+
+            // if(parseInt(this.formToPrint) <= parseInt(this.statusValue)) {
+            //     window.open('fvr/pdf_application/' + this.applicationIdValue + '/' + this.formToPrint);
+            //     this.print = false;
+            //     this.formToPrint = '';
+            //     $('#print-modal').modal('hide');
+            //     setTimeout(function(){ $('#filter').click(); }  , 1000);
+            //     return;
+            // }
+
+            // if(parseInt(this.statusValue) === 1) {
+            //     if(parseInt(this.formToPrint) === 2 || parseInt(this.formToPrint) === 0) {
+            //         this.errors = this.errorHandler({ invalid: ['This Transaction is not yet Paid'] });
+            //         return;
+            //     }
+            // }
         },
 
         openModalForPayment(id) {

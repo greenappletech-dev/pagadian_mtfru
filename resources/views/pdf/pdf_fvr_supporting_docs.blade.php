@@ -174,6 +174,29 @@
         padding-bottom: 2px;
     }
 
+    .admeasurement .or_number {
+        position: absolute;
+        bottom: 50px;
+    }
+
+    .admeasurement .place_of_inspection {
+        position: absolute;
+        top: 624px;
+        left: 50px;
+        text-align: center;
+        width: 215px;
+        font-size: 14px;
+    }
+
+    .admeasurement .date_of_inspection {
+        position: absolute;
+        top: 624px;
+        left: 272px;
+        text-align: center;
+        width: 191px;
+        font-size: 14px;
+    }
+
     .cert_numbers .license_number {
         position: absolute;
         top: 183px;
@@ -206,7 +229,7 @@
     .cert_numbers .permitted {
         position: absolute;
         top: 504px;
-        left: 250px;
+        left: 180px;
         text-align: center;
         font-size: 13px;
     }
@@ -269,8 +292,8 @@
 
     .cert_numbers .or_number {
         position: absolute;
-        bottom: 150px;
-        left: 200px;
+        bottom: 167px;
+        left: 205px;
         text-align: center;
         font-size: 13px;
     }
@@ -449,6 +472,11 @@
         width: 198px;
         bottom: 255px;
         left: 185px;
+    }
+
+    .inspection .or_number {
+        position: absolute;
+        bottom: 180px;
     }
 
     .permit_to_operate {
@@ -937,52 +965,53 @@
 <body>
 
 
-@if($data[0]['with_engine'] !== false)
+@if($data['application']['with_engine'] !== false)
 
     <div class="page">
         <div class="admeasurement">
             <img style="width: 815px; position: absolute; top: -45px; left: -45px;" src="{{ asset('image/forms/ADMEASUREMENT.jpg') }}" alt="">
 
-            <div class="full_name">{{ $data[0]['full_name'] }}</div>
-            <div class="barangay">PAGADIAN CITY</div>
-            <div class="transact_date">{{ $data[0]['transact_date'] }}</div>
-            <div class="address">{{ $data[0]['address'] }}</div>
-            <div class="boat_desc">{{ $data[0]['name'] . ' / ' . $data[0]['color']}}</div>
+            <div class="full_name">{{ $data['application']['full_name'] }}</div>
+            <div class="barangay">{{ strtoupper($data['comp_address']) }}</div>
+            <div class="transact_date">{{ $data['application']['transact_date'] }}</div>
+            <div class="address">{{ $data['application']['address'] }}</div>
+            <div class="boat_desc">{{ $data['application']['name'] . ' / ' . $data['application']['color']}}</div>
 
-            <div class="body_number">{{ $data[0]['body_number'] }}</div>
-            <div class="license_number">{{ $data[2] }}</div>
-            <div class="boat_type">{{ $data[0]['boat_type'] }}</div>
+            <div class="body_number">{{ $data['application']['body_number'] }}</div>
+            <div class="license_number">{{ $data['license_num'] }}</div>
+            <div class="boat_type">{{ $data['application']['boat_type'] }}</div>
 
-            <div class="fishing_gear">{{ $data[0]['fishing_gear'] }}</div>
-            <div class="manning_crew">{{ $data[0]['manning_crew'] }}</div>
+            <div class="fishing_gear">{{ $data['application']['fishing_gear'] }}</div>
+            <div class="manning_crew">{{ $data['application']['manning_crew'] }}</div>
 
-            <div class="length">{{ $data[0]['length'] }}</div>
-            <div class="width">{{ $data[0]['width'] }}</div>
-            <div class="dept">{{ $data[0]['dept'] }}</div>
-            <div class="gross_tonnage">{{ $data[0]['gross_tonnage'] }}</div>
-            <div class="net_tonnage">{{ $data[0]['net_tonnage'] }}</div>
+            <div class="length">{{ $data['application']['length'] }}</div>
+            <div class="width">{{ $data['application']['width'] }}</div>
+            <div class="dept">{{ $data['application']['dept'] }}</div>
+            <div class="gross_tonnage">{{ $data['application']['gross_tonnage'] }}</div>
+            <div class="net_tonnage">{{ $data['application']['net_tonnage'] }}</div>
+
+            <div class="place_of_inspection">{{ strtoupper($data['comp_address']) }}</div>
+            <div class="date_of_inspection">{{ date('F d, Y', strtotime($data['application']['or_date'])) }}</div>
 
 
             <table>
                 <tr>
-                    <th width="35.7%">{{ $data[0]['make_type'] }}</th>
-                    <th width="29%">{{ $data[0]['engine_motor_no'] }}</th>
-                    <th width="16%">{{ $data[0]['horsepower'] }}</th>
-                    <th>{{ $data[0]['cylinder'] }}</th>
+                    <th width="35.7%">{{ $data['application']['make_type'] }}</th>
+                    <th width="29%">{{ $data['application']['engine_motor_no'] }}</th>
+                    <th width="16%">{{ $data['application']['horsepower'] }}</th>
+                    <th>{{ $data['application']['cylinder'] }}</th>
                 </tr>
-
-                @foreach($data[1] as $auxiliary)
-
+                @foreach($data['auxiliary_engine'] as $auxiliary)
                     <tr>
                         <th>{{ $auxiliary['make_type'] }}</th>
                         <th>{{ $auxiliary['engine_motor_no'] }}</th>
                         <th>{{ $auxiliary['horsepower'] }}</th>
                         <th>{{ $auxiliary['cylinder'] }}</th>
                     </tr>
-
                 @endforeach
-
             </table>
+
+{{--            <div class="or_number">{{ $data['application']['or_number'] }}</div>--}}
         </div>
     </div>
 
@@ -991,54 +1020,54 @@
         <div class="cert_numbers">
             <img style="width: 815px; position: absolute; top: -45px; left: -45px;" src="{{ asset('image/forms/CERTIFICATE OF NUMBER.jpg') }}" alt="">
 
-            <div class="license_number">{{ $data[2] }}</div>
+            <div class="license_number">{{ $data['license_num'] }}</div>
 
             <table class="table-1">
                 <tr>
-                    <th style="width: 34.3%">{{ $data[0]['name'] }}</th>
-                    <th colspan="2">{{ $data[0]['body_number'] }}</th>
+                    <th style="width: 34.3%">{{ $data['application']['name'] }}</th>
+                    <th colspan="2">{{ $data['application']['body_number'] }}</th>
                 </tr>
 
                 <tr>
-                    <th>PROTECTED AREA</th>
-                    <th>{{ $data[0]['boat_type'] }}</th>
-                    <th>PAGADIAN CITY</th>
+                    <th style="font-size: 10px">{{ $data['trading'] }}</th>
+                    <th>{{ $data['application']['boat_type'] }}</th>
+                    <th>{{ strtoupper($data['comp_address']) }}</th>
                 </tr>
 
                 <tr>
-                    <th>{{ date('F j, Y', strtotime($data[0]['birth_date'])) }}</th>
-                    <th colspan="2">PAGADIAN CITY</th>
+                    <th>{{ date('F j, Y', strtotime($data['application']['birth_date'])) }}</th>
+                    <th colspan="2">{{ strtoupper($data['comp_address']) }}</th>
                 </tr>
             </table>
 
             <table class="table-2">
                 <tr>
-                    <th style="width: 50%">{{ $data[0]['full_name'] }}</th>
-                    <th style="width: 50%">{{ $data[0]['address'] }}</th>
+                    <th style="width: 50%">{{ $data['application']['full_name'] }}</th>
+                    <th style="width: 50%">{{ $data['application']['address'] }}</th>
                 </tr>
             </table>
 
-            <div class="permitted">PROTECTED AREA</div>
+            <div class="permitted">{{ $data['trading'] }}</div>
 
             <table class="table-3">
                 <tr>
-                    <th style="width: 28%">{{ $data[0]['length'] }}</th>
-                    <th style="width: 21.5%">{{ $data[0]['width'] }}</th>
-                    <th style="width: 20.3%">{{ $data[0]['dept'] }}</th>
-                    <th style="width: 16%">{{ $data[0]['gross_tonnage'] }}</th>
-                    <th>{{ $data[0]['net_tonnage'] }}</th>
+                    <th style="width: 28%">{{ $data['application']['length'] }}</th>
+                    <th style="width: 21.5%">{{ $data['application']['width'] }}</th>
+                    <th style="width: 20.3%">{{ $data['application']['dept'] }}</th>
+                    <th style="width: 16%">{{ $data['application']['gross_tonnage'] }}</th>
+                    <th>{{ $data['application']['net_tonnage'] }}</th>
                 </tr>
             </table>
 
             <table class="table-4">
                 <tr>
-                    <th style="width: 37.2%">{{ $data[0]['make_type'] }}</th>
-                    <th style="width: 25.2%">{{ $data[0]['engine_motor_no'] }}</th>
-                    <th style="width: 24.5%">{{ $data[0]['horsepower'] }}</th>
-                    <th style="width: 24.5%">{{ $data[0]['cylinder'] }}</th>
+                    <th style="width: 37.2%">{{ $data['application']['make_type'] }}</th>
+                    <th style="width: 25.2%">{{ $data['application']['engine_motor_no'] }}</th>
+                    <th style="width: 24.5%">{{ $data['application']['horsepower'] }}</th>
+                    <th style="width: 24.5%">{{ $data['application']['cylinder'] }}</th>
                 </tr>
 
-                @foreach($data[1] as $auxiliary)
+                @foreach($data['auxiliary_engine'] as $auxiliary)
 
                 <tr>
                     <th>{{ $auxiliary['make_type'] }}</th>
@@ -1051,7 +1080,7 @@
 
             </table>
 
-            {{ $day = date('j', strtotime($data[0]['or_date'])) }}
+            {{ $day = date('j', strtotime($data['application']['or_date'])) }}
             {{ $last_digit = substr($day, -1) }}
             {{ $ordinal = 'th' }}
 
@@ -1067,15 +1096,15 @@
                 {{ $ordinal = 'th' }}
             @endif
 
-            <div class="issue_at">PAGADIAN CITY</div>
+            <div class="issue_at">{{ strtoupper($data['comp_address']) }}</div>
 
             <div class="issue_date">{{ $day.$ordinal }}</div>
 
-            <div class="issue_month">{{ date('F, Y', strtotime($data[0]['or_date'])) }}</div>
+            <div class="issue_month">{{ date('F, Y', strtotime($data['application']['or_date'])) }}</div>
 
-            <div class="validity_date">{{ date('F d, Y', strtotime($data[0]['validity_date'])) }}</div>
+            <div class="validity_date">{{ date('F d, Y', strtotime($data['application']['validity_date'])) }}</div>
 
-            <div class="or_number">{{ $data[0]['or_number'] }} <br> {{ $data[0]['or_number_2'] }}</div>
+            <div class="or_number">{{ $data['application']['or_number'] }}</div>
 
         </div>
     </div>
@@ -1086,46 +1115,46 @@
         <div class="inspection">
             <img style="width: 815px; position: absolute; top: -45px; left: -45px;" src="{{ asset('image/forms/INSPECTION.jpg') }}" alt="">
 
-            <div class="full_name">{{ $data[0]['full_name'] }}</div>
+            <div class="full_name">{{ $data['application']['full_name'] }}</div>
 
-            @if($data[0]['civ_stat'] === 'SNL')
+            @if($data['application']['civ_stat'] === 'SNL')
                 <div class="civil_status">SINGLE</div>
             @else
                 <div class="civil_status">MARRIED</div>
             @endif
 
-            <div class="age">{{ $data[7] }}</div>
+            <div class="age">{{ $data['birthdate'] }}</div>
 
 
-            <div class="barangay">{{ $data[0]['brgy_desc'] }}</div>
-            <div class="transact_date">{{ $data[0]['transact_date'] }}</div>
-            <div class="address">{{ $data[0]['address'] }}</div>
-            <div class="boat_desc">{{ $data[0]['name'] }}</div>
+            <div class="barangay">{{ $data['application']['brgy_desc'] }}</div>
+            <div class="transact_date">{{ $data['application']['transact_date'] }}</div>
+            <div class="address">{{ $data['application']['address'] }}</div>
+            <div class="boat_desc">{{ $data['application']['name'] }}</div>
 
-            <div class="body_number">{{ $data[0]['body_number'] }}</div>
-            <div class="license_number">{{ $data[2] }}</div>
-            <div class="boat_type">{{ $data[0]['boat_type'] }}</div>
+            <div class="body_number">{{ $data['application']['body_number'] }}</div>
+            <div class="license_number">{{ $data['license_num'] }}</div>
+            <div class="boat_type">{{ $data['application']['boat_type'] }}</div>
 
-            <div class="fishing_gear">{{ $data[0]['fishing_gear'] }}</div>
-            <div class="manning_crew">{{ $data[0]['manning_crew'] }}</div>
+            <div class="fishing_gear">{{ $data['application']['fishing_gear'] }}</div>
+            <div class="manning_crew">{{ $data['application']['manning_crew'] }}</div>
 
-            <div class="length">{{ $data[0]['length'] }}</div>
-            <div class="width">{{ $data[0]['width'] }}</div>
-            <div class="dept">{{ $data[0]['dept'] }}</div>
-            <div class="gross_tonnage">{{ $data[0]['gross_tonnage'] }}</div>
-            <div class="net_tonnage">{{ $data[0]['net_tonnage'] }}</div>
+            <div class="length">{{ $data['application']['length'] }}</div>
+            <div class="width">{{ $data['application']['width'] }}</div>
+            <div class="dept">{{ $data['application']['dept'] }}</div>
+            <div class="gross_tonnage">{{ $data['application']['gross_tonnage'] }}</div>
+            <div class="net_tonnage">{{ $data['application']['net_tonnage'] }}</div>
 
-            <div class="boat_color">{{$data[0]['color']}}</div>
+            <div class="boat_color">{{$data['application']['color']}}</div>
 
 
             <table>
                 <tr>
-                    <th width="13%">{{ $data[0]['horsepower'] }}</th>
-                    <th width="25%">{{ $data[0]['engine_motor_no'] }}</th>
-                    <th width="35.7%">{{ $data[0]['make_type'] }}</th>
+                    <th width="13%">{{ $data['application']['horsepower'] }}</th>
+                    <th width="25%">{{ $data['application']['engine_motor_no'] }}</th>
+                    <th width="35.7%">{{ $data['application']['make_type'] }}</th>
                 </tr>
 
-                @foreach($data[1] as $auxiliary)
+                @foreach($data['auxiliary_engine'] as $auxiliary)
 
                     <tr>
                         <th>{{ $auxiliary['horsepower'] }}</th>
@@ -1134,9 +1163,9 @@
                     </tr>
 
                 @endforeach
-
             </table>
-    {{ $day = date('j', strtotime($data[0]['or_date'])) }}
+
+    {{ $day = date('j', strtotime($data['application']['or_date'])) }}
     {{ $last_digit = substr($day, -1) }}
     {{ $ordinal = 'th' }}
 
@@ -1155,11 +1184,13 @@
 
             <div class="issue_date">{{ $day.$ordinal }}</div>
 
-            <div class="issue_month">{{ date('F', strtotime($data[0]['or_date'])) }}</div>
+            <div class="issue_month">{{ date('F', strtotime($data['application']['or_date'])) }}</div>
 
-            <div class="issue_year">{{ date('y', strtotime($data[0]['or_date'])) }}</div>
+            <div class="issue_year">{{ date('y', strtotime($data['application']['or_date'])) }}</div>
 
-            <div class="validity_date">{{ date('F d, Y', strtotime($data[0]['validity_date'])) }}</div>
+            <div class="validity_date">{{ date('F d, Y', strtotime($data['application']['validity_date'])) }}</div>
+
+{{--            <div class="or_number">{{ $data['application']['or_number'] }}</div>--}}
 
         </div>
     </div>
@@ -1169,29 +1200,29 @@
         <div class="motorboat_operator_license">
             <img style="width: 815px; position: absolute; top: -45px; left: -45px;" src="{{ asset('image/forms/MOTORBOAT_OPERATOR_LICENSE.jpg') }}" alt="">
 
-            <div class="license_number">{{ $data[2] }}</div>
+            <div class="license_number">{{ $data['license_num'] }}</div>
 
             <table class="personal_info">
                 <tr>
-                    <th style="width: 20%">{{ $data[0]['last_name'] }}</th>
-                    <th style="width: 20%">{{ $data[0]['first_name'] }}</th>
-                    <th style="width: 20%">{{ $data[0]['mid_name'] }}</th>
+                    <th style="width: 20%">{{ $data['application']['last_name'] }}</th>
+                    <th style="width: 20%">{{ $data['application']['first_name'] }}</th>
+                    <th style="width: 20%">{{ $data['application']['mid_name'] }}</th>
                 </tr>
             </table>
 
-            <div class="address">{{ $data[0]['address'] }}</div>
+            <div class="address">{{ $data['application']['address'] }}</div>
 
             <table class="birth_info">
                 <tr>
-                    <th style="width: 40.6%">{{ date('F d, Y', strtotime($data[0]['birth_date']))  }}</th>
-                    <th style="width: 29.5%">PAGADIAN CITY</th>
-                    <th>{{ date('F d, Y', strtotime($data[0]['or_date'])) }}</th>
+                    <th style="width: 40.6%">{{ date('F d, Y', strtotime($data['application']['birth_date']))  }}</th>
+                    <th style="width: 29.5%">{{ strtoupper($data['comp_address']) }}</th>
+                    <th>{{ date('F d, Y', strtotime($data['application']['or_date'])) }}</th>
                 </tr>
             </table>
 
-            <div class="boat_type">{{ $data[0]['boat_type'] }}</div>
+            <div class="boat_type">{{ $data['application']['boat_type'] }}</div>
 
-            {{ $day = date('j', strtotime($data[0]['or_date'])) }}
+            {{ $day = date('j', strtotime($data['application']['or_date'])) }}
             {{ $last_digit = substr($day, -1) }}
             {{ $ordinal = 'th' }}
 
@@ -1207,15 +1238,15 @@
                 {{ $ordinal = 'th' }}
             @endif
 
-            <div class="issue_at">PAGADIAN CITY</div>
+            <div class="issue_at">{{ strtoupper($data['comp_address']) }}</div>
 
 
-            <div class="issue_month">{{ date('F Y', strtotime($data[0]['or_date'])) }}</div>
+            <div class="issue_month">{{ date('F Y', strtotime($data['application']['or_date'])) }}</div>
 
 
-            <div class="validity_date">{{ date('F d, Y', strtotime($data[0]['validity_date'])) }}</div>
+            <div class="validity_date">{{ date('F d, Y', strtotime($data['application']['validity_date'])) }}</div>
 
-            <div class="or_number">{{ $data[0]['or_number'] }} <br> {{ $data[0]['or_number_2'] }}</div>
+            <div class="or_number">{{ $data['application']['or_number'] }}</div>
 
         </div>
     </div>
@@ -1226,19 +1257,17 @@
         <div class="boat_captain">
             <img style="width: 580px; height: 750px; position: absolute; top: -45px; left: -45px;" src="{{ asset('image/forms/BOAT_CAPTAIN.jpg') }}" alt="">
 
-            <div class="name">{{ $data[4]['full_name'] }}</div>
+            <div class="name">{{ $data['boat_captain']['full_name'] }}</div>
 
-            @if($data[4]['image_location'] !== null)
+            @if($data['boat_captain']['image_location'] !== null)
 
-                <img class="boat_captain_img" src="{{ asset('image/captain_image/' . $data[4]['image_location']) }}">
+                <img class="boat_captain_img" src="{{ asset('image/captain_image/' . $data['boat_captain']['image_location']) }}">
 
             @endif
 
-            <div class="license_number">{{ $data[2] }}</div>
+            <div class="license_number">{{ $data['license_num'] }}</div>
 
-
-
-            {{ $day = date('j', strtotime($data[0]['or_date'])) }}
+            {{ $day = date('j', strtotime($data['application']['or_date'])) }}
             {{ $last_digit = substr($day, -1) }}
             {{ $ordinal = 'th' }}
 
@@ -1254,14 +1283,14 @@
                 {{ $ordinal = 'th' }}
             @endif
 
-            <div class="name">{{ $data[4]['full_name'] }}</div>
+            <div class="name">{{ $data['boat_captain']['full_name'] }}</div>
             <div class="issue_date">{{ $day.$ordinal }}</div>
 
-            <div class="issue_month">{{ date('F' , strtotime($data[0]['or_date'])) }}</div>
-            <div class="issue_year">{{ date('y' , strtotime($data[0]['or_date'])) }}</div>
-            <div class="validity_date">{{ date('F d Y' , strtotime($data[0]['validity_date'])) }}</div>
+            <div class="issue_month">{{ date('F' , strtotime($data['application']['or_date'])) }}</div>
+            <div class="issue_year">{{ date('y' , strtotime($data['application']['or_date'])) }}</div>
+            <div class="validity_date">{{ date('F d Y' , strtotime($data['application']['validity_date'])) }}</div>
 
-            <div class="or_number">{{ $data[0]['or_number'] }} <br> {{ $data[0]['or_number_2'] }}</div>
+            <div class="or_number">{{ $data['application']['or_number_2'] }}</div>
 
         </div>
     </div>
@@ -1271,7 +1300,7 @@
     <div class="fishing_boat_license">
         <img style="width: 590px; height: 800px; position: absolute; top: -45px; left: -45px;" src="{{ asset('image/forms/FISHING_BOAT_LICENSE.jpg') }}" alt="">
 
-        {{ $day = date('j', strtotime($data[0]['or_date'])) }}
+        {{ $day = date('j', strtotime($data['application']['or_date'])) }}
         {{ $last_digit = substr($day, -1) }}
         {{ $ordinal = 'th' }}
 
@@ -1288,31 +1317,31 @@
         @endif
 
 
-        <div class="license_number">{{ $data[2] }}</div>
+        <div class="license_number">{{ $data['license_num'] }}</div>
 
-        <div class="transact_type">{{ $data[3] }}</div>
+        <div class="transact_type">{{ $data['transact_type'] }}</div>
 
-        <div class="name">{{ $data[0]['full_name'] }}</div>
+        <div class="name">{{ $data['application']['full_name'] }}</div>
 
-        <div class="boat_name">{{ $data[0]['name'] }}</div>
+        <div class="boat_name">{{ $data['application']['name'] . ' / ' . $data['application']['color'] }}</div>
 
-        <div class="address">{{ $data[0]['address'] }}</div>
+        <div class="address">{{ $data['application']['address'] }}</div>
 
-        <div class="fishing_gear">{{ $data[0]['fishing_gear'] }}</div>
+        <div class="fishing_gear">{{ $data['application']['fishing_gear'] }}</div>
 
-        <div class="gross_tonnage">{{ $data[0]['gross_tonnage'] }}</div>
+        <div class="gross_tonnage">{{ $data['application']['gross_tonnage'] }}</div>
 
-        <div class="net_tonnage">{{ $data[0]['net_tonnage'] }}</div>
+        <div class="net_tonnage">{{ $data['application']['net_tonnage'] }}</div>
 
         <div class="issue_date">{{ $day.$ordinal }}</div>
 
-        <div class="issue_month">{{ date('F Y' , strtotime($data[0]['or_date'])) }}</div>
+        <div class="issue_month">{{ date('F Y' , strtotime($data['application']['or_date'])) }}</div>
 
-        <div class="or_date">{{ date('F d Y' , strtotime($data[0]['or_date'])) }}</div>
+        <div class="or_date">{{ date('F d Y' , strtotime($data['application']['or_date'])) }}</div>
 
-        <div class="validity_date">{{ date('F d Y' , strtotime($data[0]['validity_date'])) }}</div>
+        <div class="validity_date">{{ date('F d Y' , strtotime($data['application']['validity_date'])) }}</div>
 
-        <div class="or_number">{{ $data[0]['or_number'] }} <br> {{ $data[0]['or_number_2'] }}</div>
+        <div class="or_number">{{ $data['application']['or_number_2'] }}</div>
 
     </div>
 </div>
@@ -1323,7 +1352,7 @@
     <div class="seaweed_farms">
         <img style="width: 590px; height: 800px; position: absolute; top: -45px; left: -45px;" src="{{ asset('image/forms/SEAWEED_FARMS.jpg') }}" alt="">
 
-        {{ $day = date('j', strtotime($data[0]['or_date'])) }}
+        {{ $day = date('j', strtotime($data['application']['or_date'])) }}
         {{ $last_digit = substr($day, -1) }}
         {{ $ordinal = 'th' }}
 
@@ -1340,36 +1369,32 @@
         @endif
 
 
-        @if($data[5] !== null)
-
-            <img class="operator_img" src="{{ asset('image/operator_image/' . $data[5]['name']) }}" alt="">
-
+        @if($data['operator_img'] !== null)
+            <img class="operator_img" src="{{ asset('image/operator_image/' . $data['operator_img']['name']) }}" alt="">
         @endif
 
 
+        <div class="license_number">{{ $data['license_num'] }}</div>
 
-        <div class="license_number">{{ $data[2] }}</div>
+        <div class="name">{{ $data['application']['full_name'] }}</div>
 
-        <div class="name">{{ $data[0]['full_name'] }}</div>
+        <div class="boat_name">{{ $data['application']['name'] }}</div>
 
-        <div class="boat_name">{{ $data[0]['name'] }}</div>
+        <div class="address">{{ $data['application']['address'] }}</div>
 
-        <div class="address">{{ $data[0]['address'] }}</div>
-
-        <div class="fishing_gear">NET{{ $data[0]['fishing_gear'] }}</div>
-
+        <div class="fishing_gear">NET{{ $data['application']['fishing_gear'] }}</div>
 
         <div class="issue_date">{{ $day.$ordinal }}</div>
 
-        <div class="issue_month">{{ date('F' , strtotime($data[0]['or_date'])) }}</div>
+        <div class="issue_month">{{ date('F' , strtotime($data['application']['or_date'])) }}</div>
 
-        <div class="issue_year">{{ date('y' , strtotime($data[0]['or_date'])) }}</div>
+        <div class="issue_year">{{ date('y' , strtotime($data['application']['or_date'])) }}</div>
 
-        <div class="or_date">{{ date('F d Y' , strtotime($data[0]['or_date'])) }}</div>
+        <div class="or_date">{{ date('F d Y' , strtotime($data['application']['or_date'])) }}</div>
 
-        <div class="validity_date">{{ date('F d Y' , strtotime($data[0]['validity_date'])) }}</div>
+        <div class="validity_date">{{ date('F d Y' , strtotime($data['application']['validity_date'])) }}</div>
 
-        <div class="or_number">{{ $data[0]['or_number']  }} </br> {{ $data[0]['or_number_2'] }}</div>
+        <div class="or_number">{{ $data['application']['or_number_2']  }}</div>
 
     </div>
 </div>

@@ -407,7 +407,6 @@ export default {
             auxEngineSerialValue: null,
             auxCylinderValue: null,
 
-
             err_msg: '',
             err: false,
             suc_msg: '',

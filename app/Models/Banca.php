@@ -54,6 +54,7 @@ class Banca extends Model
             ->select(
                 'bancas.*' ,
                 'boat_types.name as boat_type',
+                'boat_types.boat_type_code',
                 'barangay.id as barangay_id',
                 'barangay.brgy_desc as brgy_desc',
                 'barangay.brgy_code as brgy_code',

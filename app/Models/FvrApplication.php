@@ -41,6 +41,8 @@ class FvrApplication extends Model
 
     public function fetchDataById($id) {
         return FvrApplication::leftJoin('taxpayer', 'taxpayer.id', 'fvr_applications.taxpayer_id')
+            ->leftJoin('bancas', 'bancas.id', 'fvr_applications.banca_id')
+            ->leftJoin('boat_types', 'boat_types.id', 'fvr_applications.boat_type_id')
             ->leftJoin('barangay', 'barangay.id', 'fvr_applications.barangay_id')
             ->select(
                 'fvr_applications.*',
@@ -48,8 +50,36 @@ class FvrApplication extends Model
                 'fvr_applications.name as boat_name',
                 'fvr_applications.color as boat_color',
                 'fvr_applications.length as boat_length',
+                'fvr_applications.body_number as fvr_body_number',
                 'barangay.brgy_code',
                 'barangay.brgy_desc',
+                'barangay.banca_code',
+                'bancas.or_new_application_date',
+//                'bancas.body_number as banca_body_number',
+                'boat_types.boat_type_code'
+            )
+            ->where('fvr_applications.id', $id)
+            ->first();
+    }
+
+    public function fetchDataByIdForRenewal($id) {
+        return FvrApplication::leftJoin('taxpayer', 'taxpayer.id', 'fvr_applications.taxpayer_id')
+            ->leftJoin('bancas', 'bancas.id', 'fvr_applications.banca_id')
+            ->leftJoin('boat_types', 'boat_types.id', 'fvr_applications.boat_type_id')
+            ->leftJoin('barangay', 'barangay.id', 'fvr_applications.barangay_id')
+            ->select(
+                'fvr_applications.*',
+                'taxpayer.full_name as operator',
+                'fvr_applications.name as boat_name',
+                'fvr_applications.color as boat_color',
+                'fvr_applications.length as boat_length',
+                'fvr_applications.body_number as fvr_body_number',
+                'barangay.brgy_code',
+                'barangay.brgy_desc',
+                'barangay.banca_code',
+                'bancas.or_new_application_date',
+                'bancas.body_number as body_number',
+                'boat_types.boat_type_code'
             )
             ->where('fvr_applications.id', $id)
             ->first();

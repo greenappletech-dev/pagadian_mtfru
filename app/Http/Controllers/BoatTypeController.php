@@ -27,15 +27,17 @@ class BoatTypeController extends Controller
     public function store(Request $request) {
 
         $request->validate([
-            'name' => ['required', 'unique:boat_types,name']
+            'name' => ['required', 'unique:boat_types,name'],
+            'code' => ['required']
         ],[
-            'name.required' => 'Boat Type Is Required'
+            'name.required' => 'Boat type is required',
+            'name.unique' => 'Boat type is already exist!',
+            'code.required' => 'Code is required',
         ]);
-
-        /* SAVE ALL REQUEST */
 
         $boat_type = new BoatType();
         $boat_type->name = strtoupper($request->name);
+        $boat_type->boat_type_code = strtoupper($request->code);
         $boat_type->with_engine = (bool)$request->with_engine;
 
         return !$boat_type->save()
@@ -49,15 +51,19 @@ class BoatTypeController extends Controller
     }
 
     public function update(Request $request) {
+
         $request->validate([
-            'name' => ['required', 'unique:boat_types,name,' . $request->id]
-        ] ,
-        [
-            'name.required' => 'Boat Type Is Required'
+            'name' => ['required', 'unique:boat_types,name,'  . $request->id],
+            'code' => ['required']
+        ],[
+            'name.required' => 'Boat type is required',
+            'name.unique' => 'Boat type is already exist!',
+            'code.required' => 'Code is required',
         ]);
 
         $boat_type = $this->boat_type->fetchDataById($request->id);
         $boat_type->name = strtoupper($request->name);
+        $boat_type->boat_type_code = strtoupper($request->code);
         $boat_type->with_engine = $request->with_engine;
 
         return !$boat_type->save()

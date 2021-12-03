@@ -1,0 +1,1132 @@
+<html>
+<title>PDF Report</title>
+<head>
+    <style>
+        @page  {
+            margin: 0cm 0cm;
+        }
+
+        .pagenum:before {
+            content: counter(page);
+        }
+
+        /** Define now the real margins of every page in the PDF **/
+        body {
+            margin: 145px 50px 30px 50px;
+            font-family: Arial, sans-serif;
+        }
+
+        /* header */
+
+        header  {
+            position: fixed;
+            padding: 50px 50px 0px 50px;
+            height: 75px;
+        }
+
+        header .table-header tr th{
+            text-align: left;
+            padding: 1px 0px;
+            font-size: 13px;
+            font-weight: normal;
+        }
+
+        header .table-header tr .company {
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        header .table-header tr .report-title {
+            font-weight: bold;
+        }
+
+
+        /* main */
+
+        main {
+            font-size: 11px;
+        }
+
+        main table {
+            border-collapse: collapse;
+        }
+
+        main table thead {
+            border: 1px solid #000;
+        }
+
+        main table thead tr th {
+            padding: 5px 0px;
+            text-align: left;
+            font-weight: normal;
+        }
+
+        main table thead tr th:first-child {
+            padding-left: 10px;
+        }
+
+        main table thead tr th:last-child {
+            padding-right: 10px;
+        }
+
+        main table tbody tr td {
+            padding: 4px 0px;
+            vertical-align: top;
+        }
+
+        main table tbody tr td:first-child {
+            padding-left: 10px;
+        }
+
+        main table tbody tr td:last-child {
+            padding-right: 10px;
+        }
+
+        main {
+            page-break-after: always;
+        }
+
+        .summary {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+        }
+
+        .summary tbody tr td {
+            border: 1px solid #000;
+            font-size: 12px;
+            font-weight: bold;
+            vertical-align: middle;
+        }
+
+
+    </style>
+</head>
+<body>
+<!-- Define header and footer blocks before your content -->
+<header>
+    <table class="table-header" width="100%;">
+        <tr>
+            <th width="75%" class="company">MTFRU</th>
+            <th>User ID: <span class="username">FEBRER, PRINCE</span></th>
+        </tr>
+        <tr>
+            <th class="city">Pagadian City</th>
+            <th class="page-number">Page No: <span class="pagenum"></span></th>
+        </tr>
+        <tr>
+            <th class="report-title">Monthly Accomplishment Report</th>
+            <th class="datetime">11/04/2021 10:43:15 AM</th>
+        </tr>
+        <tr>
+            <th style="font-weight: bold">FROM: 10/01/2021 TO: 10/31/2021</th>
+            <th style="font-weight: bold"></th>
+        </tr>
+    </table>
+</header>
+
+
+
+
+
+<!-- Wrap the content of your PDF inside a main tag -->
+
+
+<main>
+
+    <table class="summary">
+        <thead>
+        <tr>
+            <th colspan="2" style="text-align: center">
+                <span style="font-size: 15px; font-weight: bold">Monthly Accomplishment Report</span><br>
+                <span style="font-size: 13px; font-weight: normal">(Summary per Transaction)</span>
+            </th>
+        </tr>
+        </thead>
+        <tbody>
+        
+            <tr>
+                <td style="width: 30%">NEW</td>
+                <td style="text-align: center">0</td>
+            </tr>
+
+        
+            <tr>
+                <td style="width: 30%">RENEWAL</td>
+                <td style="text-align: center">0</td>
+            </tr>
+
+        
+            <tr>
+                <td style="width: 30%">CHANGE UNIT</td>
+                <td style="text-align: center">0</td>
+            </tr>
+
+        
+            <tr>
+                <td style="width: 30%">TRANSFER</td>
+                <td style="text-align: center">0</td>
+            </tr>
+
+        
+            <tr>
+                <td style="width: 30%">RENEWAL &amp; CHANGE UNIT</td>
+                <td style="text-align: center">0</td>
+            </tr>
+
+        
+            <tr>
+                <td style="width: 30%">TRANSFER &amp; CHANGE UNIT</td>
+                <td style="text-align: center">0</td>
+            </tr>
+
+                </tbody>
+    </table>
+
+</main>
+
+
+<main>
+    <table style="width: 100%">
+
+        <thead>
+        <tr>
+            <th style="text-align: center; width: 3%">No.</th>
+            <th style="text-align: center; width: 8%">MOTOR SIDECAR</th>
+            <th style="text-align: left">NAME OF OPERATOR</th>
+            <th style="text-align: left">ADDRESS</th>
+            <th style="text-align: left; width: 8%">CELL NO</th>
+            <th style="text-align: left; width: 8%">MAKE/TYPE</th>
+            <th style="text-align: center; width: 8%">DATE OF APPLICATION</th>
+            <th style="text-align: center; width: 8%">DATE OF PAYMENT</th>
+            <th style="text-align: center; width: 5%">STATUS OF TRANSACTION</th>
+        </tr>
+        </thead>
+
+        <tbody>
+
+        ]]
+
+            
+            <tr>
+                <td style="font-size: 15px; font-weight: bold; border-bottom: 1px solid #000; padding-top: 5px; padding-bottom: 5px;" colspan="9">
+                    NEW
+                </td>
+            </tr>
+
+                
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">1</td>
+                            <td style="text-align: center">3290</td>
+                            <td>BUHISAN, ANITA L</td>
+                            <td>ZONE-8, TIGUMA, PAGADIAN CITY</td>
+                            <td>09092180573</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/04/2021</td>
+                            <td style="text-align: center">08/12/2021</td>
+                            <td style="text-align: center">N</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">2</td>
+                            <td style="text-align: center">3310</td>
+                            <td>MADAMBA, DAISY RIE A.</td>
+                            <td>PRK. FISHERVILLE, LUMBIA DISTRICT, PAGADIAN CITY</td>
+                            <td>09700812362</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/11/2021</td>
+                            <td style="text-align: center">10/13/2021</td>
+                            <td style="text-align: center">N</td>
+                        </tr>
+
+                    
+                
+        ]]
+
+            
+            <tr>
+                <td style="font-size: 15px; font-weight: bold; border-bottom: 1px solid #000; padding-top: 5px; padding-bottom: 5px;" colspan="9">
+                    RENEWAL
+                </td>
+            </tr>
+
+                
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">1</td>
+                            <td style="text-align: center">0557</td>
+                            <td>QUIDIT, ROLLY L.</td>
+                            <td>PRK. NANGKA, PEDULONAN, PAGADIAN CITY</td>
+                            <td>09265296484</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/01/2021</td>
+                            <td style="text-align: center">10/12/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">2</td>
+                            <td style="text-align: center">0594</td>
+                            <td>MALALIS, JOHNDEE P. / JOJETH D.</td>
+                            <td>PRK. KAHAYAG, DUMAGOC, PAGADIAN CITY</td>
+                            <td>09099068464 / 09704467510</td>
+                            <td>KAWASAKI</td>
+                            <td style="text-align: center">10/01/2021</td>
+                            <td style="text-align: center">10/08/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">3</td>
+                            <td style="text-align: center">1247</td>
+                            <td>RUSTIA, HONEY P.</td>
+                            <td>PRK. SILAO, DUMAGOC, PAGADIAN CITY</td>
+                            <td>09067233810</td>
+                            <td>KAWASAKI</td>
+                            <td style="text-align: center">10/04/2021</td>
+                            <td style="text-align: center">10/08/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">4</td>
+                            <td style="text-align: center">2240</td>
+                            <td>PONTERAS, RAMIL / NOVELYN B.</td>
+                            <td>PRK. 3, BOGO, PAGADIAN CITY</td>
+                            <td>09351337524</td>
+                            <td>KAWASAKI</td>
+                            <td style="text-align: center">10/05/2021</td>
+                            <td style="text-align: center">10/08/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">5</td>
+                            <td style="text-align: center">1378</td>
+                            <td>NOVERO, GEDEON M.</td>
+                            <td>ZONE-10, TIGUMA, PAGADIAN CITY</td>
+                            <td>09994309559</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/05/2021</td>
+                            <td style="text-align: center">10/08/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">6</td>
+                            <td style="text-align: center">2296</td>
+                            <td>CARIÑO, JOSHUA R. / CARMELITA G.</td>
+                            <td>PRK. UPPER GOLDEN SHOWER, BALANGASAN DISTRICT, PAGADIAN CITY</td>
+                            <td>09461463812</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/06/2021</td>
+                            <td style="text-align: center">10/11/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">7</td>
+                            <td style="text-align: center">0608</td>
+                            <td>CARIÑO, JOSHUA R. / CARMELITA G.</td>
+                            <td>PRK. UPPER GOLDEN SHOWER, BALANGASAN DISTRICT, PAGADIAN CITY</td>
+                            <td>09461463812</td>
+                            <td>KAWASAKI</td>
+                            <td style="text-align: center">10/06/2021</td>
+                            <td style="text-align: center">10/11/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">8</td>
+                            <td style="text-align: center">1310</td>
+                            <td>CARIÑO, JOSHUA R. / CARMELITA G.</td>
+                            <td>PRK. UPPER GOLDEN SHOWER, BALANGASAN DISTRICT, PAGADIAN CITY</td>
+                            <td>09461463812</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/06/2021</td>
+                            <td style="text-align: center">10/11/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">9</td>
+                            <td style="text-align: center">1135</td>
+                            <td>CARIÑO, JOSHUA R. / CARMELITA G.</td>
+                            <td>PRK. UPPER GOLDEN SHOWER, BALANGASAN DISTRICT, PAGADIAN CITY</td>
+                            <td>09461463812</td>
+                            <td>KAWASAKI</td>
+                            <td style="text-align: center">10/06/2021</td>
+                            <td style="text-align: center">10/11/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">10</td>
+                            <td style="text-align: center">1292</td>
+                            <td>CARIÑO, JOHANNES G.</td>
+                            <td>PRK. UPPER GOLDEN SHOWER, BALANGASAN DISTRICT, PAGADIAN CITY</td>
+                            <td>09461463812</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/06/2021</td>
+                            <td style="text-align: center">10/11/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">11</td>
+                            <td style="text-align: center">1214</td>
+                            <td>CARIÑO, JOSHUA R. / CARMELITA G.</td>
+                            <td>PRK. UPPER GOLDEN SHOWER, BALANGASAN DISTRICT, PAGADIAN CITY</td>
+                            <td>09461463812</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/06/2021</td>
+                            <td style="text-align: center">10/11/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">12</td>
+                            <td style="text-align: center">0622</td>
+                            <td>CARIÑO, JOHANNES G.</td>
+                            <td>PRK. UPPER GOLDEN SHOWER, BALANGASAN DISTRICT, PAGADIAN CITY</td>
+                            <td>09461463812</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/06/2021</td>
+                            <td style="text-align: center">10/11/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">13</td>
+                            <td style="text-align: center">1682</td>
+                            <td>CARIÑO, JOHANNES G.</td>
+                            <td>PRK. UPPER GOLDEN SHOWER, BALANGASAN DISTRICT, PAGADIAN CITY</td>
+                            <td>09461463812</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/06/2021</td>
+                            <td style="text-align: center">10/11/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">14</td>
+                            <td style="text-align: center">1193</td>
+                            <td>CARIÑO, JOSHUA R. / CARMELITA G.</td>
+                            <td>PRK. UPPER GOLDEN SHOWER, BALANGASAN DISTRICT, PAGADIAN CITY</td>
+                            <td>09461463812</td>
+                            <td>KAWASAKI</td>
+                            <td style="text-align: center">10/06/2021</td>
+                            <td style="text-align: center">10/11/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">15</td>
+                            <td style="text-align: center">2376</td>
+                            <td>CARIÑO, JOSHUA R. / CARMELITA G.</td>
+                            <td>PRK. UPPER GOLDEN SHOWER, BALANGASAN DISTRICT, PAGADIAN CITY</td>
+                            <td>09461463812</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/06/2021</td>
+                            <td style="text-align: center">10/11/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">16</td>
+                            <td style="text-align: center">0739</td>
+                            <td>SANGCAD, NORAISA A.</td>
+                            <td>PRK. MALINAWON, SANTIAGO DIST. PAGADIAN CITY</td>
+                            <td>09752548699</td>
+                            <td>KAWASAKI</td>
+                            <td style="text-align: center">10/06/2021</td>
+                            <td style="text-align: center">10/08/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">17</td>
+                            <td style="text-align: center">2010</td>
+                            <td>LUGAGAY, GENARO P.</td>
+                            <td>PRK. SWEETROSE, DUMAGOC, PAGADIAN CITY</td>
+                            <td>0918731571</td>
+                            <td>KAWASAKI</td>
+                            <td style="text-align: center">10/06/2021</td>
+                            <td style="text-align: center">10/08/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">18</td>
+                            <td style="text-align: center">1890</td>
+                            <td>AMBA, JULIAN JR. F. / ARLYN R.</td>
+                            <td>PRK. GOLDEN SHOWER, STA. MARIA DISTRICT, PAGADIAN CITY</td>
+                            <td>09121761444</td>
+                            <td>KAWASAKI</td>
+                            <td style="text-align: center">10/06/2021</td>
+                            <td style="text-align: center">10/08/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">19</td>
+                            <td style="text-align: center">0161</td>
+                            <td>CARIÑO, JOSHUA R. / CARMELITA G.</td>
+                            <td>PRK. UPPER GOLDEN SHOWER, BALANGASAN DISTRICT, PAGADIAN CITY</td>
+                            <td>09461463812</td>
+                            <td>TVS</td>
+                            <td style="text-align: center">10/06/2021</td>
+                            <td style="text-align: center">10/11/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">20</td>
+                            <td style="text-align: center">1272</td>
+                            <td>EMPACIS, JINEL C.</td>
+                            <td>PRK. SANTAN, BULAWAN, PAGADIAN CITY</td>
+                            <td>09303211465</td>
+                            <td>KAWASAKI</td>
+                            <td style="text-align: center">10/07/2021</td>
+                            <td style="text-align: center">10/15/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">21</td>
+                            <td style="text-align: center">1808</td>
+                            <td>EMPACIS, JINEL C.</td>
+                            <td>PRK. SANTAN, BULAWAN, PAGADIAN CITY</td>
+                            <td>09303211465</td>
+                            <td>KAWASAKI</td>
+                            <td style="text-align: center">10/07/2021</td>
+                            <td style="text-align: center">10/15/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">22</td>
+                            <td style="text-align: center">2769</td>
+                            <td>EMPACIS, JINEL C.</td>
+                            <td>PRK. SANTAN, BULAWAN, PAGADIAN CITY</td>
+                            <td>09303211465</td>
+                            <td>KAWASAKI</td>
+                            <td style="text-align: center">10/07/2021</td>
+                            <td style="text-align: center">10/15/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">23</td>
+                            <td style="text-align: center">2391</td>
+                            <td>LINTANG, MASSER T. / BASSER A.</td>
+                            <td>PRK. AFRICAN DAISY, SANTIAGO DISTRICT, PAGADIAN CITY</td>
+                            <td>092687269981</td>
+                            <td>KAWASAKI</td>
+                            <td style="text-align: center">10/08/2021</td>
+                            <td style="text-align: center">10/08/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">24</td>
+                            <td style="text-align: center">1395</td>
+                            <td>BORDA, SILVERIO JR. M.</td>
+                            <td>PRK. HILLSIDE, BUENAVISTA, PAGADIAN CITY</td>
+                            <td>09100153379</td>
+                            <td>KAWASAKI</td>
+                            <td style="text-align: center">10/08/2021</td>
+                            <td style="text-align: center">10/08/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">25</td>
+                            <td style="text-align: center">2843</td>
+                            <td>TAMPAL, FLORDELIZ T.</td>
+                            <td>PRK. PALMERA, BALANGASAN DISTRICT, PAGADIAN CITY</td>
+                            <td>09098232590</td>
+                            <td>KAWASAKI</td>
+                            <td style="text-align: center">10/08/2021</td>
+                            <td style="text-align: center">10/11/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">26</td>
+                            <td style="text-align: center">1131</td>
+                            <td>BAJAO, EULOGIO / FELOMINA S.</td>
+                            <td>PRK. RUBIA, SAN FRANCISCO DISTRICT, PAGADIAN CITY</td>
+                            <td>09269506305</td>
+                            <td>KAWASAKI</td>
+                            <td style="text-align: center">10/08/2021</td>
+                            <td style="text-align: center">10/11/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">27</td>
+                            <td style="text-align: center">1147</td>
+                            <td>BENASAHAN, EDGAR L.</td>
+                            <td>PRK. FATIMA, DAO, PAGADIAN CITY</td>
+                            <td>09751839540</td>
+                            <td>KAWASAKI</td>
+                            <td style="text-align: center">10/11/2021</td>
+                            <td style="text-align: center">10/11/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">28</td>
+                            <td style="text-align: center">1996</td>
+                            <td>MAGSAYO, MANUEL JR. B.</td>
+                            <td>PRK. BAKHAW-A, KAWIT DISTRICT, PAGADIAN CITY</td>
+                            <td>09300627082</td>
+                            <td>KAWASAKI</td>
+                            <td style="text-align: center">10/11/2021</td>
+                            <td style="text-align: center">10/15/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">29</td>
+                            <td style="text-align: center">1532</td>
+                            <td>VALLEJO, RAMIL E.</td>
+                            <td>PRK, SANTAN, TAWAGAN SUR, PAGADIAN CITY</td>
+                            <td>09505920505</td>
+                            <td>KAWASAKI</td>
+                            <td style="text-align: center">10/13/2021</td>
+                            <td style="text-align: center">10/14/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">30</td>
+                            <td style="text-align: center">2281</td>
+                            <td>TAHOY, ROLANDO D.</td>
+                            <td>PRK. AQUINO, STO. NIÑO DISTRICT, PAGADIAN CITY</td>
+                            <td>09300840098</td>
+                            <td>KAWASAKI</td>
+                            <td style="text-align: center">10/14/2021</td>
+                            <td style="text-align: center">10/15/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">31</td>
+                            <td style="text-align: center">0343</td>
+                            <td>CODINO, TERESITA U.</td>
+                            <td>PRK. LUY-A 3, DANLUGAN, PAGADIAN CITY</td>
+                            <td>094858973</td>
+                            <td>KAWASAKI</td>
+                            <td style="text-align: center">10/14/2021</td>
+                            <td style="text-align: center">10/15/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">32</td>
+                            <td style="text-align: center">0717</td>
+                            <td>BACULI, TEOFILO I.</td>
+                            <td>PRK. SAMPAGUITA, BULAWAN, PAGADIAN CITY</td>
+                            <td>09050751247</td>
+                            <td>KAWASAKI</td>
+                            <td style="text-align: center">10/15/2021</td>
+                            <td style="text-align: center">10/15/2021</td>
+                            <td style="text-align: center">R</td>
+                        </tr>
+
+                    
+                
+        ]]
+
+            
+            <tr>
+                <td style="font-size: 15px; font-weight: bold; border-bottom: 1px solid #000; padding-top: 5px; padding-bottom: 5px;" colspan="9">
+                    CHANGE UNIT
+                </td>
+            </tr>
+
+                
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">1</td>
+                            <td style="text-align: center">0844</td>
+                            <td>MAMENTONG, TALIB S.</td>
+                            <td>PRK. ARABIC, BANALE, PAGADIAN CITY</td>
+                            <td>09204946206</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/13/2021</td>
+                            <td style="text-align: center">11/11/2020</td>
+                            <td style="text-align: center">CU</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">2</td>
+                            <td style="text-align: center">1481</td>
+                            <td>CALIB, BOBBY A.</td>
+                            <td>ZONE-14, TIGUMA, PAGADIAN CITY</td>
+                            <td>09397776377</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/13/2021</td>
+                            <td style="text-align: center">06/01/2020</td>
+                            <td style="text-align: center">CU</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">3</td>
+                            <td style="text-align: center">1734</td>
+                            <td>LIBO-ON, VIRGINIA R.</td>
+                            <td>PRK. LOWER BAGONG-SILANG, BALANGASAN DISTRICT, PAGADIAN CITY</td>
+                            <td>09107306779</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/15/2021</td>
+                            <td style="text-align: center">01/20/2021</td>
+                            <td style="text-align: center">CU</td>
+                        </tr>
+
+                    
+                
+        ]]
+
+            
+            <tr>
+                <td style="font-size: 15px; font-weight: bold; border-bottom: 1px solid #000; padding-top: 5px; padding-bottom: 5px;" colspan="9">
+                    TRANSFER
+                </td>
+            </tr>
+
+                
+        ]]
+
+            
+            <tr>
+                <td style="font-size: 15px; font-weight: bold; border-bottom: 1px solid #000; padding-top: 5px; padding-bottom: 5px;" colspan="9">
+                    RENEWAL &amp; CHANGE UNIT
+                </td>
+            </tr>
+
+                
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">1</td>
+                            <td style="text-align: center">2021</td>
+                            <td>PANTARAN, ALINADER M.</td>
+                            <td>PRK. MUSLIM VILLAGE, KAWIT DISTRICT, PAGADIAN CITY</td>
+                            <td>09305883377</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/01/2021</td>
+                            <td style="text-align: center">10/04/2021</td>
+                            <td style="text-align: center">R|CU</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">2</td>
+                            <td style="text-align: center">0197</td>
+                            <td>TADIAMON, MARIAFLOR C. / ARTURO T.</td>
+                            <td>ZONE-10, TIGUMA, PAGADIAN CITY</td>
+                            <td>09476442264</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/01/2021</td>
+                            <td style="text-align: center">10/04/2021</td>
+                            <td style="text-align: center">R|CU</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">3</td>
+                            <td style="text-align: center">1627</td>
+                            <td>ANIÑON, LIEZEL B.</td>
+                            <td>PRK. AVOCADO, BUENAVISTA, PAGADIAN CITY</td>
+                            <td>09077195366</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/05/2021</td>
+                            <td style="text-align: center">01/27/2021</td>
+                            <td style="text-align: center">R|CU</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">4</td>
+                            <td style="text-align: center">1970</td>
+                            <td>CODINO, JAMES PRESCO T.</td>
+                            <td>PRK. PRESCO, DATAGAN, PAGADIAN CITY</td>
+                            <td>09389672671</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/05/2021</td>
+                            <td style="text-align: center">10/06/2021</td>
+                            <td style="text-align: center">R|CU</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">5</td>
+                            <td style="text-align: center">1506</td>
+                            <td>BRIONES, POLITO R.</td>
+                            <td>PRK. RUBIA, BUENAVISTA, PAGADIAN CITY</td>
+                            <td>09997978770</td>
+                            <td>TVS</td>
+                            <td style="text-align: center">10/05/2021</td>
+                            <td style="text-align: center">10/08/2021</td>
+                            <td style="text-align: center">R|CU</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">6</td>
+                            <td style="text-align: center">0178</td>
+                            <td>CARIÑO, JOSHUA R. / CARMELITA G.</td>
+                            <td>PRK. UPPER GOLDEN SHOWER, BALANGASAN DISTRICT, PAGADIAN CITY</td>
+                            <td>09461463812</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/06/2021</td>
+                            <td style="text-align: center">10/11/2021</td>
+                            <td style="text-align: center">R|CU</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">7</td>
+                            <td style="text-align: center">2247</td>
+                            <td>LUGAGAY, GENARO P.</td>
+                            <td>PRK. SWEETROSE, DUMAGOC, PAGADIAN CITY</td>
+                            <td>0918731571</td>
+                            <td>TVS</td>
+                            <td style="text-align: center">10/06/2021</td>
+                            <td style="text-align: center">10/08/2021</td>
+                            <td style="text-align: center">R|CU</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">8</td>
+                            <td style="text-align: center">2237</td>
+                            <td>MASLA, NIDA G.</td>
+                            <td>ZONE-1, MURICAY, PAGADIAN CITY</td>
+                            <td>09204180105</td>
+                            <td>KAWASAKI</td>
+                            <td style="text-align: center">10/06/2021</td>
+                            <td style="text-align: center">10/14/2021</td>
+                            <td style="text-align: center">R|CU</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">9</td>
+                            <td style="text-align: center">0636</td>
+                            <td>MAULANA, WAEL P.</td>
+                            <td>PRK. CAMPO ISLAM, SAN PEDRO DISTRICT, PAGADIANC CITY</td>
+                            <td>09276663107</td>
+                            <td>KAWASAKI</td>
+                            <td style="text-align: center">10/06/2021</td>
+                            <td style="text-align: center">10/08/2021</td>
+                            <td style="text-align: center">R|CU</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">10</td>
+                            <td style="text-align: center">2809</td>
+                            <td>HIDALGO, LEOPOLDO / JONATHAN D.</td>
+                            <td>PRK. VILLARIN, BANALE, PAGADIAN CITY</td>
+                            <td>09480346928</td>
+                            <td>TVS</td>
+                            <td style="text-align: center">10/06/2021</td>
+                            <td style="text-align: center">10/08/2021</td>
+                            <td style="text-align: center">R|CU</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">11</td>
+                            <td style="text-align: center">2498</td>
+                            <td>MACAPOBRE, ANARIZA C. / CARLO A.</td>
+                            <td>PRK. SANDAYONG, STO. NIÑO DISTRICT, PAGADIAN CITY</td>
+                            <td>09053313104</td>
+                            <td>TVS</td>
+                            <td style="text-align: center">10/07/2021</td>
+                            <td style="text-align: center">10/11/2021</td>
+                            <td style="text-align: center">R|CU</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">12</td>
+                            <td style="text-align: center">0999</td>
+                            <td>CAUGAN, GIASANA E.</td>
+                            <td>ZONE-2, MURICAY, PAGADIAN CITY</td>
+                            <td>09075691668</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/07/2021</td>
+                            <td style="text-align: center">10/08/2021</td>
+                            <td style="text-align: center">R|CU</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">13</td>
+                            <td style="text-align: center">1269</td>
+                            <td>BENDULO, JUNITH M. / JOSEPHINE S.</td>
+                            <td>PRK. KAMANSI, LENIENZA, PAGADIAN CITY</td>
+                            <td>09484817440</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/11/2021</td>
+                            <td style="text-align: center">10/15/2021</td>
+                            <td style="text-align: center">R|CU</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">14</td>
+                            <td style="text-align: center">0767</td>
+                            <td>MONG, FEDERICO T.</td>
+                            <td>PRK. IPIL-IPIL, DITORAY, PAGADIAN CITY</td>
+                            <td>09752957882</td>
+                            <td>TVS</td>
+                            <td style="text-align: center">10/11/2021</td>
+                            <td style="text-align: center">10/15/2021</td>
+                            <td style="text-align: center">R|CU</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">15</td>
+                            <td style="text-align: center">1238</td>
+                            <td>BALASABAS, ROMEO E.</td>
+                            <td>PRK. LOWER BAGONG SILANG, BALANGASAN DISTRICT, PAGADIAN CITY</td>
+                            <td>09219775438</td>
+                            <td>TVS</td>
+                            <td style="text-align: center">10/11/2021</td>
+                            <td style="text-align: center">10/15/2021</td>
+                            <td style="text-align: center">R|CU</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">16</td>
+                            <td style="text-align: center">1590</td>
+                            <td>HELIDO, MIRAFLOR A.</td>
+                            <td>PRK. ALTA TIERRA, NAPOLAN, PAGADIAN CITY</td>
+                            <td>09079441153</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/12/2021</td>
+                            <td style="text-align: center">10/15/2021</td>
+                            <td style="text-align: center">R|CU</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">17</td>
+                            <td style="text-align: center">2264</td>
+                            <td>ENCA, ASIDJA A. / ZAINOR A.</td>
+                            <td>PRK. MUSLIM VILLAGE, KAWIT DISTRICT, PAGADIAN CITY</td>
+                            <td>09056140532</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/12/2021</td>
+                            <td style="text-align: center">10/13/2021</td>
+                            <td style="text-align: center">R|CU</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">18</td>
+                            <td style="text-align: center">1318</td>
+                            <td>ENCA, ASIDJA A. / ZAINOR A.</td>
+                            <td>PRK. MUSLIM VILLAGE, KAWIT DISTRICT, PAGADIAN CITY</td>
+                            <td>09056140532</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/12/2021</td>
+                            <td style="text-align: center">10/13/2021</td>
+                            <td style="text-align: center">R|CU</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">19</td>
+                            <td style="text-align: center">1474</td>
+                            <td>COTONGAN, ROLANDO S.</td>
+                            <td>PRK. SANTAN-B, SAN JOSE DISTRICT, PAGADIAN CITY</td>
+                            <td>09097747819</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/13/2021</td>
+                            <td style="text-align: center">10/15/2021</td>
+                            <td style="text-align: center">R|CU</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">20</td>
+                            <td style="text-align: center">2681</td>
+                            <td>LAHOYLAHOY, SOFRONIO JR. T.</td>
+                            <td>PRK. MUSLIM VILLAGE, KAWIT DISTRICT, PAGADIAN CITY</td>
+                            <td>09455935737</td>
+                            <td>TVS</td>
+                            <td style="text-align: center">10/14/2021</td>
+                            <td style="text-align: center">10/14/2021</td>
+                            <td style="text-align: center">R|CU</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">21</td>
+                            <td style="text-align: center">0977</td>
+                            <td>VALDEZ, REY A.</td>
+                            <td>PRK. FATIMA, DAO, PAGADIAN CITY</td>
+                            <td>09360365492</td>
+                            <td>TVS</td>
+                            <td style="text-align: center">10/15/2021</td>
+                            <td style="text-align: center">10/15/2021</td>
+                            <td style="text-align: center">R|CU</td>
+                        </tr>
+
+                    
+                
+        ]]
+
+            
+            <tr>
+                <td style="font-size: 15px; font-weight: bold; border-bottom: 1px solid #000; padding-top: 5px; padding-bottom: 5px;" colspan="9">
+                    TRANSFER &amp; CHANGE UNIT
+                </td>
+            </tr>
+
+                
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">1</td>
+                            <td style="text-align: center">1111</td>
+                            <td>ACOPE, ROLANDO D. / REBECCA M.</td>
+                            <td>PRK. NANGKA, BANALE, PAGADIAN CITY</td>
+                            <td>09121082884</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/11/2021</td>
+                            <td style="text-align: center">10/12/2021</td>
+                            <td style="text-align: center">T|CU</td>
+                        </tr>
+
+                    
+                        
+                        <tr>
+                            <td style="text-align: center">2</td>
+                            <td style="text-align: center">1780</td>
+                            <td>IBRAHIM, AL-NADEN S. / OMAYYAH A.</td>
+                            <td>PRK. TULINGAN, SANTIAGO DISTRICT, PAGADIAN CITY</td>
+                            <td>09399070971</td>
+                            <td>BAJAJ</td>
+                            <td style="text-align: center">10/11/2021</td>
+                            <td style="text-align: center">10/12/2021</td>
+                            <td style="text-align: center">T|CU</td>
+                        </tr>
+
+                    
+                
+        
+        </tbody>
+
+    </table>
+
+</main>
+
+
+
+</body>
+</html>
+
+

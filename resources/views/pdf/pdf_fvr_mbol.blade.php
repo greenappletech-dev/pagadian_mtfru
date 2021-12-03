@@ -118,43 +118,43 @@
 
 <img style="width: 815px; position: absolute; top: -45px; left: -45px;" src="{{ asset('image/forms/MBOL FORM.jpg') }}" alt="">
 
-<span class="transaction_type">{{ $data[3] }}</span>
+<span class="transaction_type">{{ $data['transact_type'] }}</span>
 
 <table class="table-1">
     <tr>
-        <th>{{ $data[0]['full_name'] }}</th>
+        <th>{{ $data['application']['full_name'] }}</th>
     </tr>
 
     <tr>
-        <th>{{ $data[0]['name'] . ' / ' . $data[0]['color'] }}</th>
+        <th>{{ $data['application']['name'] . ' / ' . $data['application']['color'] }}</th>
     </tr>
 </table>
 
 <table class="table-a">
     <tr>
-        <th>{{ $data[0]['length'] }}</th>
+        <th>{{ $data['application']['length'] }}</th>
     </tr>
 
     <tr>
-        <th>{{ $data[0]['width'] }}</th>
+        <th>{{ $data['application']['width'] }}</th>
     </tr>
 
     <tr>
-        <th>{{ $data[0]['dept'] }}</th>
+        <th>{{ $data['application']['dept'] }}</th>
     </tr>
 
     <tr>
-        <th>{{ $data[0]['gross_tonnage'] }}</th>
+        <th>{{ $data['application']['gross_tonnage'] }}</th>
     </tr>
 
     <tr>
-        <th>{{ $data[0]['net_tonnage'] }}</th>
+        <th>{{ $data['application']['net_tonnage'] }}</th>
     </tr>
 
     <tr>
         <th>
-            @if(!empty($data[0]['make_type']))
-                {{ $data[0]['make_type'] }}
+            @if(!empty($data['application']['make_type']))
+                {{ $data['application']['make_type'] }}
             @else
                 NA
             @endif
@@ -163,8 +163,8 @@
 
     <tr>
         <th>
-            @if(!empty($data[0]['horsepower']))
-                - {{ $data[0]['horsepower'] }} -
+            @if(!empty($data['application']['horsepower']))
+                - {{ $data['application']['horsepower'] }} -
             @else
                 NA
             @endif
@@ -173,8 +173,8 @@
 
     <tr>
         <th>
-            @if(!empty($data[0]['engine_motor_no']))
-                {{ $data[0]['engine_motor_no'] }}
+            @if(!empty($data['application']['engine_motor_no']))
+                {{ $data['application']['engine_motor_no'] }}
             @else
                 NA
             @endif
@@ -183,8 +183,8 @@
 
     <tr>
         <th>
-            @if(!empty($data[0]['make_type']))
-                - {{ $data[0]['cylinder'] }} -
+            @if(!empty($data['application']['make_type']))
+                - {{ $data['application']['cylinder'] }} -
             @else
                 NA
             @endif
@@ -192,17 +192,17 @@
     </tr>
 
     <tr>
-        <th>{{ count($data[1]) }}</th>
+        <th>{{ count($data['auxiliary_engine']) }}</th>
     </tr>
 </table>
 
-@if(count($data[1]) !== 0 )
+@if(count($data['auxiliary_engine']) !== 0 )
 
 {{ $counter = 1 }}
 
 <table class="table-a-2">
     <tr>
-        @foreach($data[1] as $auxiliary)
+        @foreach($data['auxiliary_engine'] as $auxiliary)
 
             <th>
                 {{$auxiliary['make_type'] }}
@@ -215,7 +215,7 @@
 
     {{$counter = 1}}
     <tr>
-        @foreach($data[1] as $auxiliary)
+        @foreach($data['auxiliary_engine'] as $auxiliary)
 
             <th>
                 - {{ $auxiliary['horsepower'] }} -
@@ -228,7 +228,7 @@
 
     {{$counter = 1}}
     <tr>
-        @foreach($data[1] as $auxiliary)
+        @foreach($data['auxiliary_engine'] as $auxiliary)
 
             <th>
                 {{ $auxiliary['engine_motor_no'] }}
@@ -241,7 +241,7 @@
 
     {{$counter = 1}}
     <tr>
-        @foreach($data[1] as $auxiliary)
+        @foreach($data['auxiliary_engine'] as $auxiliary)
 
             <th>
                 - {{ $auxiliary['cylinder'] }} -
@@ -259,30 +259,30 @@
 
 <table class="table-a-3">
     <tr>
-        <th>{{ $data[0]['boat_type'] }}</th>
+        <th>{{ $data['application']['boat_type'] }}</th>
     </tr>
     <tr>
-        <th>{{ $data[0]['fishing_gear'] }}</th>
+        <th>{{ $data['application']['fishing_gear'] }}</th>
     </tr>
     <tr>
-        <th>{{ $data[0]['manning_crew'] }}</th>
+        <th>{{ $data['application']['manning_crew'] }}</th>
     </tr>
 </table>
 
 
-<div class="body_number">{{ $data[0]['body_number'] }}</div>
+<div class="body_number">{{ $data['application']['body_number'] }}</div>
 
 <table class="table-b">
     <tr>
-        <th>{{ $data[0]['full_name'] }}</th>
+        <th>{{ $data['application']['full_name'] }}</th>
     </tr>
 
     <tr>
-        <th>{{ $data[0]['address'] }}</th>
+        <th>{{ $data['application']['address'] }}</th>
     </tr>
 
     <tr>
-        <th>{{ date('F d, Y' , strtotime($data[0]['birth_date'])) }}</th>
+        <th>{{ date('F d, Y' , strtotime($data['application']['birth_date'])) }}</th>
     </tr>
 
     <tr>
@@ -290,8 +290,8 @@
     </tr>
 </table>
 
-<span class="license_number">{{ $data[2] }}</span>
-<span class="license_number_slide">{{ $data[2] }}</span>
+<span class="license_number">{{ $data['license_num'] }}</span>
+<span class="license_number_slide">{{ $data['license_num'] }}</span>
 
 
 </body>

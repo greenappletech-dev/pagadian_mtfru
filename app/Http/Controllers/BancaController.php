@@ -60,6 +60,7 @@ class BancaController extends Controller
 
     public function update(StoreBanca $request) {
         $banca = Banca::where('id', $request->id)->first();
+        $banca->or_new_application_date = $request->or_new_application_date;
         return $this->dbValues($banca, $request, 'Banca Successfully Updated');
     }
 

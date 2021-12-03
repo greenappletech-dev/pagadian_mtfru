@@ -222,6 +222,17 @@
                     </div>
                 </div>
             </div>
+
+
+            <div class="card">
+                <div class="card-header">
+                    New Application OR Date
+                </div>
+                <div class="card-body">
+                    <input type="date" class="form-control" v-model="orNewDate">
+                </div>
+            </div>
+
         </div>
 
 
@@ -404,6 +415,7 @@ export default {
             horsePowerValue: this.banca.horsepower,
             engineSerialValue: this.banca.engine_motor_no,
             cylinderValue: this.banca.cylinder,
+            orNewDate: this.banca.or_new_application_date,
             barangayCode: null,
             searchedValue: null,
             auxMakeTypeValue: null,
@@ -544,6 +556,7 @@ export default {
                 fishing_gear: this.fishingGearValue,
                 manning_crew: this.manningCrewValue,
                 body_number: this.bodyNumberValue,
+                or_new_application_date: this.orNewDate
             })
             .then(response => {
                 this.returnSuccess(response);
