@@ -1251,49 +1251,50 @@
         </div>
     </div>
 
+    @if(isset($data['boat_captain']))
+        <div class="page">
+            <div class="boat_captain">
+                <img style="width: 580px; height: 750px; position: absolute; top: -45px; left: -45px;" src="{{ asset('image/forms/BOAT_CAPTAIN.jpg') }}" alt="">
 
+                <div class="name">{{ $data['boat_captain']['full_name'] }}</div>
 
-    <div class="page">
-        <div class="boat_captain">
-            <img style="width: 580px; height: 750px; position: absolute; top: -45px; left: -45px;" src="{{ asset('image/forms/BOAT_CAPTAIN.jpg') }}" alt="">
+                @if($data['boat_captain']['image_location'] !== null)
 
-            <div class="name">{{ $data['boat_captain']['full_name'] }}</div>
+                    <img class="boat_captain_img" src="{{ asset('image/captain_image/' . $data['boat_captain']['image_location']) }}">
 
-            @if($data['boat_captain']['image_location'] !== null)
+                @endif
 
-                <img class="boat_captain_img" src="{{ asset('image/captain_image/' . $data['boat_captain']['image_location']) }}">
+                <div class="license_number">{{ $data['license_num'] }}</div>
 
-            @endif
-
-            <div class="license_number">{{ $data['license_num'] }}</div>
-
-            {{ $day = date('j', strtotime($data['application']['or_date'])) }}
-            {{ $last_digit = substr($day, -1) }}
-            {{ $ordinal = 'th' }}
-
-            @if($day < 21 && $day > 4)
-                {{$ordinal = 'th'}}
-            @elseif(($last_digit % 100) === 3)
-                {{ $ordinal = 'rd' }}
-            @elseif(($last_digit % 100) === 2)
-                {{ $ordinal = 'nd' }}
-            @elseif(($last_digit % 100) === 1)
-                {{ $ordinal = 'st' }}
-            @elseif(($last_digit % 100) === 0)
+                {{ $day = date('j', strtotime($data['application']['or_date'])) }}
+                {{ $last_digit = substr($day, -1) }}
                 {{ $ordinal = 'th' }}
-            @endif
 
-            <div class="name">{{ $data['boat_captain']['full_name'] }}</div>
-            <div class="issue_date">{{ $day.$ordinal }}</div>
+                @if($day < 21 && $day > 4)
+                    {{$ordinal = 'th'}}
+                @elseif(($last_digit % 100) === 3)
+                    {{ $ordinal = 'rd' }}
+                @elseif(($last_digit % 100) === 2)
+                    {{ $ordinal = 'nd' }}
+                @elseif(($last_digit % 100) === 1)
+                    {{ $ordinal = 'st' }}
+                @elseif(($last_digit % 100) === 0)
+                    {{ $ordinal = 'th' }}
+                @endif
 
-            <div class="issue_month">{{ date('F' , strtotime($data['application']['or_date'])) }}</div>
-            <div class="issue_year">{{ date('y' , strtotime($data['application']['or_date'])) }}</div>
-            <div class="validity_date">{{ date('F d Y' , strtotime($data['application']['validity_date'])) }}</div>
+                <div class="name">{{ $data['boat_captain']['full_name'] }}</div>
+                <div class="issue_date">{{ $day.$ordinal }}</div>
 
-            <div class="or_number">{{ $data['application']['or_number_2'] }}</div>
+                <div class="issue_month">{{ date('F' , strtotime($data['application']['or_date'])) }}</div>
+                <div class="issue_year">{{ date('y' , strtotime($data['application']['or_date'])) }}</div>
+                <div class="validity_date">{{ date('F d Y' , strtotime($data['application']['validity_date'])) }}</div>
 
+                <div class="or_number">{{ $data['application']['or_number_2'] }}</div>
+            </div>
         </div>
-    </div>
+    @endif
+
+
 @endif
 
 <div class="page">

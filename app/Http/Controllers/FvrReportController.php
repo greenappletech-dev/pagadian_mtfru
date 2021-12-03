@@ -71,12 +71,20 @@ class FvrReportController extends Controller
                 {
                     $total_or = $collection->where('or_group', $group)->first();
                     $orgroup = $group;
-                    $item->$orgroup = $total_or['totals'] ?? 0;
-                    $totalPerTransaction += $total_or['totals'];
+
+                    if($total_or)
+                    {
+                        $item->$orgroup = $total_or['totals'] ?? 0;
+                        $totalPerTransaction += $total_or['totals'];
+                    }
+                    else
+                    {
+                        $item->$orgroup = 0;
+                        $totalPerTransaction += 0;
+                    }
                 }
 
                 $item->total = $totalPerTransaction;
-                $totalPerTransaction = 0;
             })
             ->toArray();
 
