@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\ChargesExport;
 use App\Models\MtopApplication;
+use App\Models\Taxpayer;
 use App\Models\Tricycle;
 use Illuminate\Support\Facades\DB;
 use Excel;
@@ -14,13 +15,14 @@ class MTOPChargeListController extends Controller
         return view('report.mtop_charge_list');
     }
 
-    public function fetchsearcheddata($body_number) {
+    public function fetchSearchedDataByOperator($operator_id, $taxyear) {
         $mtop_application_annual_taxes = MtopApplication::leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
         ->leftJoin('collne2', 'collne2.or_code', 'colhdr.or_code')
         ->leftJoin('otherinc', 'otherinc.inc_code','collne2.inc_code')
         ->leftJoin('taxpayer', 'taxpayer.id', 'mtop_applications.taxpayer_id')
         ->where('otherinc.annual_tax','Y')
-        ->where('mtop_applications.body_number', $body_number)
+        ->where('mtop_applications.taxpayer_id', $operator_id)
+        ->where('otherinc.inc_desc', 'LIKE', '%' . $taxyear .'%')
         ->select(
             'colhdr.trnx_date',
             'collne2.inc_desc',
@@ -30,12 +32,14 @@ class MTOPChargeListController extends Controller
             'mtop_applications.body_number',
             'mtop_applications.mtfrb_case_no',
             'mtop_applications.validity_date'
-        )->get()->toArray();
+        )
+        ->get()
+        ->toArray();
 
 
         $tricycle_old_annual_taxes = Tricycle::leftJoin('taxpayer', 'taxpayer.id', 'tricycles.operator_id')
         ->where('at_or_number', '!=', '')
-        ->where('body_number', $body_number)
+        ->where('tricycles.operator_id', $operator_id)
         ->select(
             'at_or_date as trnx_date',
             'taxpayer.full_name as operator',
@@ -46,29 +50,49 @@ class MTOPChargeListController extends Controller
         ->get();
 
         foreach($tricycle_old_annual_taxes as $old_data) {
-            array_push($mtop_application_annual_taxes, [
-                'trnx_date' => $old_data['trnx_date'],
-                'inc_desc' => 'ANNUAL TAX',
-                'or_number' => $old_data['or_number'],
-                'amount' => $old_data['amount'],
-                'operator' => $old_data['operator'],
-                'body_number' => $old_data['body_number'],
-                'mtfrb_case_no' => '',
-                'validity_date' => '',
-            ]);
+
+            $checkCorrectTransactDesc = DB::table('colhdr')
+                ->leftJoin('collne2', 'colhdr.or_code', 'collne2.or_code')
+                ->leftJoin('otherinc', 'collne2.inc_code', 'otherinc.inc_code')
+                ->where('otherinc.annual_tax', 'Y')
+                ->where('or_number', 'LIKE', '%' . $old_data['or_number'] . '%')
+                ->where('otherinc.inc_desc', 'LIKE', '%' . $taxyear .'%')
+                ->select('otherinc.inc_desc')
+                ->first();
+
+
+            if($checkCorrectTransactDesc)
+            {
+                array_push($mtop_application_annual_taxes, [
+                    'trnx_date' => $old_data['trnx_date'],
+                    'inc_desc' => $checkCorrectTransactDesc->inc_desc ?? '',
+                    'or_number' => $old_data['or_number'],
+                    'amount' => $old_data['amount'],
+                    'operator' => $old_data['operator'],
+                    'body_number' => $old_data['body_number'],
+                    'mtfrb_case_no' => '',
+                    'validity_date' => '',
+                ]);
+            }
         }
-
-
 
         return $mtop_application_annual_taxes;
     }
 
-    public function filter($body_number) {
-        return response()->json(['charges' => $this->fetchsearcheddata($body_number)], 200);
+    public function filter_operator($operator_id, $taxyear) {
+        $data = $this->fetchSearchedDataByOperator($operator_id, $taxyear);
+        return response()->json(['charges' => $data], 200);
     }
 
-    public function pdf($body_number, $size, $orientation) {
-        $mtop_charges = $this->fetchsearcheddata($body_number);
+    public function search($name)
+    {
+        $taxpayer = new Taxpayer();
+        $data = $taxpayer->fetchSearchedDataByName(strtoupper($name));
+        return response()->json(['operator' => $data], 200);
+    }
+
+    public function pdf($operator_id, $taxyear, $size, $orientation) {
+        $mtop_charges = $this->fetchSearchedDataByOperator($operator_id, $taxyear);
 
         $pdf = \App::make('dompdf.wrapper');
         $pdf->getDomPDF()->set_option("enable_php", true);
@@ -78,8 +102,8 @@ class MTOPChargeListController extends Controller
         return $pdf->stream();
     }
 
-    public function export($body_number) {
-        return Excel::download(new ChargesExport($this->fetchsearcheddata($body_number)), 'operator_annual_tax' . time() . '.xlsx');
+    public function export($operator_id, $taxyear) {
+        return Excel::download(new ChargesExport($this->fetchSearchedDataByOperator($operator_id, $taxyear)), 'operator_annual_tax' . time() . '.xlsx');
     }
 
 }

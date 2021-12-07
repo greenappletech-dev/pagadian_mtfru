@@ -155,9 +155,11 @@ Route::group(['middleware'=> 'auth'], function() {
 
         /* MTOP Charges List */
         Route::get('mtop_charges_list', [MTOPChargeListController::class, 'index']);
-        Route::get('mtop_charges_list/filter/{body_number}', [MTOPChargeListController::class, 'filter']);
-        Route::get('mtop_charges_list/pdf/{body_number}/{size}/{orientation}', [MTOPChargeListController::class, 'pdf']);
-        Route::get('mtop_charges_list/export/{body_number}', [MTOPChargeListController::class, 'export']);
+//        Route::get('mtop_charges_list/filter/{body_number}', [MTOPChargeListController::class, 'filter']);
+        Route::get('mtop_charges_list/filter_operator/{operator_id}/{taxyear}', [MTOPChargeListController::class, 'filter_operator']);
+        Route::get('mtop_changes_list/search/{name}', [MTOPChargeListController::class, 'search']);
+        Route::get('mtop_charges_list/pdf/{operator_id}/{taxyear}/{size}/{orientation}', [MTOPChargeListController::class, 'pdf']);
+        Route::get('mtop_charges_list/export/{operator_id}/{taxyear}', [MTOPChargeListController::class, 'export']);
 
         /* MTOP Reports */
         Route::get('mtop_report', [ReportController::class, 'index']);

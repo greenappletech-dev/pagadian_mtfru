@@ -129,88 +129,76 @@
                     <h2 style="font-size: 17px; margin: 0;">Select Transaction Type</h2>
                 </div>
 
+
                 <div class="card-body">
+
+
+
+                    <!--- FOR NEW --->
 
                     <div class="card">
                         <div class="card-header d-flex justify-content-start">
+                            <label class="d-flex justify-content-start" for="chk_new" style="width: 100%;
+                            height: 100%;
+                            margin: 0">
+                                <input type="checkbox" v-model="newTransaction" v-on:click="checkNew" style="display: none" id="chk_new">
+                                <span style="position: relative; width: 20px; height: 20px;" class="border rounded mr-2"><i id="new_check_icon" class="fas fa-check" style="display: none;
+                                        position: absolute;
+                                        top: 50%;
+                                        left: 55%;
+                                        transform: translate(-50%, -50%);
+                                        font-size: 15px;
+                                        color: #3ae374;"></i></span>
+                                <h2 style="font-size: 17px; margin: 0;">New</h2>
+                            </label>
+                        </div>
+                    </div>
 
-                            <label
-                                class="d-flex justify-content-start"
-                                for="chk_renewal"
-                                style="width: 100%;
+
+                    <!--- FOR RENEWAL --->
+
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-start">
+                            <label class="d-flex justify-content-start" for="chk_renewal" style="width: 100%;
                                 height: 100%;
                                 margin: 0">
-
-                                <input
-                                    type="checkbox"
-                                    v-model="renewal"
-                                    v-on:click="checkRenewal"
-                                    style="display: none"
-                                    id="chk_renewal">
-
-                                <span
-                                    style="position: relative;
+                                <input type="checkbox" v-model="renewal" v-on:click="checkRenewal" style="display: none" id="chk_renewal">
+                                <span style="position: relative;
                                     width: 20px;
-                                    height: 20px;"
-                                    class="border rounded mr-2">
-                                        <i
-                                            id="new_check_icon"
-                                            class="fas fa-check"
-                                            style="display: none;
+                                    height: 20px;" class="border rounded mr-2"><i id="renew_check_icon" class="fas fa-check" style="display: none;
                                             position: absolute;
                                             top: 50%;
                                             left: 55%;
                                             transform: translate(-50%, -50%);
                                             font-size: 15px;
-                                            color: #3ae374;">
-                                        </i>
-                                </span>
-
-                                <h2 style="font-size: 17px; margin: 0;">New/Renewal</h2>
-
+                                            color: #3ae374;"></i></span>
+                                <h2 style="font-size: 17px; margin: 0;">Renewal</h2>
                             </label>
                         </div>
                     </div>
 
+                    <!--- FOR DROPPING --->
+
                     <div class="card">
                         <div class="card-header d-flex justify-content-start">
 
-                            <label
-                                class="d-flex justify-content-start"
-                                for="chk_dropping"
-                                style="width: 100%;
+                            <label class="d-flex justify-content-start" for="chk_dropping" style="width: 100%;
                                 height: 100%;
                                 margin: 0">
-
-                                <input
-                                    type="checkbox"
-                                    v-model="droppingValue"
-                                    v-on:click="checkDropping"
-                                    style="display: none"
-                                    id="chk_dropping">
-
-                                <span
-                                    style="position: relative;
+                                <input type="checkbox" v-model="droppingValue" v-on:click="checkDropping" style="display: none" id="chk_dropping">
+                                <span style="position: relative;
                                     width: 20px;
-                                    height: 20px;"
-                                    class="border rounded mr-2">
-                                <i
-                                    id="drop_check_icon"
-                                    class="fas fa-check"
-                                    style="display: none;
+                                    height: 20px;" class="border rounded mr-2"><i id="drop_check_icon" class="fas fa-check" style="display: none;
                                     position: absolute;
                                     top: 50%;
                                     left: 55%;
                                     transform: translate(-50%, -50%);
                                     font-size: 15px;
-                                    color: #3ae374;">
-                                </i>
-                        </span>
-
+                                    color: #3ae374;"></i></span>
                                 <h2 style="font-size: 17px; margin: 0;">Dropping</h2>
-
                             </label>
                         </div>
+
 
                         <div class="card-body" id="dropping_details" style="position: relative; display: none">
                             <label>Please Select New Operator</label>
@@ -267,38 +255,22 @@
                         </div>
                     </div>
 
+                    <!--- FOR CHANGE UNIT --->
+
                     <div class="card">
                         <div class="card-header d-flex justify-content-start">
-                            <label
-                                class="d-flex justify-content-start"
-                                for="chk_change_unit"
-                                style="width: 100%;
+                            <label class="d-flex justify-content-start" for="chk_change_unit" style="width: 100%;
                                 height: 100%;
                                 margin: 0">
-
-                                <input type="checkbox"
-                                       v-model="changeUnitValue"
-                                       v-on:click="checkChangeUnit"
-                                       style="display: none"
-                                       id="chk_change_unit">
-
-
-                                <span style="position: relative; width: 20px; height: 20px;" class="border rounded mr-2">
-                                    <i
-                                        id="change_unit_icon"
-                                        class="fas fa-check"
-                                        style="display: none;
+                                <input type="checkbox" v-model="changeUnitValue" v-on:click="checkChangeUnit" style="display: none" id="chk_change_unit">
+                                <span style="position: relative; width: 20px; height: 20px;" class="border rounded mr-2"><i id="change_unit_icon" class="fas fa-check" style="display: none;
                                         position: absolute;
                                         top: 50%;
                                         left: 55%;
                                         transform: translate(-50%, -50%);
                                         font-size: 15px;
-                                        color: #3ae374;">
-                                    </i>
-                                </span>
-
+                                        color: #3ae374;"></i></span>
                                 <h2 style="font-size: 17px; margin: 0;">Change Unit</h2>
-
                             </label>
                         </div>
 
@@ -523,9 +495,13 @@ export default {
             caseNumberValue: null,
             searchNewOperator: false,
 
+
             /* TRANSACTION TYPE */
 
             transactionType: this.mtop_application.transact_type.split(','),
+
+            /* NEW TRANSACTION */
+            newTransaction: false,
 
             /* RENEWAL VALUES */
             renewal: false,
@@ -637,7 +613,6 @@ export default {
             axios.get('mtop/getdata')
                 .then(response => {
                     this.chargesTableData = response.data.charges;
-
                     this.barangayCodeTableData = response.data.barangays;
                 });
 
@@ -763,7 +738,7 @@ export default {
         },
 
         storeRecord() {
-            if(!this.renewal && !this.newOperator && !this.changeUnit) {
+            if(!this.renewal && !this.newOperator && !this.changeUnit && !this.newTransaction) {
                 this.err = true;
                 this.err_msg = 'You Must Select Transaction';
                 return;
@@ -820,6 +795,7 @@ export default {
                 chassis_no: this.chassisNoValue,
                 plate_no: this.plateNoValue,
                 charges: this.selectedChargesTableData,
+                new: this.newTransaction,
                 renewal: this.renewal,
                 dropping: this.newOperator,
                 change_unit: this.changeUnit,
@@ -839,16 +815,45 @@ export default {
             .finally(() => this.loader = false);
         },
 
-        /* NEW/RENEWAL */
+
+        /* NEW */
+
+        checkNew(e)
+        {
+            if(e.target.checked)
+            {
+                $('#new_check_icon').show();
+                $('#renew_check_icon').hide();
+                $('#drop_check_icon').hide();
+                $('#dropping_details').hide();
+                $('#change_unit_icon').hide();
+                $('#change_unit_details').hide();
+
+
+                this.newTransaction = true;
+                this.renewal = false;
+                this.newOperator = false;
+                this.changeUnit = false;
+                return;
+            }
+
+            this.newTransaction = false;
+            $('#new_check_icon').hide();
+        },
+
+
+        /* RENEWAL */
 
 
         checkRenewal(e) {
 
             if(e.target.checked) {
                 this.renewal = true;
+                this.newTransaction = false;
                 this.newOperator = false;
 
-                $('#new_check_icon').show();
+                $('#new_check_icon').hide();
+                $('#renew_check_icon').show();
                 $('#drop_check_icon').hide();
                 $('#dropping_details').hide();
 
@@ -876,9 +881,13 @@ export default {
         checkDropping(e) {
 
             if (e.target.checked) {
+
+                $('#new_check_icon').hide();
+                $('#renew_check_icon').hide();
                 $('#dropping_details').show();
                 $('#drop_check_icon').show();
-                $('#new_check_icon').hide();
+
+                this.newTransaction = false;
                 this.newOperator = true;
                 this.renewal = false;
                 return;
@@ -895,6 +904,31 @@ export default {
             this.newOperator = false;
 
         },
+
+        /* CHANGE UNIT */
+
+
+        checkChangeUnit(e) {
+            if (e.target.checked) {
+                $('#change_unit_details').show();
+                $('#change_unit_icon').show();
+                $('#new_check_icon').hide();
+
+                this.newTransaction = false;
+                this.changeUnit = true;
+                return;
+            }
+
+            $('#change_unit_details').hide();
+            $('#change_unit_icon').hide();
+            this.changeUnit = false;
+            this.newMakeTypeValue = '';
+            this.newEngineMotorNo = '';
+            this.newPlateNoValue = '';
+            this.newChassisNoValue = '';
+        },
+
+
 
         openModalToSearchNewOperator() {
             this.addCharges = false;
@@ -930,32 +964,6 @@ export default {
             $('#search-modal').modal('hide');
         },
 
-
-        /* END OF DROPPING */
-
-
-        /* CHANGE UNIT */
-
-
-        checkChangeUnit(e) {
-            if (e.target.checked) {
-                $('#change_unit_details').show();
-                $('#change_unit_icon').show();
-                this.changeUnit = true;
-                return;
-            }
-
-            $('#change_unit_details').hide();
-            $('#change_unit_icon').hide();
-            this.changeUnit = false;
-            this.newMakeTypeValue = '';
-            this.newEngineMotorNo = '';
-            this.newPlateNoValue = '';
-            this.newChassisNoValue = '';
-        },
-
-
-        /* END OF CHANGE UNIT */
 
     },
 

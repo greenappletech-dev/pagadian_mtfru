@@ -134,84 +134,66 @@
 
                 <div class="card-body">
 
+                    <!--- FOR NEW --->
+
                     <div class="card">
                         <div class="card-header d-flex justify-content-start">
+                            <label class="d-flex justify-content-start" for="chk_new" style="width: 100%;
+                            height: 100%;
+                            margin: 0">
+                                <input type="checkbox" v-model="newTransaction" v-on:click="checkNew" style="display: none" id="chk_new">
+                                <span style="position: relative; width: 20px; height: 20px;" class="border rounded mr-2"><i id="new_check_icon" class="fas fa-check" style="display: none;
+                                        position: absolute;
+                                        top: 50%;
+                                        left: 55%;
+                                        transform: translate(-50%, -50%);
+                                        font-size: 15px;
+                                        color: #3ae374;"></i></span>
+                                <h2 style="font-size: 17px; margin: 0;">New</h2>
+                            </label>
+                        </div>
+                    </div>
 
-                            <label
-                                class="d-flex justify-content-start"
-                                for="chk_renewal"
-                                style="width: 100%;
+                    <!--- FOR RENEWAL --->
+
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-start">
+                            <label class="d-flex justify-content-start" for="chk_renewal" style="width: 100%;
                                 height: 100%;
                                 margin: 0">
-
-                                <input
-                                    type="checkbox"
-                                    v-model="renewal"
-                                    v-on:click="checkRenewal"
-                                    style="display: none"
-                                    id="chk_renewal">
-
-                                <span
-                                    style="position: relative;
+                                <input type="checkbox" v-model="renewal" v-on:click="checkRenewal" style="display: none" id="chk_renewal">
+                                <span style="position: relative;
                                     width: 20px;
-                                    height: 20px;"
-                                    class="border rounded mr-2">
-                                        <i
-                                            id="new_check_icon"
-                                            class="fas fa-check"
-                                            style="display: none;
+                                    height: 20px;" class="border rounded mr-2"><i id="renew_check_icon" class="fas fa-check" style="display: none;
                                             position: absolute;
                                             top: 50%;
                                             left: 55%;
                                             transform: translate(-50%, -50%);
                                             font-size: 15px;
-                                            color: #3ae374;">
-                                        </i>
-                                </span>
-
-                                <h2 style="font-size: 17px; margin: 0;">New/Renewal</h2>
-
+                                            color: #3ae374;"></i></span>
+                                <h2 style="font-size: 17px; margin: 0;">Renewal</h2>
                             </label>
                         </div>
                     </div>
 
+                    <!--- FOR DROPPING --->
+
                     <div class="card">
                         <div class="card-header d-flex justify-content-start">
-
-                            <label
-                                class="d-flex justify-content-start"
-                                for="chk_dropping"
-                                style="width: 100%;
+                            <label class="d-flex justify-content-start" for="chk_dropping" style="width: 100%;
                                 height: 100%;
                                 margin: 0">
-
-                                <input
-                                    type="checkbox"
-                                    v-model="droppingValue"
-                                    v-on:click="checkDropping"
-                                    style="display: none"
-                                    id="chk_dropping">
-
-                                <span
-                                    style="position: relative;
+                                <input type="checkbox" v-model="droppingValue" v-on:click="checkDropping" style="display: none" id="chk_dropping">
+                                <span style="position: relative;
                                     width: 20px;
-                                    height: 20px;"
-                                    class="border rounded mr-2">
-                                <i
-                                    id="drop_check_icon"
-                                    class="fas fa-check"
-                                    style="display: none;
+                                    height: 20px;" class="border rounded mr-2"><i id="drop_check_icon" class="fas fa-check" style="display: none;
                                     position: absolute;
                                     top: 50%;
                                     left: 55%;
                                     transform: translate(-50%, -50%);
                                     font-size: 15px;
-                                    color: #3ae374;">
-                                </i>
-                        </span>
-
+                                    color: #3ae374;"></i></span>
                                 <h2 style="font-size: 17px; margin: 0;">Dropping</h2>
-
                             </label>
                         </div>
 
@@ -269,6 +251,8 @@
                             </div>
                         </div>
                     </div>
+
+                    <!--- FOR CHANGE UNIT --->
 
                     <div class="card">
                         <div class="card-header d-flex justify-content-start">
@@ -519,6 +503,9 @@ export default {
 
             transactionType: this.mtop_application.transact_type.split(','),
 
+            /* NEW TRANSACTION VALUE */
+            newTransaction: false,
+
             /* RENEWAL VALUES */
             renewal: false,
 
@@ -561,7 +548,6 @@ export default {
 
         compute(event) {
             event.target.checked
-
             ? this.transactionTotals += parseFloat(event.target.value)
             : this.transactionTotals -= parseFloat(event.target.value);
         },
@@ -650,15 +636,24 @@ export default {
 
             /* FETCH VALUES SO WE CAN TRIGGER THE FUNCTIONS */
 
-            this.renewal = this.transactionType.some(item => parseInt(item) === 1 || parsetInt(item) === 4);
+            this.newTransaction = this.transactionType.some(item => parseInt(item) === 4);
+            this.renewal = this.transactionType.some(item => parseInt(item) === 1);
             this.newOperator = this.transactionType.some(item => parseInt(item) === 2);
             this.changeUnit = this.transactionType.some(item => parseInt(item) === 3);
 
-            if(this.renewal) {
+
+            if(this.newTransaction)
+            {
                 $('#new_check_icon').show();
             }
 
-            if(this.newOperator) {
+            if(this.renewal)
+            {
+                $('#renew_check_icon').show();
+            }
+
+            if(this.newOperator)
+            {
                 $('#dropping_details').show();
                 $('#drop_check_icon').show();
                 this.newOperatorIdValue = this.mtop_application.taxpayer_id;
@@ -667,7 +662,8 @@ export default {
                 this.newOperatorBarangayIdValue = this.mtop_application.barangay_id;
             }
 
-            if(this.changeUnit) {
+            if(this.changeUnit)
+            {
                 $('#change_unit_details').show();
                 $('#change_unit_icon').show();
 
@@ -785,7 +781,7 @@ export default {
         updateRecord(){
             if(this.selectedChargesTableData.length !== 0) {
 
-                if(!this.renewal && !this.newOperator && !this.changeUnit) {
+                if(!this.renewal && !this.newOperator && !this.changeUnit && !this.newTransaction) {
                     this.err = true;
                     this.err_msg = 'You Must Select Transaction';
                     return;
@@ -841,6 +837,7 @@ export default {
                     engine_motor_no: this.engineMotorNo,
                     chassis_no: this.chassisNoValue,
                     plate_no: this.plateNoValue,
+                    new: this.newTransaction,
                     renewal: this.renewal,
                     dropping: this.newOperator,
                     change_unit: this.changeUnit,
@@ -862,16 +859,44 @@ export default {
 
         },
 
-        /* NEW/RENEWAL */
+        /* NEW */
+
+        checkNew(e)
+        {
+            if(e.target.checked)
+            {
+                $('#new_check_icon').show();
+                $('#renew_check_icon').hide();
+                $('#drop_check_icon').hide();
+                $('#dropping_details').hide();
+                $('#change_unit_icon').hide();
+                $('#change_unit_details').hide();
+
+
+                this.newTransaction = true;
+                this.renewal = false;
+                this.newOperator = false;
+                this.changeUnit = false;
+                return;
+            }
+
+            this.newTransaction = false;
+            $('#new_check_icon').hide();
+        },
+
+
+        /* RENEWAL */
 
 
         checkRenewal(e) {
 
             if(e.target.checked) {
                 this.renewal = true;
+                this.newTransaction = false;
                 this.newOperator = false;
 
-                $('#new_check_icon').show();
+                $('#new_check_icon').hide();
+                $('#renew_check_icon').show();
                 $('#drop_check_icon').hide();
                 $('#dropping_details').hide();
 
@@ -899,9 +924,13 @@ export default {
         checkDropping(e) {
 
             if (e.target.checked) {
+
+                $('#new_check_icon').hide();
+                $('#renew_check_icon').hide();
                 $('#dropping_details').show();
                 $('#drop_check_icon').show();
-                $('#new_check_icon').hide();
+
+                this.newTransaction = false;
                 this.newOperator = true;
                 this.renewal = false;
                 return;
@@ -917,6 +946,29 @@ export default {
             $('#dropping_details').hide();
             this.newOperator = false;
 
+        },
+
+        /* CHANGE UNIT */
+
+
+        checkChangeUnit(e) {
+            if (e.target.checked) {
+                $('#change_unit_details').show();
+                $('#change_unit_icon').show();
+                $('#new_check_icon').hide();
+
+                this.newTransaction = false;
+                this.changeUnit = true;
+                return;
+            }
+
+            $('#change_unit_details').hide();
+            $('#change_unit_icon').hide();
+            this.changeUnit = false;
+            this.newMakeTypeValue = '';
+            this.newEngineMotorNo = '';
+            this.newPlateNoValue = '';
+            this.newChassisNoValue = '';
         },
 
         openModalToSearchNewOperator() {
@@ -951,34 +1003,6 @@ export default {
             this.newOperatorBarangayIdValue = barangay_id;
             $('#search-modal').modal('hide');
         },
-
-
-        /* END OF DROPPING */
-
-
-        /* CHANGE UNIT */
-
-
-        checkChangeUnit(e) {
-            if (e.target.checked) {
-                $('#change_unit_details').show();
-                $('#change_unit_icon').show();
-                this.changeUnit = true;
-                return;
-            }
-
-            $('#change_unit_details').hide();
-            $('#change_unit_icon').hide();
-            this.changeUnit = false;
-            this.newMakeTypeValue = '';
-            this.newEngineMotorNo = '';
-            this.newPlateNoValue = '';
-            this.newChassisNoValue = '';
-        },
-
-
-        /* END OF CHANGE UNIT */
-
 
     },
 

@@ -36,7 +36,7 @@ class Taxpayer extends Model
 
     public function fetchSearchedDataByName($string) {
         return Taxpayer::leftJoin('barangay', 'barangay.brgy_code', 'taxpayer.brgy_code')
-            ->whereRaw('CONCAT(taxpayer.last_name,taxpayer.first_name,taxpayer.tax_id) LIKE ?', '%'.$string.'%')
+            ->whereRaw('CONCAT(taxpayer.full_name,taxpayer.tax_id) LIKE ?', '%'.$string.'%')
             ->groupBy('barangay.id', 'taxpayer.id')
             ->select(
                 'barangay.id as barangay_id',

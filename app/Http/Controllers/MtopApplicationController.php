@@ -137,33 +137,67 @@ class MtopApplicationController extends Controller
         $taxpayer->save();
     }
 
+
+
+
+
+    public function getTransaction(Request $request)
+    {
+        $arr = [];
+
+        if($request->new)
+        {
+            $applicationId = null;
+
+
+            if(isset($request->id))
+            {
+                $applicationId = $request->id;
+            }
+
+            /* validate if the transaction is new. to qualified the transaction must have no previous records */
+            $checkIfHasPreviousRecord = MtopApplication::where('tricycle_id', $request->tricycle_id)
+                ->where(function($query) use ($applicationId) {
+                    if($applicationId != null)
+                    {
+                        $query->where('id', '!=', $applicationId);
+                    }
+                })
+                ->get();
+
+            if(count($checkIfHasPreviousRecord) != 0)
+            {
+                return false;
+            }
+
+            array_push($arr, 4);
+        }
+
+        if($request->renewal) {
+            array_push($arr, 1);
+        }
+
+        if($request->dropping) {
+            array_push($arr, 2);
+        }
+
+        if($request->change_unit) {
+            array_push($arr, 3);
+        }
+
+        return $arr;
+    }
+
+
     public function saveDBValues(MtopApplication $data, Request $request, $message) {
 
-        $transaction_type = [];
 
-        /* check if the transaction is new let's check if the body number has a previous records */
+        $transaction_type = $this->getTransaction($request);
 
-        $previous_application = MtopApplication::where('body_number', $request->body_number)->count();
-
-
-        if($previous_application === 0) {
-            array_push($transaction_type, 4);
-        }
-        else
+        if($transaction_type === false)
         {
-            if($request->renewal) {
-                array_push($transaction_type, 1);
-            }
-
-            if($request->dropping) {
-                array_push($transaction_type, 2);
-            }
-
-            if($request->change_unit) {
-                array_push($transaction_type, 3);
-            }
+            return response()->json(['err_msg' => 'This record already have previous transaction'], 401);
         }
-
 
         DB::beginTransaction();
 
@@ -257,18 +291,11 @@ class MtopApplicationController extends Controller
 
     public function updateDBValues(Request $request, MtopApplication $data, $message) {
 
-        $transaction_type = [];
+        $transaction_type = $this->getTransaction($request);
 
-        if($request->renewal) {
-            array_push($transaction_type, 1);
-        }
-
-        if($request->dropping) {
-            array_push($transaction_type, 2);
-        }
-
-        if($request->change_unit) {
-            array_push($transaction_type, 3);
+        if($transaction_type === false)
+        {
+            return response()->json(['err_msg' => 'This record already have previous transaction'], 401);
         }
 
         DB::beginTransaction();

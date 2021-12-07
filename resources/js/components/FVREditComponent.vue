@@ -316,41 +316,18 @@
 
                     <div class="card">
                         <div class="card-header d-flex justify-content-start">
-
-                            <label
-                                class="d-flex justify-content-start"
-                                for="chk_renewal"
-                                style="width: 100%;
-                                height: 100%;
-                                margin: 0">
-
-                                <input
-                                    type="checkbox"
-                                    v-model="renewal"
-                                    v-on:click="checkRenewal"
-                                    style="display: none"
-                                    id="chk_renewal">
-
-                                <span
-                                    style="position: relative;
+                            <label class="d-flex justify-content-start" for="chk_renewal" style="width: 100%;height: 100%;margin: 0">
+                                <input type="checkbox" v-model="renewal" v-on:click="checkRenewal" style="display: none" id="chk_renewal">
+                                <span style="position: relative;
                                     width: 20px;
-                                    height: 20px;"
-                                    class="border rounded mr-2">
-                                        <i
-                                            id="renew_check_icon"
-                                            class="fas fa-check"
-                                            style="display: none;
+                                    height: 20px;" class="border rounded mr-2"><i id="renew_check_icon" class="fas fa-check" style="display: none;
                                             position: absolute;
                                             top: 50%;
                                             left: 55%;
                                             transform: translate(-50%, -50%);
                                             font-size: 15px;
-                                            color: #3ae374;">
-                                        </i>
-                                </span>
-
+                                            color: #3ae374;"></i></span>
                                 <h2 style="font-size: 17px; margin: 0;">Renewal</h2>
-
                             </label>
                         </div>
                     </div>

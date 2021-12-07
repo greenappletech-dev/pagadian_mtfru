@@ -694,6 +694,8 @@ export default {
             cityCode: '',
             orMonthNewTransaction: '',
 
+
+
             err: false,
             suc: false,
             err_msg: '',
@@ -994,7 +996,7 @@ export default {
                 $('#change_unit_icon').show();
                 $('#new_check_icon').hide();
 
-                this.new = false;
+                this.newTransaction = false;
                 this.changeUnit = true;
                 this.disableFields(false);
                 return;
