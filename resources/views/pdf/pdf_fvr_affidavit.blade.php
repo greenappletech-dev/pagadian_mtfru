@@ -81,26 +81,26 @@
 
     .ctc_no {
         position: absolute;
-        bottom: 173px;
-        left: 450px;
+        bottom: 408px;
+        left: 380px;
         font-size: 12px;
     }
 
     .ctc_date {
         position: absolute;
-        bottom: 158px;
-        left: 190px;
+        bottom: 387px;
+        left: 305px;
         font-size: 12px;
-        width: 125px;
+        width: 175px;
         text-align: center;
     }
 
     .issue_at {
         position: absolute;
-        bottom: 158px;
-        left: 338px;
+        bottom: 365px;
+        left: 305px;
         font-size: 12px;
-        width: 125px;
+        width: 175px;
         text-align: center;
     }
 
