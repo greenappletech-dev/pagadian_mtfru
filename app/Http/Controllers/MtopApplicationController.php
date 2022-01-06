@@ -176,12 +176,10 @@ class MtopApplicationController extends Controller
         if($request->renewal) {
             array_push($arr, 1);
         }
-
-        if($request->dropping) {
+        else if($request->dropping) {
             array_push($arr, 2);
         }
-
-        if($request->change_unit) {
+        else if($request->change_unit) {
             array_push($arr, 3);
         }
 

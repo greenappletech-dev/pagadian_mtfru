@@ -3,6 +3,7 @@
 use App\Http\Controllers\FvrApplicationAuxiliaryEngineController;
 use \App\Http\Controllers\MtopApplicationChargeController;
 use App\Http\Controllers\FvrApplicationChargeController;
+use App\Http\Controllers\ScheduledController;
 use \App\Http\Controllers\SystemParameterController;
 use \App\Http\Controllers\MtopApplicationController;
 use App\Http\Controllers\MtopViewRenewalController;
@@ -38,6 +39,9 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+/* upload file to gdrive */
+Route::get('uploadImage', [ScheduledController::class, 'uploadImages']);
 
 
 Auth::routes(['verify'=> true]);
@@ -259,6 +263,9 @@ Route::group(['middleware'=> 'auth'], function() {
 
 
         Route::get('test/{from}/{to}', [ReportController::class, 'monthly_accomplishment_report']);
+
+
+
 
     });
 
