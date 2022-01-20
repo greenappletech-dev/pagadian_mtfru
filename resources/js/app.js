@@ -121,6 +121,10 @@ Vue.component('boat_type-component', require('./components/BoatTypeComponent.vue
 Vue.component('fvr_report-component', require('./components/FVRReportComponent.vue').default);
 
 
+/* ANNUAL TAX */
+Vue.component('annual-component', require('./components/AnnualTaxComponent.vue').default);
+
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

@@ -176,10 +176,12 @@ class MtopApplicationController extends Controller
         if($request->renewal) {
             array_push($arr, 1);
         }
-        else if($request->dropping) {
+
+        if($request->dropping) {
             array_push($arr, 2);
         }
-        else if($request->change_unit) {
+
+        if($request->change_unit) {
             array_push($arr, 3);
         }
 
@@ -191,6 +193,7 @@ class MtopApplicationController extends Controller
 
 
         $transaction_type = $this->getTransaction($request);
+
 
         if($transaction_type === false)
         {

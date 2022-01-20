@@ -298,17 +298,6 @@
         font-size: 13px;
     }
 
-    .page {
-        position: relative;
-        width: 100%;
-        height: 100%;
-    }
-
-    .page {
-        page-break-after: always;
-    }
-
-
     .inspection .full_name {
         text-align: center;
         width: 290px;
@@ -958,6 +947,17 @@
         width: 180px;
         text-align: left;
     }
+
+    .page {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+
+    .page {
+        page-break-after: always;
+    }
+
 
 
 </style>

@@ -28,6 +28,9 @@ class Kernel extends ConsoleKernel
     {
         $schedule->exec('curl ' . URL::current() . '/uploadImage')
             ->sendOutputTo(public_path() . '/task/log/gdrive_up_log' . date('m-d-y-H-i-s') . '.txt');
+
+//        $schedule->call('App\Http\Controllers\ScheduledController@uploadImages')
+//            ->sendOutputTo(public_path() . '/task/log/gdrive_up_log' . date('m-d-y-H-i-s') . '.txt');
     }
 
     /**
