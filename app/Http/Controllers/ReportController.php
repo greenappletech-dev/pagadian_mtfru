@@ -154,6 +154,7 @@ class ReportController extends Controller
                 })
                 ->where('status', 4)
                 ->where('transact_type', 'LIKE' , '%'. $transact[0] .'%')
+                ->where('colhdr.cancel', null)
                 ->whereBetween('transact_date', [$from, $to])
                 ->select(
                     'mtop_applications.transact_date',
@@ -361,6 +362,7 @@ class ReportController extends Controller
         $payment = MtopApplication::leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
             ->whereBetween('colhdr.trnx_date', [$from, $to])
             ->whereBetween('mtop_applications.body_number', [$new_franchise->body_number_from, $new_franchise->body_number_to])
+            ->where('colhdr.cancel', null)
             ->where('mtop_applications.transact_type', 4)
             ->where(function($query) use ($barangay_id)
             {
@@ -485,6 +487,7 @@ class ReportController extends Controller
         $data = MtopApplication::leftJoin('taxpayer', 'taxpayer.id', 'mtop_applications.taxpayer_id')
             ->leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
             ->leftJoin('tricycles', 'tricycles.body_number', 'mtop_applications.body_number')
+            ->where('colhdr.cancel', null)
             ->whereDate('mtop_applications.transact_date', '<=' , $to)
             ->whereBetween('mtop_applications.body_number', [$new_franchise->body_number_from, $new_franchise->body_number_to])
             ->select(

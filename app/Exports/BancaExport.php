@@ -18,11 +18,6 @@ class BancaExport implements FromArray, WithHeadings, WithStyles
         $this->export = $bancas;
     }
 
-    public function array(): array
-    {
-        return $this->export;
-    }
-
 
     public function headings(): array
     {

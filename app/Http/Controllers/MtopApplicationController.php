@@ -156,6 +156,7 @@ class MtopApplicationController extends Controller
             }
 
             /* validate if the transaction is new. to qualified the transaction must have no previous records */
+
             $checkIfHasPreviousRecord = MtopApplication::where('tricycle_id', $request->tricycle_id)
                 ->where(function($query) use ($applicationId) {
                     if($applicationId != null)
@@ -389,68 +390,180 @@ class MtopApplicationController extends Controller
     /* MTOP APPLICATION LIST */
 
 
-    public function getdata_filtered($from, $to, $barangay_id) {
 
+
+    public function getdata_filtered($from, $to, $barangay_id) {
         /* check if transaction are paid */
 
-        $check_paid = $this->mtop_applications->fetchFilteredData($from, $to, $barangay_id);
+        $data = $this->mtop_applications->fetchFilteredData($from, $to, $barangay_id)
+            ->each(function($application){
+                $validity_date = null;
+                $status = null;
 
-        foreach ($check_paid as $application) {
-            if($application['status'] === 2) {
-                $paid_applications = DB::table('colhdr')->where('mtop_application_id',$application['application_id'])->first();
+                if($application['status'] != 4 && $application['status'] != 1)
+                {
+                    $storeValidityDateIfNotCancel = $this->ORDetails($application);
 
+                    if($storeValidityDateIfNotCancel)
+                    {
+                        if($storeValidityDateIfNotCancel != 'cancelled' && $application['status'] == 2)
+                        {
+                            /* check if there's a change unit only transaction.
+                            So we can get the last application and get the validity date
+                            No renewal on change unit transaction only */
+                            $transaction_type = explode(',', $application['transact_type']);
+                            $validity_date = $storeValidityDateIfNotCancel;
+                            $status = 3;
 
-                if($paid_applications != null) {
+                            /* if the transaction is change unit retain the validity date from the previous transaction */
 
-                    /* check if there's a change unit only transaction.
-                    So we can get the last application and get the validity date
-                    No renewal on change unit transaction only */
+                            if(count($transaction_type) == 1) {
+                                /* the value of change unit is 3 */
 
+                                if((int)$transaction_type[0] === 3) {
+                                    $get_previous_transaction = Tricycle::leftJoin('mtop_applications', 'mtop_applications.id','tricycles.mtop_application_id')
+                                        ->where('tricycles.body_number', $application['body_number'])
+                                        ->first();
 
-                    $transaction_type = explode(',', $application['transact_type']);
-
-
-                    /* add 2 year to the validity date */
-
-                    $validity_date = date('m/d/Y', strtotime('+2 years', strtotime($paid_applications->trnx_date)));
-
-
-
-                    if(count($transaction_type) == 1) {
-
-                        /* the value of change unit is 3 */
-
-
-
-                        if((int)$transaction_type[0] === 3) {
-
-                            $get_previous_transaction = Tricycle::leftJoin('mtop_applications', 'mtop_applications.id','tricycles.mtop_application_id')
-                                                        ->where('tricycles.body_number', $application['body_number'])
-                                                        ->first();
-
-
-                            /* save previous validity date */
-                            $validity_date = $get_previous_transaction->validity_date;
-
+                                    /* save previous validity date */
+                                    $validity_date = $get_previous_transaction->validity_date;
+                                }
+                            }
+                        }
+                        else if($storeValidityDateIfNotCancel === 'cancelled' && $application['status'] == 3)
+                        {
+                            $status = 1;
                         }
 
+                        if($status)
+                        {
+                            $update_application = MtopApplication::where('id', $application['application_id'])->first();
+                            $update_application->status = $status;
+                            $update_application->validity_date = $validity_date ?? null;
+                            $update_application->save();
 
+                            /* update the list also to prevent calling the same function again */
+                            $application->status = $status;
+                            $application->validity_date = $validity_date ?? null;
+                        }
                     }
-
-                    /* if transaction is renewal of dropping must generate new validity date */
-
-                    $update_application = MtopApplication::where('id', $application['application_id'])->first();
-                    $update_application->status = 3;
-                    $update_application->validity_date = $validity_date;
-                    $update_application->save();
                 }
-            }
+                else if ($application['status'] == 4)
+                {
+                    if($this->ORDetails($application) == 'cancelled')
+                    {
+                        $application->cancelled = true;
+                    }
+                }
+
+                return $application;
+            });
+
+        //        foreach ($mtop_applications as $application) {
+//
+//
+////            if($this->ORDetails($application) == true && $application['status'] === 3)
+////            {
+////                dd('yes');
+////            }
+////            else if($application['status'] === 2)
+////            {
+////                dd($this->ORDetails($application));
+////            }
+////            if($application['status'] === 2)
+////            {
+////                $paid_applications = DB::table('colhdr')
+////                    ->where('mtop_application_id',$application['application_id'])
+////                    ->where('cancel', null)
+////                    ->orderBy('id', 'desc')
+////                    ->first();
+////
+////                if($paid_applications != null) {
+////
+////                    /* check if there's a change unit only transaction.
+////                    So we can get the last application and get the validity date
+////                    No renewal on change unit transaction only */
+////
+////
+////                    $transaction_type = explode(',', $application['transact_type']);
+////
+////                    /* add 2 year to the validity date */
+////
+////                    $validity_date = date('m/d/Y', strtotime('+2 years', strtotime($paid_applications->trnx_date)));
+////
+////                    if(count($transaction_type) == 1) {
+////
+////                        /* the value of change unit is 3 */
+////
+////                        if((int)$transaction_type[0] === 3) {
+////
+////                            $get_previous_transaction = Tricycle::leftJoin('mtop_applications', 'mtop_applications.id','tricycles.mtop_application_id')
+////                                                        ->where('tricycles.body_number', $application['body_number'])
+////                                                        ->first();
+////
+////                            /* save previous validity date */
+////                            $validity_date = $get_previous_transaction->validity_date;
+////
+////                        }
+////                    }
+////
+////                    /* if transaction is renewal of dropping must generate new validity date */
+////
+////                    $update_application = MtopApplication::where('id', $application['application_id'])->first();
+////                    $update_application->status = 3;
+////                    $update_application->validity_date = $validity_date;
+////                    $update_application->save();
+////                }
+////            }
+////            else if($application['status'] === 3)
+////            {
+////
+////                /* if the transaction was cancelled */
+////
+////                $cancelTransaction = DB::table('colhdr')
+////                    ->where('mtop_application_id',$application['application_id'])
+////                    ->where('cancel', 'Y')
+////                    ->orderBy('id', 'desc')
+////                    ->first();
+////
+////                /* return the status to for payment */
+////
+////                if($cancelTransaction)
+////                {
+////                    $update = MtopApplication::where('id', $application['application_id'])->first();
+////                    $update->status = 1;
+////                    $update->save();
+////                }
+////            }
+//        }
+
+        return response()->json(['mtop_applications' => $data]);
+    }
+
+    public function cancel($id)
+    {
+        $mtop_application = $this->mtop_applications->fetchDataById($id);
+        $mtop_application->status = 1;
+        $mtop_application->validity_date = null;
+
+        return $mtop_application->save()
+            ? response()->json(['message' => 'Application Cancelled'], 200)
+            : response()->json(['message' => 'Something When Wrong'], 401);
+    }
+
+    private function ORDetails($data) {
+
+        $checkOR = DB::table('colhdr')
+            ->where('mtop_application_id', $data['application_id'])
+            ->orderBy('id', 'desc')
+            ->first();
+
+        /* OR IS CANCELLED */
+
+        if($checkOR)
+        {
+            return $checkOR->cancel !== 'Y' ? date('m/d/Y', strtotime('+2 years', strtotime($checkOR->trnx_date))) : 'cancelled';
         }
-
-        /* fetch data to display */
-
-        $mtop_applications = $this->mtop_applications->fetchFilteredData($from, $to, $barangay_id);
-        return response()->json(['mtop_applications' => $mtop_applications]);
     }
 
     public function approve($id, $type) {
