@@ -100,6 +100,7 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('mtop/destroy/{id}', [MtopApplicationController::class, 'destroy']);
         Route::patch('mtop/approve/{id}/{type}', [MtopApplicationController::class, 'approve']);
         Route::patch('mtop/validity_date', [MtopApplicationController::class,'update_validity']);
+        Route::get('mtop/cancel/{id}', [MtopApplicationController::class,'cancel']);
 
         /* MTOP Entry */
         Route::get('mtop_entry/renew/{id}', [MtopApplicationController::class, 'renew']);
@@ -265,6 +266,11 @@ Route::group(['middleware'=> 'auth'], function() {
         /* ANNUAL TAX */
 
         Route::get('annualtax', [MtopAnnualTaxController::class, 'index']);
+        Route::get('annualtax/filter/{from}/{to}', [MtopAnnualTaxController::class, 'filter']);
+        Route::get('searchBodyNumber/{bodyNumber}', [MtopAnnualTaxController::class, 'searchBodyNumber']);
+        Route::post('annualtax/save', [MtopAnnualTaxController::class, 'save']);
+        Route::get('annualtax/stab/{id}', [MtopAnnualTaxController::class, 'stab']);
+        Route::get('annualtax/destroy/{id}', [MtopAnnualTaxController::class, 'destroy']);
 
 
 

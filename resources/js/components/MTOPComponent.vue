@@ -84,27 +84,28 @@
 
             <!--   Table     -->
             <div class="main-content-table">
-                <div class="row">
-                    <div class="col-md-12">
-                        <v-client-table
-                            :data="tableData"
-                            :columns="columns"
-                            :options="options">
+            <div class="row">
+                <div class="col-md-12">
+                    <v-client-table
+                        :data="tableData"
+                        :columns="columns"
+                        :options="options">
                             <span slot="status" slot-scope="{row}">
                                 {{ displayStatus(row.status) }}
                             </span>
-                            <span slot="action" slot-scope="{row}">
-                                <button v-if="row.status === 1" v-on:click="approveForPayment(row.application_id)" class="btn btn-info d-inline-block"><i class="fas fa-check mr-1"></i>Proceed To Payment</button>
-                                <button v-if="row.status === 3" v-on:click="approveApplication(row.application_id)" class="btn btn-warning d-inline-block"><i class="fas fa-check mr-1"></i>Approve</button>
-                                <button v-on:click="openModalToPrint(row.application_id, row.status)" class="btn btn-primary d-inline-block"><i class="fas fa-print mr-1"></i> Print</button>
-                                <button v-if="row.status !== 4" v-on:click="openToEdit(row.application_id)" class="btn btn-success d-inline-block"><i class="fas fa-edit mr-1"></i> Edit</button>
-                                <button v-if="row.status !== 4" v-on:click="destroyRecord(row.application_id)" class="btn btn-danger d-inline-block"><i class="fas fa-trash mr-1"></i>Delete</button>
-                                <button v-if="row.status === 4 && row.transact_type === '3'" v-on:click="openModalToEditValidity(row.application_id)" class="btn btn-info d-inline-block"><i class="fas fa-edit mr-1"></i> Change Validity Date</button>
+                        <span slot="action" slot-scope="{row}">
+                                <button v-if="!row.cancelled && row.status === 1" v-on:click="approveForPayment(row.application_id)" class="btn btn-info d-inline-block"><i class="fas fa-check mr-1"></i>Proceed To Payment</button>
+                                <button v-if="!row.cancelled && row.status === 3" v-on:click="approveApplication(row.application_id)" class="btn btn-warning d-inline-block"><i class="fas fa-check mr-1"></i>Approve</button>
+                                <button v-if="!row.cancelled"  v-on:click="openModalToPrint(row.application_id, row.status)" class="btn btn-primary d-inline-block"><i class="fas fa-print mr-1"></i> Print</button>
+                                <button v-if="!row.cancelled && row.status !== 4" v-on:click="openToEdit(row.application_id)" class="btn btn-success d-inline-block"><i class="fas fa-edit mr-1"></i> Edit</button>
+                                <button v-if="!row.cancelled && row.status !== 4" v-on:click="destroyRecord(row.application_id)" class="btn btn-danger d-inline-block"><i class="fas fa-trash mr-1"></i>Delete</button>
+                                <button v-if="!row.cancelled && row.status === 4 && row.transact_type === '3'" v-on:click="openModalToEditValidity(row.application_id)" class="btn btn-info d-inline-block"><i class="fas fa-edit mr-1"></i> Change Validity Date</button>
+                                <button v-if="row.cancelled" v-on:click="cancelTransaction(row.application_id)" class="btn btn-danger d-inline-block"><i class="fas fa-times mr-1"></i>Cancel Transaction. OR Cancelled</button>
                             </span>
-                        </v-client-table>
-                    </div>
+                    </v-client-table>
                 </div>
             </div>
+        </div>
         </div>
 
         <!--        modal window    -->
@@ -285,6 +286,7 @@ export default {
         },
 
          convertDateFormat($date) {
+
             let d = new Date($date);
 
             let month = d.getMonth() + 1;
@@ -469,6 +471,19 @@ export default {
                 })
                 .finally(()=> this.loader = false);
             }
+        },
+
+        cancelTransaction(id) {
+            axios.get('mtop/cancel/' + id)
+                .then(response => {
+                    this.suc = true;
+                    this.suc_msg = response.data.message;
+                })
+                .catch(error => {
+                    this.err = true;
+                    this.err_msg = error.response.data.err_msg;
+                })
+                .finally(()=> this.loader = false);
         },
 
         openToCreate() {
