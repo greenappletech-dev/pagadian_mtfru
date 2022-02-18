@@ -98,6 +98,10 @@
             <td>{{ $data[0]['or_number'] }}</td>
         </tr>
         <tr>
+            <td>OR DATE:</td>
+            <td>{{ date('m/d/Y', strtotime($data[0]['trnx_date'])) }}</td>
+        </tr>
+        <tr>
             <td style="border-bottom: 1px solid #000" colspan="2">CHARGES</td>
         </tr>
 
