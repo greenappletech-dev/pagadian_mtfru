@@ -551,7 +551,7 @@ class ReportController extends Controller
                     $address = $checkForNewPendingRegistration->address;
                     $mobile = $checkForNewPendingRegistration->mobile;
                     $date_registered = $checkForNewPendingRegistration->date_registered;
-                    $status = 'FOR REGISTRATION';
+                    $status = 'REGISTRATION';
                     $transact_type = 'REGISTRATION';
                 }
             }
