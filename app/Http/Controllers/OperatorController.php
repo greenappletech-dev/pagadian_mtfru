@@ -102,7 +102,7 @@ class OperatorController extends Controller
 
     public function upload(Request $request) {
         $request->validate([
-            'image' => 'required|mimes:jpg,jpeg,png,csv,txt,xlx,xls,pdf|max:2048'
+            'image' => 'required|mimes:jpg,jpeg,png|max:2048'
         ]);
 
 

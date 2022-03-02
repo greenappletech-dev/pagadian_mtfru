@@ -91,7 +91,7 @@ class ReportController extends Controller
 
     private function get_status($status): string {
         if($status !== null) {
-            $status_array = array('PENDING', 'FOR PAYMENT', 'FOR APPROVAL', 'APPROVED');
+            $status_array = array('APPLICATION', 'FOR PAYMENT', 'FOR APPROVAL', 'APPROVED');
             return $status_array[$status - 1];
         }
 
@@ -183,7 +183,6 @@ class ReportController extends Controller
                     'mtop_applications.id',
                     'barangay.brgy_desc'
                 )
-//                ->orderBy('transact_type')
                 ->orderBy('barangay.brgy_desc')
                 ->orderBy('mtop_applications.transact_date')
                 ->get()
@@ -212,7 +211,6 @@ class ReportController extends Controller
                         $data['status'],
                         $data['trnx_date'],
                     ]);
-
             }
         }
 
@@ -332,7 +330,7 @@ class ReportController extends Controller
         return $report;
     }
 
-    public function new_franchise_summary_report($from, $to, $barangay_id) {
+        public function new_franchise_summary_report($from, $to, $barangay_id) {
 
         $report = array();
 
@@ -521,21 +519,60 @@ class ReportController extends Controller
         $no_data = array_diff($arr2, array_column($data, 'body_number'));
 
         /* push all missing body numbers and leave all the details as blank */
-        foreach($no_data as $missing) {
+        foreach($no_data as $bodyNumberNoApplication) {
+
+            $checkForNewPendingRegistration = Tricycle::where('body_number', $bodyNumberNoApplication)
+                ->leftJoin('taxpayer', 'taxpayer.id', 'tricycles.operator_id')
+                ->whereDate('tricycles.created_at', '<=' , $to)
+                ->select(
+                    'taxpayer.full_name',
+                    'taxpayer.address1 as address',
+                    'taxpayer.mobile',
+                    'tricycles.created_at as date_registered',
+                )
+                ->first();
+
+            $full_name = '';
+            $address = '';
+            $mobile = '';
+            $date_registered = '';
+            $status = '';
+            $transact_type = '';
+
+            if($checkForNewPendingRegistration)
+            {
+                if($checkForNewPendingRegistration->full_name == '' && $checkForNewPendingRegistration->full_name == null)
+                {
+
+                }
+                else
+                {
+                    $full_name = $checkForNewPendingRegistration->full_name;
+                    $address = $checkForNewPendingRegistration->address;
+                    $mobile = $checkForNewPendingRegistration->mobile;
+                    $date_registered = $checkForNewPendingRegistration->date_registered;
+                    $status = 'FOR REGISTRATION';
+                    $transact_type = 'REGISTRATION';
+                }
+            }
+
+
+
             array_push($data, [
                 'id' => '',
-                'body_number' => $missing,
-                'full_name' => '',
-                'date_registered' => '',
-                'address' => '',
-                'mobile' => '',
+                'body_number' => $bodyNumberNoApplication,
+                'full_name' =>  $full_name,
+                'date_registered' => $date_registered,
+                'address' => $address,
+                'mobile' => $mobile,
                 'transact_date' => '',
                 'payment_date' => '',
                 'approve_date' => '',
                 'make_type' => '',
-                'status' => '',
-                'transact_type' => '',
+                'status' => $status,
+                'transact_type' => $transact_type,
             ]);
+
         }
 
         $return_data = collect($data)->sortBy('body_number')->toArray();
@@ -555,6 +592,8 @@ class ReportController extends Controller
             $id = $value['id'];
             $dup_body_number = $value['body_number'];
         }
+
+
 
         return $return_data;
 
