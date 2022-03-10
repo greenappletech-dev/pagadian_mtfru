@@ -791,7 +791,11 @@ class FvrApplicationController extends Controller
 
         $engine_count = 1 + count($fvr_auxiliary_engine);
 
+        $licenseBoatCode = 'M';
 
+        if($fvr_application->boat_type_code == 'C') {
+            $licenseBoatCode = 'C';
+        }
 
         /* get license number */
 
@@ -800,7 +804,7 @@ class FvrApplicationController extends Controller
 
         unset($arr_body_number[0]);
 
-        $arr_body_number[2] = "M" . $arr_body_number[3];
+        $arr_body_number[2] = $licenseBoatCode . $arr_body_number[3];
 
         unset($arr_body_number[3]);
 
@@ -812,7 +816,6 @@ class FvrApplicationController extends Controller
         /* GET AGE */
 
         $birthdate = Carbon::parse($fvr_application->birth_date)->age;
-
 
         $data = [
                 'application' => $fvr_application,

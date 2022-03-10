@@ -94,6 +94,7 @@ class FvrApplication extends Model
                 'fvr_applications.*',
                 'boat_types.name as boat_type',
                 'boat_types.with_engine',
+                'boat_types.boat_type_code',
                 'taxpayer.full_name',
                 'taxpayer.first_name',
                 'taxpayer.last_name',
