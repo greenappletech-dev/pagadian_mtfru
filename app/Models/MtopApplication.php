@@ -46,6 +46,7 @@ class MtopApplication extends Model
         return MtopApplication::leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
             ->leftJoin('barangay', 'barangay.id','mtop_applications.barangay_id')
             ->leftJoin('taxpayer', 'taxpayer.id', 'mtop_applications.taxpayer_id')
+            ->where('colhdr.cancel', null)
             ->where('mtop_applications.id', $id)
             ->first();
     }
