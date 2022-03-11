@@ -131,7 +131,7 @@
 
 
                         <div class="form-group" v-if="view_img">
-                            <img style="width: 100%; height: 300px" v-bind:src="img_location">
+                            <img style="width: 100%; max-height: 500px" v-bind:src="img_location">
                         </div>
 
                         <div v-else>
@@ -560,7 +560,7 @@ export default {
             axios.get('operator/viewImage/' + id)
             .then(response => {
                 $('#create-modal').modal('show');
-                this.img_location = 'public/image/operator_image/license.png';
+                this.img_location = 'public/image/operator_image/' + response.data.image;
             }).catch(error => {
                 this.returnFailed(error);
             })
