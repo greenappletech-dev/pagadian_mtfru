@@ -560,7 +560,7 @@ export default {
             axios.get('operator/viewImage/' + id)
             .then(response => {
                 $('#create-modal').modal('show');
-                this.img_location = 'public/storage/image/license.png';
+                this.img_location = 'public/image/operator_image/license.png';
             }).catch(error => {
                 this.returnFailed(error);
             })
