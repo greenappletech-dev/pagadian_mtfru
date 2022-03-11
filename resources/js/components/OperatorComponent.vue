@@ -96,6 +96,7 @@
                             :options="options">
                             <span slot="actions" slot-scope="{row}">
                                 <button v-on:click="openModalToUpload(row.id)" class="btn btn-info mb-2"><i class="fas fa-upload mr-1"></i>Upload Image</button>
+                                <button v-on:click="viewImage(row.id)" class="btn btn-info mb-2"><i class="fas fa-image mr-1"></i>View Image</button>
                                 <button v-on:click="openModalToEdit(row.id)" class="btn btn-success mb-2"><i class="fas fa-edit mr-1"></i>Edit</button>
                                 <button v-on:click="destroyRecord(row.id)" class="btn btn-danger mb-2"><i class="fas fa-trash mr-1"></i>Delete</button>
                             </span>
@@ -112,7 +113,8 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel" v-if="adding">Add Operator</h5>
-                        <h5 class="modal-title" id="exampleModalLabel" v-else>Edit Operator</h5>
+                        <h5 class="modal-title" id="exampleModalLabel" v-if="!adding && !view_img">Edit Operator</h5>
+                        <h5 class="modal-title" id="exampleModalLabel" v-if="view_img">Operator Image</h5>
 
 
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -127,68 +129,76 @@
                             </ul>
                         </div>
 
-                        <div class="form-group" v-if="print">
-                            <label for="paper-size">Paper Size</label>
-                            <select id="paper-size" class="form-control">
-                                <option>Letter</option>
-                                <option>Legal</option>
-                                <option>A4</option>
-                            </select>
 
-                            <label for="paper-orientation">Orientation</label>
-                            <select id="paper-orientation" class="form-control">
-                                <option>Portrait</option>
-                                <option>Landscape</option>
-                            </select>
+                        <div class="form-group" v-if="view_img">
+                            <img style="width: 100%; height: 300px" v-bind:src="img_location">
                         </div>
 
-                        <div class="form-group" v-else>
-                            <label for="last_name">Last Name</label>
-                            <input type="text" id="last_name" class="form-control" v-model="lastNameValue">
+                        <div v-else>
+                            <div class="form-group" v-if="print">
+                                <label for="paper-size">Paper Size</label>
+                                <select id="paper-size" class="form-control">
+                                    <option>Letter</option>
+                                    <option>Legal</option>
+                                    <option>A4</option>
+                                </select>
 
-                            <label for="first_name">First Name</label>
-                            <input type="text" id="first_name" class="form-control" v-model=firstNameValue>
+                                <label for="paper-orientation">Orientation</label>
+                                <select id="paper-orientation" class="form-control">
+                                    <option>Portrait</option>
+                                    <option>Landscape</option>
+                                </select>
+                            </div>
 
-                            <label for="middle_name">Middle Name</label>
-                            <input type="text" id="middle_name" class="form-control" v-model="middleNameValue">
+                            <div class="form-group" v-else>
+                                <label for="last_name">Last Name</label>
+                                <input type="text" id="last_name" class="form-control" v-model="lastNameValue">
 
-                            <label for="suffix">Suffix</label>
-                            <input type="text" id="suffix" class="form-control" v-model="suffixValue">
+                                <label for="first_name">First Name</label>
+                                <input type="text" id="first_name" class="form-control" v-model=firstNameValue>
 
-                            <label for="birth_date">Birth Date</label>
-                            <input type="date" id="birth_date" class="form-control" v-model="birthdateValue">
+                                <label for="middle_name">Middle Name</label>
+                                <input type="text" id="middle_name" class="form-control" v-model="middleNameValue">
 
-                            <label for="sex">Sex</label>
-                            <select id="sex" class="form-control" v-model="sexValue">
-                                <option value="F">Female</option>
-                                <option value="M">Male</option>
-                            </select>
+                                <label for="suffix">Suffix</label>
+                                <input type="text" id="suffix" class="form-control" v-model="suffixValue">
 
-                            <label for="civ_stat">Civil Status</label>
-                            <select id="civ_stat" class="form-control" v-model="civilStatusValue">
-                                <option value="SNL">SINGLE</option>
-                                <option value="MRD">MARRIED</option>
-                            </select>
+                                <label for="birth_date">Birth Date</label>
+                                <input type="date" id="birth_date" class="form-control" v-model="birthdateValue">
 
-                            <label for="mobile">Mobile</label>
-                            <input type="text" id="mobile" class="form-control" v-model="mobileValue">
+                                <label for="sex">Sex</label>
+                                <select id="sex" class="form-control" v-model="sexValue">
+                                    <option value="F">Female</option>
+                                    <option value="M">Male</option>
+                                </select>
 
-                            <label for="email">Email</label>
-                            <input type="email" id="email" class="form-control" v-model="emailValue">
+                                <label for="civ_stat">Civil Status</label>
+                                <select id="civ_stat" class="form-control" v-model="civilStatusValue">
+                                    <option value="SNL">SINGLE</option>
+                                    <option value="MRD">MARRIED</option>
+                                </select>
 
-                            <label for="brgy_code">Barangay Code</label>
-                            <select id="brgy_code" class="form-control" v-model="barangayCodeValue">
-                                <option v-for="barangay in barangayCodeTableData" v-bind:value="barangay.brgy_code">{{ barangay.brgy_code + '-' + barangay.brgy_desc }}</option>
-                            </select>
+                                <label for="mobile">Mobile</label>
+                                <input type="text" id="mobile" class="form-control" v-model="mobileValue">
 
-                            <label for="address">Address</label>
-                            <input type="text" class="form-control" id="address" v-model="addressValue">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" class="form-control" v-model="emailValue">
 
+                                <label for="brgy_code">Barangay Code</label>
+                                <select id="brgy_code" class="form-control" v-model="barangayCodeValue">
+                                    <option v-for="barangay in barangayCodeTableData" v-bind:value="barangay.brgy_code">{{ barangay.brgy_code + '-' + barangay.brgy_desc }}</option>
+                                </select>
+
+                                <label for="address">Address</label>
+                                <input type="text" class="form-control" id="address" v-model="addressValue">
+
+                            </div>
                         </div>
+
 
                     </div>
 
-                    <div class="modal-footer">
+                    <div class="modal-footer" v-if="!view_img">
                         <button v-if="print" @click="pdfPrint" type="button" class="rounded pl-3 pr-3 pt-2 pb-2 border-0" style="width: 100px; font-size: 14px; background: #1abc9c; color: #fff;">Print</button>
                         <div v-else>
                             <button v-if="adding" @click="storeRecord" type="button" class="rounded pl-3 pr-3 pt-2 pb-2 border-0" style="width: 100px; font-size: 14px; background: #1abc9c; color: #fff;">Create</button>
@@ -306,6 +316,8 @@ export default {
             loader: false,
             adding: false,
             print: false,
+            view_img: false,
+            img_location: '',
 
             paperSize: 'Letter',
             paperOrientation: 'Portrait',
@@ -326,12 +338,14 @@ export default {
             this.suc = false;
             this.adding = false;
             this.print = false;
+            this.view_img = false;
             this.err_msg = '';
             this.suc_msg = '';
             this.initialData();
         },
 
         openModalToUpload(id) {
+            this.view_img = false;
             $('#upload-modal').modal('show');
             this.operatorIdValue = id;
         },
@@ -464,6 +478,7 @@ export default {
         openModalToEdit(id) {
             this.clearInputs();
             this.adding = false;
+            this.view_img = false;
             axios.get('operator/edit/' + id)
             .then(response => {
                 this.operatorIdValue = response.data.operator.id;
@@ -522,6 +537,7 @@ export default {
         },
 
         pdfModal() {
+            this.view_img = false;
             this.print = true;
             this.errors = [];
             $('#create-modal').modal('show');
@@ -536,6 +552,20 @@ export default {
         exportExcel(){
             window.open('tricycle/export');
         },
+
+        viewImage(id) {
+            this.view_img = true;
+            this.adding = false;
+
+            axios.get('operator/viewImage/' + id)
+            .then(response => {
+                $('#create-modal').modal('show');
+                this.img_location = 'public/storage/image/license.png';
+            }).catch(error => {
+                this.returnFailed(error);
+            })
+
+        }
     },
 
     mounted() {

@@ -127,6 +127,19 @@ class OperatorController extends Controller
 
     }
 
+    public function viewImage($id) {
+        $image = OperatorImage::where('taxpayer_id', $id)->orderBy('id', 'desc')->first();
+        if($image)
+        {
+            return response()->json(['image' => $image->name]);
+        }
+        else
+        {
+            return response()->json(['err_msg' => 'No Image Found'], 402);
+        }
+
+    }
+
     public function pdf($size, $orientation) {
 
     }

@@ -88,6 +88,7 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::post('operator/store',[OperatorController::class, 'store']);
         Route::patch('operator/update/{id}',[OperatorController::class, 'update']);
         Route::post('operator/upload/{id}', [OperatorController::class, 'upload']);
+        Route::get('operator/viewImage/{id}', [OperatorController::class, 'viewImage']);
 
         /* MTOP */
         Route::get('mtop', [MtopApplicationController::class, 'index']);
