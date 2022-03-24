@@ -101,6 +101,7 @@
                                     <button v-if="!row.cancelled && row.status !== 4" v-on:click="destroyRecord(row.application_id)" class="btn btn-danger d-inline-block"><i class="fas fa-trash mr-1"></i>Delete</button>
                                     <button v-if="!row.cancelled && row.status === 4 && row.transact_type === '3'" v-on:click="openModalToEditValidity(row.application_id)" class="btn btn-info d-inline-block"><i class="fas fa-edit mr-1"></i> Change Validity Date</button>
                                     <button v-if="row.cancelled" v-on:click="cancelTransaction(row.application_id)" class="btn btn-danger d-inline-block"><i class="fas fa-times mr-1"></i>Cancel Transaction. OR Cancelled</button>
+                                    <button v-if="row.old_transaction" v-on:click="tagOrNumber(row.application_id)" class="btn btn-info d-inline-block"><i class="fas fa-check mr-1"></i>Tag OR Number</button>
                                 </span>
                         </v-client-table>
                     </div>
@@ -128,12 +129,10 @@
                             </ul>
                         </div>
 
-
                         <div class="" v-if="validity_update">
                             <label for="validity_date">Validity Date</label>
                             <input type="date" id="validity_date" class="form-control" v-model="validityDateValue">
                         </div>
-
 
                         <div v-else>
 
@@ -166,6 +165,8 @@
                     </div>
                     <div class="modal-footer">
 
+                        <button v-if="tagOR" class="btn btn-primary">Tag OR Number</button>
+
                         <button v-if="validity_update" @click="updateValidity" type="button" class="rounded pl-3 pr-3 pt-2 pb-2 border-0" style="width: 100px; font-size: 14px; background: #1abc9c; color: #fff;">Update</button>
 
                         <div v-else>
@@ -177,6 +178,48 @@
                 </div>
             </div>
         </div>
+
+
+        <div class="modal fade" id="tag_or_modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        Tag OR Number
+                    </div>
+                    <div class="modal-body">
+                        <div v-if="tagOR">
+                            <div class="input-group">
+                                <input type="text" placeholder="Search OR Number" class="form-control" v-model="or_no">
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-primary" v-on:click="searchOR">Search OR</button>
+                                </div>
+                            </div>
+                            <div style="padding: 10px; font-weight: bold;" v-if="orDetailsTableData.length > 0">{{ orDetailsTableData[0].full_name }}</div>
+                            <table id="or_details">
+                                <thead>
+                                <tr>
+                                    <th>Item Name</th>
+                                    <th>Amount</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <template v-for="data in orDetailsTableData">
+                                    <tr>
+                                        <td>{{ data.inc_desc }}</td>
+                                        <td>{{ data.ln_amnt }}</td>
+                                    </tr>
+                                </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" v-on:click="submitOrTag">Tag OR Number</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </template>
 
@@ -199,8 +242,8 @@ export default {
                     updated_at: 'Updated At',
                     action: 'Action',
                 },
-                sortable: ['mtfrb_case_no', 'transact_date'],
-                filterable: ['mtfrb_case_no', 'body_number'],
+                sortable: ['mtfrb_case_no', 'body_number', 'transact_date'],
+                filterable: ['mtfrb_case_no', 'body_number', 'transact_date'],
                 templates: {
                     hol_date: function(h, row) {
                         return row.hol_date !== null ? moment(row.hol_date).format('YYYY-MM-DD') : null;
@@ -226,6 +269,7 @@ export default {
             operatorTableData: [],
             barangayCodeTableData: [],
             tricycleTableData: [],
+            orDetailsTableData: [],
 
 
             //values
@@ -250,13 +294,14 @@ export default {
             validityDateValue: null,
             barangayCodeValue: '',
             statusValue: '',
-
+            or_no: '',
 
             err_msg: '',
             err: false,
             suc_msg: '',
             suc: false,
 
+            tagOR: false,
             loader: false,
             adding: false,
             print: false,
@@ -329,6 +374,7 @@ export default {
             this.statusValue = status;
             this.applicationIdValue = id;
             this.print = true;
+            this.tagOR = false;
             this.validity_update = false;
             this.errors = [];
             $('#print-modal').modal('show');
@@ -337,11 +383,13 @@ export default {
         openModalToPrintReport() {
             this.print = false;
             this.validity_update = false;
+            this.tagOr = false;
             $('#print-modal').modal('show');
         },
 
         openModalToEditValidity(id) {
             this.validity_update = true;
+            this.tagOr = false;
             this.applicationIdValue = id;
             $('#print-modal').modal('show');
         },
@@ -395,6 +443,7 @@ export default {
         },
 
         approveForPayment(id) {
+
             let confirmBox = confirm("Proceed to Payment?");
             if(confirmBox === true)
             {
@@ -498,6 +547,42 @@ export default {
             window.location.href = 'mtop_renewal';
         },
 
+        tagOrNumber(id) {
+            this.tagOR = true;
+            this.validity_update = false;
+            this.applicationIdValue = id;
+            $('#tag_or_modal').modal('show');
+        },
+
+        searchOR() {
+            if (!this.or_no || this.or_no === '')
+            {
+                alert('OR Number is Required');
+                return;
+            }
+
+            axios.get('mtop/or_finder/' + this.or_no)
+            .then(response => {
+                this.orDetailsTableData = response.data.data;
+            })
+        },
+
+        submitOrTag() {
+            axios.patch('mtop/tagOR', {
+                or_no: this.orDetailsTableData[0].id,
+                application_id : this.applicationIdValue
+            }).then(response => {
+                this.suc = true;
+                this.suc_msg = response.data.message;
+            })
+            .catch(error => {
+                this.err = true;
+                this.err_msg = error.response.data.err_msg;
+            })
+            .finally(()=> this.loader = false);
+        }
+
+
     },
 
     mounted() {
@@ -514,3 +599,17 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+
+    #or_details {
+        width: 100%;
+    }
+    #or_details  tr th {
+        background: whitesmoke;
+    }
+    #or_details  tr th, tr td{
+        padding: 10px;
+        font-size: 13px;
+    }
+</style>

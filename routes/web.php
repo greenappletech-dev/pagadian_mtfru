@@ -102,6 +102,8 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::patch('mtop/approve/{id}/{type}', [MtopApplicationController::class, 'approve']);
         Route::patch('mtop/validity_date', [MtopApplicationController::class,'update_validity']);
         Route::get('mtop/cancel/{id}', [MtopApplicationController::class,'cancel']);
+        Route::get('mtop/or_finder/{or_no}', [MtopApplicationController::class, 'findor']);
+        Route::patch('mtop/tagOR', [MtopApplicationController::class,'tagOR']);
 
         /* MTOP Entry */
         Route::get('mtop_entry/renew/{id}', [MtopApplicationController::class, 'renew']);

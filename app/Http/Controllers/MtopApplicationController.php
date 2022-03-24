@@ -389,9 +389,6 @@ class MtopApplicationController extends Controller
 
     /* MTOP APPLICATION LIST */
 
-
-
-
     public function getdata_filtered($from, $to, $barangay_id) {
         /* check if transaction are paid */
 
@@ -456,8 +453,22 @@ class MtopApplicationController extends Controller
                     }
                 }
 
+
+                /*
+                    check if the transact date is less than the implementation date
+                    a additional button will be added to be able to tag the OR of the selected transaction.
+                */
+
+                $colhdr = \DB::table('colhdr')->where('mtop_application_id', $application->application_id)->first();
+
+                if($application->status === 4)
+                {
+                    $application->old_transaction = $colhdr === null;
+                }
+
                 return $application;
             });
+
 
         //        foreach ($mtop_applications as $application) {
 //
@@ -673,5 +684,22 @@ class MtopApplicationController extends Controller
 
         return $pdf->stream();
     }
+
+    public function findor($or_no) {
+
+        $getOR = DB::table('colhdr')
+            ->leftJoin('collne2', 'collne2.or_code', 'colhdr.or_code')
+            ->where('colhdr.or_number', 'LIKE', '%'. $or_no . '%')
+            ->get();
+
+        return response()->json(['data'=> $getOR]);
+    }
+
+    public function tagOR(Request $request)
+    {
+        DB::table('colhdr')->where('id', $request->or_no)->update(['mtop_application_id' => $request->application_id]);
+        return response()->json(['message' => 'OR Tagged Successfully!']);
+    }
+
 }
 
