@@ -54,11 +54,12 @@
                         <option value="3">New Franchise Summary Per Month - (Range)</option>
                         <option value="2">Summary Report Per Make/Type</option>
                         <option value="5">Monthly Accomplishment Report</option>
+                        <option value="6">List of Expired & For Expiration Franchise Report</option>
                     </select>
 
                         <div id="filter_options_1">
 
-                            <div v-if="report.type !== '4' && report.type !== '5'">
+                            <div v-if="report.type !== '4' && report.type !== '5' && report.type !== '6'">
                                 <label for="barangay" class="mt-1">Specific Barangay</label>
                                     <select id="barangay" class="form-control" v-model="barangay.id">
                                         <option value=""></option>
@@ -69,7 +70,7 @@
                                     </select>
                             </div>
 
-                            <div class="row mt-1">
+                            <div class="row mt-1" v-if="report.type !== '6'">
                                 <div class="col">
                                     <label for="from">From:</label>
                                     <input type="date" id="from" class="form-control" v-model="report.from">
@@ -78,6 +79,26 @@
                                 <div class="col">
                                     <label for="to">To:</label>
                                     <input type="date" id="to" class="form-control" v-model="report.to">
+                                </div>
+                            </div>
+
+                            <div class="row mt-1" v-if="report.type === '6'">
+                                <div class="col">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="expiration" value="expired" id="expired" v-model="expiredFilter">
+                                        <label class="form-check-label" for="expired">
+                                            Expired Franchise
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="col">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="expiration" value="for_expiration" id="for_expiration" v-model="expiredFilter">
+                                        <label class="form-check-label" for="for_expiration">
+                                            For Expiration Franchise
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
 
@@ -153,6 +174,7 @@ export default {
             err: false,
             suc: false,
             loader: false,
+            expiredFilter: '',
             paperSize: 'Letter',
             paperOrientation: 'Portrait',
 
@@ -208,6 +230,9 @@ export default {
 
         openModalToPrint() {
 
+            console.log(this.expiredFilter);
+
+
             if(this.report.type == null)
             {
 
@@ -218,18 +243,31 @@ export default {
 
             const wout_range = ['2'];
 
-            if(wout_range.indexOf(this.report.type) < 0)
+            if(this.report.type === '6')
             {
-
-                if(this.report.from == null || this.report.to == null)
+                if(this.expiredFilter === '')
+                {
+                    this.err = true;
+                    return this.err_msg = 'Select Filter Option';
+                }
+            }
+            else
+            {
+                if(wout_range.indexOf(this.report.type) < 0)
                 {
 
-                    this.err = true;
-                    return this.err_msg = 'Please Set Range';
+                    if(this.report.from == null || this.report.to == null)
+                    {
+
+                        this.err = true;
+                        return this.err_msg = 'Please Set Range';
+
+                    }
 
                 }
-
             }
+
+
 
             $('#print-modal').modal('show');
 
@@ -239,7 +277,15 @@ export default {
         printPdf() {
 
             let optional_route = this.barangay.id == null || this.barangay.id === '' ? '/null' : '/'  + this.barangay.id;
-            window.open('mtop_report/pdf/'+ this.report.type + '/' + this.report.from + '/' + this.report.to + optional_route + '/' + this.paperSize + '/' + this.paperOrientation)
+
+            if(this.report.type === '6')
+            {
+                window.open('expired_franchise/' + this.expiredFilter + '/' + this.paperSize + '/' + this.paperOrientation);
+            }
+            else
+            {
+                window.open('mtop_report/pdf/'+ this.report.type + '/' + this.report.from + '/' + this.report.to + optional_route + '/' + this.paperSize + '/' + this.paperOrientation)
+            }
 
         },
 
@@ -258,25 +304,43 @@ export default {
 
             const wout_range = ['2'];
 
-            if(wout_range.indexOf(this.report.type) < 0)
+            if(this.report.type === '6')
             {
-
-
-                if(this.report.from == null || this.report.to == null)
+                if(this.expiredFilter === '')
+                {
+                    this.err = true;
+                    return this.err_msg = 'Select Filter Option';
+                }
+            }
+            else
+            {
+                if(wout_range.indexOf(this.report.type) < 0)
                 {
 
+                    if(this.report.from == null || this.report.to == null)
+                    {
 
-                    this.err = true;
-                    return this.err_msg = 'Please Set Range';
+                        this.err = true;
+                        return this.err_msg = 'Please Set Range';
 
+                    }
 
                 }
-
-
             }
 
             let optional_route = this.barangay.id == null || this.barangay.id === '' ? '/null' : '/'  + this.barangay.id;
-            window.open('mtop_report/export/'+ this.report.type + '/' + this.report.from + '/' + this.report.to + optional_route)
+
+            if(this.report.type === '6')
+            {
+                window.open('expired_franchise_excel/' + this.expiredFilter);
+            }
+            else
+            {
+                window.open('mtop_report/export/'+ this.report.type + '/' + this.report.from + '/' + this.report.to + optional_route)
+            }
+
+
+
         },
 
 

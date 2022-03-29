@@ -275,6 +275,9 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('annualtax/stab/{id}', [MtopAnnualTaxController::class, 'stab']);
         Route::get('annualtax/destroy/{id}', [MtopAnnualTaxController::class, 'destroy']);
 
+        ################## REPORT FOR EXPIRATION #####################
+        Route::get('expired_franchise/{filter}/{size}/{orientation}', [\App\Http\Controllers\ExpirationReportController::class, 'downloadPDF']);
+        Route::get('expired_franchise_excel/{filter}', [\App\Http\Controllers\ExpirationReportController::class, 'downloadExcel']);
 
 
 
