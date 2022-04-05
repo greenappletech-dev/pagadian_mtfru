@@ -141,8 +141,8 @@ export default {
                     amount              :       'Amount',
                 },
 
-                sortable: ['body_number', 'full_name'],
-                filterable: ['body_number', 'full_name'],
+                sortable: ['body_number', 'full_name', 'validity_date'],
+                filterable: ['body_number', 'full_name', 'validity_date'],
                 templates: {
                     date_registered: function(h, row) {
                         return row.date_registered !== null ? moment(row.date_registered).format('MM-DD-YYYY') : null;
