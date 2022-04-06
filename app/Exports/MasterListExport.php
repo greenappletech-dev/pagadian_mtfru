@@ -20,9 +20,13 @@ class MasterListExport implements FromView, WithStyles,  WithColumnFormatting
 {
     private $mtop_applications;
     private $tricycles;
+    public $sort;
+    public $order;
 
-    public function __construct()
+    public function __construct($sort, $order)
     {
+        $this->sort = $sort;
+        $this->order = $order;
         $this->mtop_applications = new MtopApplication();
         $this->tricycles = new Tricycle();
     }
@@ -34,7 +38,60 @@ class MasterListExport implements FromView, WithStyles,  WithColumnFormatting
 
         $arr = array();
 
-        $master_list = $this->tricycles->masterList();
+
+//        $master_list = $this->tricycles->masterList();
+
+        $master_list = Tricycle::leftJoin('taxpayer','taxpayer.id', 'tricycles.operator_id')
+            ->leftJoin('mtop_applications', 'mtop_applications.id', 'tricycles.mtop_application_id')
+            ->leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
+            ->leftJoin('collne2', 'collne2.or_code', 'colhdr.or_code')
+            ->select(
+                'mtop_applications.mtfrb_case_no',
+                'mtop_applications.transact_date',
+                'mtop_applications.validity_date',
+                'mtop_applications.transact_type',
+                'mtop_applications.approve_date',
+                DB::raw("(mtop_applications.validity_date + INTERVAL '-2 years') as payment_date"),
+                'tricycles.id',
+                'tricycles.body_number',
+                'tricycles.make_type',
+                'tricycles.engine_motor_no',
+                'tricycles.chassis_no',
+                'tricycles.plate_no',
+                'tricycles.created_at as date_registered',
+                'taxpayer.full_name',
+                'taxpayer.address1',
+                'taxpayer.mobile',
+                'mtop_applications.approve_date',
+                'colhdr.or_number as or_no',
+                'colhdr.or_code',
+                DB::raw('SUM(collne2.ln_amnt) as amount')
+            )
+            ->groupBy(
+                'mtop_applications.mtfrb_case_no',
+                'mtop_applications.transact_date',
+                'mtop_applications.validity_date',
+                'mtop_applications.transact_type',
+                'mtop_applications.approve_date',
+                'payment_date',
+                'colhdr.trnx_date',
+                'tricycles.id',
+                'tricycles.body_number',
+                'tricycles.make_type',
+                'tricycles.engine_motor_no',
+                'tricycles.chassis_no',
+                'tricycles.plate_no',
+                'tricycles.created_at',
+                'taxpayer.full_name',
+                'taxpayer.address1',
+                'taxpayer.mobile',
+                'mtop_applications.approve_date',
+                'colhdr.or_number',
+                'colhdr.or_code',
+            )
+            ->whereNull('colhdr.canc_date')
+            ->orderBy($this->sort, $this->order)
+            ->get();
 
         $arr_count = 0;
 
@@ -50,15 +107,15 @@ class MasterListExport implements FromView, WithStyles,  WithColumnFormatting
             array_push($arr,
                 [
                     'mtfrb_case_no' => $data->mtfrb_case_no,
-                    'transact_date' => $data->transact_date != null ? date('m-d-Y', strtotime($data->transact_date)) : '',
-                    'validity_date' => $data->validity_date != null ? date('m-d-Y', strtotime($data->validity_date)) : '',
-                    'approve_date' => $data->approve_date != null ? date('m-d-Y', strtotime($data->approve_date)) : '',
-                    'payment_date' => $data->payment_date != null ? date('m-d-Y', strtotime($data->payment_date)) : '',
+                    'transact_date' => $data->transact_date != null ? date('m/d/Y', strtotime($data->transact_date)) : '',
+                    'validity_date' => $data->validity_date != null ? date('m/d/Y', strtotime($data->validity_date)) : '',
+                    'approve_date' => $data->approve_date != null ? date('m/d/Y', strtotime($data->approve_date)) : '',
+                    'payment_date' => $data->payment_date != null ? date('m/d/Y', strtotime($data->payment_date)) : '',
                     'body_number' => $data->body_number,
                     'make_type' => $data->make_type,
                     'engine_motor_no' => $data->engine_motor_no,
                     'chassis_no' => $data->chassis_no,
-                    'date_registered' => $data->date_registered != null ? date('m-d-Y', strtotime($data->date_registered)) : '',
+                    'date_registered' => $data->date_registered != null ? date('m/d/Y', strtotime($data->date_registered)) : '',
                     'plate_no' => $data->plate_no,
                     'full_name' => $data->full_name,
                     'address1' => $data->address1,
@@ -80,6 +137,7 @@ class MasterListExport implements FromView, WithStyles,  WithColumnFormatting
     {
         return [
             'S' => NumberFormat::FORMAT_NUMBER_COMMA_SEPARATED1,
+            'I' => NumberFormat::FORMAT_DATE_DDMMYYYY,
         ];
     }
 

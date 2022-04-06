@@ -47,9 +47,30 @@
                 <div class="col-3">
                     <h2 class="d-inline align-middle">Master List</h2>
                 </div>
-                <div class="col-9 text-right">
-                    <a class="p-2 pl-4 pr-4 rounded" style="background: #1abc9c; font-size: 14px; box-shadow: 2px 2px 2px rgba(165, 165, 165, 1); color: #fff; text-decoration: none;" v-on:click="exportExcel">Export to Excel</a>
+                <div class="col-9 d-flex justify-content-end">
+                    <div class="form-inline">
+                        <label class="mr-2">Sort By</label>
+                        <select name="sort_by" class="border rounded p-2" style="font-size: 15px; width: 200px" v-model="sort">
+                            <option value="validity_date">Validity Date</option>
+                            <option value="date_registered">Date Registered</option>
+                            <option value="approve_date">Approved Date</option>
+                            <option value="payment_date">OR Date</option>
+                            <option value="transact_date">Transaction Date</option>
+                        </select>
+                    </div>
 <!--                    <a class="p-2 pl-4 pr-4 rounded" style="background: #1abc9c; font-size: 14px; box-shadow: 2px 2px 2px rgba(165, 165, 165, 1); color: #fff; text-decoration: none;" v-on:click="pdfModal">Print to PDF</a>-->
+                </div>
+                <div class="col-12 d-flex justify-content-end mb-1">
+                    <div class="form-inline pt-1 pb-1">
+                        <label style="font-weight: normal" class="mr-1">Order By:</label>
+                        <input type="radio" id="asc" name="order" class="mr-1" value="asc" v-model="order" checked>
+                        <label style="font-weight: normal" for="asc" class="mr-1">Asc</label>
+                        <input type="radio" id="desc" name="order" class="mr-1" value="desc" v-model="order">
+                        <label style="font-weight: normal" for="desc">Desc</label>
+                    </div>
+                </div>
+                <div class="col-12 d-flex justify-content-end">
+                    <a class="p-2 pl-4 pr-4 rounded" style="background: #1abc9c; font-size: 14px; box-shadow: 2px 2px 2px rgba(165, 165, 165, 1); color: #fff; text-decoration: none;" v-on:click="exportExcel">Export to Excel</a>
                 </div>
             </div>
 
@@ -182,6 +203,8 @@ export default {
             print: false,
             paperSize: 'Letter',
             paperOrientation: 'Portrait',
+            sort: 'validity_date',
+            order: '',
         }
     },
     methods: {
@@ -232,7 +255,12 @@ export default {
         },
 
         exportExcel(){
-            window.open('master_list/export');
+            if(this.order === '')
+            {
+                this.order = 'asc';
+            }
+
+            window.open('master_list/export/' + this.sort + '/' + this.order);
         },
     },
 

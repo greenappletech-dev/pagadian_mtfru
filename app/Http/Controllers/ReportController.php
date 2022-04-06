@@ -73,8 +73,8 @@ class ReportController extends Controller
     }
 
 
-    public function master_list_export() {
-        return Excel::download(new MasterListExport(), 'master_list.xls');
+    public function master_list_export($sort, $order) {
+        return Excel::download(new MasterListExport($sort, $order), 'master_list.xls');
     }
 
 

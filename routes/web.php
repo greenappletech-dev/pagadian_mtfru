@@ -161,7 +161,7 @@ Route::group(['middleware'=> 'auth'], function() {
         /* Master List */
         Route::get('master_list', [ReportController::class, 'master_list']);
         Route::get('master_list/getdata', [ReportController::class, 'master_list_getdata']);
-        Route::get('master_list/export', [ReportController::class, 'master_list_export']);
+        Route::get('master_list/export/{sort}/{order}', [ReportController::class, 'master_list_export']);
 
         /* MTOP Charges List */
         Route::get('mtop_charges_list', [MTOPChargeListController::class, 'index']);
