@@ -155,6 +155,20 @@
                             <label for="middle_name">Middle Name</label>
                             <input type="text" style="text-transform: uppercase" v-model="middleNameValue" id="middle_name" class="form-control">
 
+                            <label for="address">Address</label>
+                            <input type="text" style="text-transform: uppercase" v-model="addressValue" id="address" class="form-control">
+
+                            <label for="mobile_number">Mobile Number</label>
+                            <input type="text" style="text-transform: uppercase" v-model="mobileValue" id="mobile_number" class="form-control">
+
+                            <label for="gcash">GCash Account</label>
+                            <input type="text" style="text-transform: uppercase" v-model="gcashValue" id="gcash" class="form-control">
+
+                            <label for="association">Association</label>
+                            <select v-model="associationValue" id="association" class="form-control">
+                                <option v-for="association in associations" v-bind:value="association.id">{{ association.name}}</option>
+                            </select>
+
                             <label for="license_no">License Number</label>
                             <input type="text" style="text-transform: uppercase" v-model="licenseNumberValue" id="license_no" class="form-control">
 
@@ -179,15 +193,21 @@
 
 export default {
 
+    props: ['associations'],
+
     data() {
         return {
-            columns: ['body_number', 'full_name', 'driver_license_no', 'created_at', 'updated_at','actions'],
+            columns: ['body_number', 'full_name', 'driver_license_no', 'address', 'gcash', 'mobile_number', 'association', 'created_at', 'updated_at','actions'],
             tableData: [],
             options: {
                 headings: {
                     body_number: 'Body Number',
                     full_name: 'Driver Name',
                     driver_license_no: 'License #',
+                    address: 'Address',
+                    gcash: 'Gcash',
+                    mobile_number: 'Mobile #',
+                    association: 'Association',
                     created_at: 'Created At',
                     updated_at: 'Updated At',
                     action: 'Action',
@@ -229,6 +249,10 @@ export default {
             chassisNoValue: null,
             plateNoValue: null,
             operatorValue: null,
+            addressValue: null,
+            mobileValue: null,
+            gcashValue: null,
+            associationValue: null,
 
             err_msg: '',
             err: false,
@@ -267,6 +291,10 @@ export default {
             this.chassisNoValue = '';
             this.plateNoValue = '';
             this.operatorValue = '';
+            this.addressValue = '',
+            this.mobileValue = '',
+            this.gcashValue = '',
+            this.associationValue = '',
             this.errors = [];
         },
 
@@ -340,6 +368,10 @@ export default {
                 this.chassisNoValue = response.data.driver.chassis_no;
                 this.plateNoValue = response.data.driver.plate_no;
                 this.operatorValue = response.data.driver.full_name;
+                this.addressValue = response.data.driver.address;
+                this.mobileValue = response.data.driver.mobile_number;
+                this.gcashValue = response.data.driver.gcash;
+                this.associationValue = response.data.driver.tricycle_association_id;
                 $('#create-modal').modal('show');
                 this.adding = false;
             });
@@ -354,6 +386,10 @@ export default {
                 middle_name: this.middleNameValue,
                 driver_license_no: this.licenseNumberValue,
                 tricycle_id: this.tricycleIdValue,
+                address: this.addressValue,
+                mobile_number: this.mobileValue,
+                gcash: this.gcashValue,
+                tricycle_association_id: this.associationValue
 
             })
             .then(response => {
@@ -376,7 +412,11 @@ export default {
                 first_name: this.firstNameValue,
                 middle_name: this.middleNameValue,
                 driver_license_no: this.licenseNumberValue,
-                tricycle_id: this.tricycleIdValue
+                tricycle_id: this.tricycleIdValue,
+                address: this.addressValue,
+                mobile_number: this.mobileValue,
+                gcash: this.gcashValue,
+                tricycle_association_id: this.associationValue
 
             })
             .then(response => {

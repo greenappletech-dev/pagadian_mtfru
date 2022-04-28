@@ -10,7 +10,7 @@
 @section('content')
 
     <div id="app">
-        <driver-component></driver-component>
+        <driver-component :associations="{{ $associations }}"></driver-component>
     </div>
 
 @stop

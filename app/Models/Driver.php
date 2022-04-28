@@ -12,7 +12,8 @@ class Driver extends Model
 
     public function fetchData() {
         return Driver::leftJoin('tricycles', 'tricycles.id', 'drivers.tricycle_id')
-            ->select('drivers.id', 'drivers.full_name', 'drivers.driver_license_no', 'drivers.created_at', 'drivers.updated_at', 'tricycles.body_number')
+            ->leftJoin('tricycle_associations', 'drivers.tricycle_association_id', 'tricycle_associations.id')
+            ->select('drivers.*', 'tricycles.body_number','tricycle_associations.name as association')
             ->orderBy('tricycles.body_number')
             ->get();
     }
@@ -26,6 +27,10 @@ class Driver extends Model
                 'drivers.last_name',
                 'drivers.first_name',
                 'drivers.middle_name',
+                'drivers.address',
+                'drivers.mobile_number',
+                'drivers.gcash',
+                'drivers.tricycle_association_id',
                 'tricycles.id as tricycle_id',
                 'tricycles.body_number',
                 'tricycles.make_type',

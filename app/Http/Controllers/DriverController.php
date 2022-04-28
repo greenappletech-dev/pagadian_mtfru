@@ -7,6 +7,7 @@ use App\Exports\TricycleExport;
 use App\Http\Requests\StoreDriver;
 use App\Models\Driver;
 use App\Models\Tricycle;
+use App\Models\TricycleAssociation;
 use Illuminate\Http\Request;
 use Excel;
 
@@ -22,7 +23,8 @@ class DriverController extends Controller
     }
 
     public function index() {
-        return view('mtfru.driver');
+        $associations = TricycleAssociation::get();
+        return view('mtfru.driver', compact('associations'));
     }
 
     public function getrecord() {
@@ -42,6 +44,10 @@ class DriverController extends Controller
         $driver->driver_license_no = strtoupper($request->driver_license_no);
         $driver->full_name = strtoupper($request->last_name . ', ' . $request->first_name . ' ' . $request->middle_name . '.');
         $driver->tricycle_id = $request->tricycle_id;
+        $driver->address = $request->address;
+        $driver->mobile_number = $request->mobile_number;
+        $driver->gcash = $request->gcash;
+        $driver->tricycle_association_id = $request->tricycle_association_id;
 
         return !$driver->save()
         ? response()->json(

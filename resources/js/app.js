@@ -99,6 +99,7 @@ Vue.component('old_new-component', require('./components/OldNewFranchiseComponen
 Vue.component('view_renewal-component', require('./components/MTOPViewRenewalComponent.vue').default);
 Vue.component('renewal-component', require('./components/MTOPRenewalComponent.vue').default);
 Vue.component('driver-component', require('./components/DriverComponent.vue').default);
+Vue.component('association-component', require('./components/TricycleAssociationComponent.vue').default);
 
 /* MTOP REPORTS */
 Vue.component('master_list-component', require('./components/MasterListComponent.vue').default);

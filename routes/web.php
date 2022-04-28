@@ -14,6 +14,7 @@ use App\Http\Controllers\FvrViewRenewalController;
 use App\Http\Controllers\MTOPChargeListController;
 use \App\Http\Controllers\MTFRUReportController;
 use App\Http\Controllers\BoatCaptainController;
+use App\Http\Controllers\TricycleAssociationController;
 use \App\Http\Controllers\TricycleController;
 use \App\Http\Controllers\OperatorController;
 use App\Http\Controllers\BoatTypeController;
@@ -26,6 +27,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\FvrReportController;
 use App\Http\Controllers\PatchController;
 use App\Models\MtopAnnualTax;
+use App\Models\TricycleAssociation;
 use Illuminate\Support\Facades\Route;
 
 
@@ -261,7 +263,12 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('fvr_report/pdf/{from}/{to}/{barangay_id}/{size}/{orientation}', [FvrReportController::class, 'pdf']);
         Route::get('fvr_report/export/{from}/{to}/{barangay_id}', [FvrReportController::class, 'export']);
 
-
+        /* Tricycle Associations */
+        Route::get('association', [TricycleAssociationController::class, 'index']);
+        Route::post('association/store', [TricycleAssociationController::class, 'store']);
+        Route::get('association/edit/{id}', [TricycleAssociationController::class, 'edit']);
+        Route::patch('association/update', [TricycleAssociationController::class, 'update']);
+        Route::get('association/delete/{id}', [TricycleAssociationController::class, 'destroy']);
 
 
 

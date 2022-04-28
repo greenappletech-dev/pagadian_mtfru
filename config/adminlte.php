@@ -352,6 +352,11 @@ return [
             'icon' => 'fas fa-users-cog',
         ],
         [
+            'text' => 'Association',
+            'url'  => 'association',
+            'icon' => 'fas fa-cogs',
+        ],
+        [
             'text' => 'Boat Type',
             'url'  => 'boat_type',
             'icon' => 'fas fa-anchor',
