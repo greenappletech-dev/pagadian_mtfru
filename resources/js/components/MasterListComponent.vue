@@ -51,6 +51,7 @@
                     <div class="form-inline">
                         <label class="mr-2">Sort By</label>
                         <select name="sort_by" class="border rounded p-2" style="font-size: 15px; width: 200px" v-model="sort">
+                            <option value="body_number">Body Number</option>
                             <option value="validity_date">Validity Date</option>
                             <option value="date_registered">Date Registered</option>
                             <option value="approve_date">Approved Date</option>
@@ -203,7 +204,7 @@ export default {
             print: false,
             paperSize: 'Letter',
             paperOrientation: 'Portrait',
-            sort: 'validity_date',
+            sort: 'body_number',
             order: '',
         }
     },
