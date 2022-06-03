@@ -690,7 +690,7 @@ class MtopApplicationController extends Controller
         $getOR = DB::table('colhdr')
             ->leftJoin('collne2', 'collne2.or_code', 'colhdr.or_code')
             ->where('colhdr.or_number', 'LIKE', '%'. $or_no . '%')
-            ->where('mtop_application_id', null)
+            ->where('mtop_application_id', '<=', 0)
             ->get();
 
         return response()->json(['data'=> $getOR]);
