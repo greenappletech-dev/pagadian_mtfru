@@ -574,6 +574,8 @@ export default {
             }).then(response => {
                 this.suc = true;
                 this.suc_msg = response.data.message;
+
+                $('#tag_or_modal').modal('hide');
             })
             .catch(error => {
                 this.err = true;
