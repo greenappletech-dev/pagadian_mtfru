@@ -10,7 +10,7 @@
 @section('content')
 
     <div id="app">
-        <annual-component :annualtax="{{ $annualtax }}"></annual-component>
+        <annual-component :annualtax="{{ $annualtax }}" :otherinc="{{ $otherinc }}"></annual-component>
     </div>
 
 @stop
@@ -19,6 +19,6 @@
 
 
 @section('js')
-    <script src="{{ asset('js/app.js') }}" defer></script>
+    <script src="{{ asset('js/app.js') }}" d\efer></script>
 @stop
 

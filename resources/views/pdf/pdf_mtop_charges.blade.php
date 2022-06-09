@@ -12,7 +12,7 @@
 
         /** Define now the real margins of every page in the PDF **/
         body {
-            margin: 130px 50px 30px 50px;
+            margin: 150px 50px 30px 50px;
             font-family: Arial, sans-serif;
         }
 
@@ -96,8 +96,13 @@
             <th class="report-title">Operator's Annual Tax</th>
             <th class="datetime">{{ date('m/d/Y h:i:s A') }}</th>
         </tr>
+        <tr>
+            <th colspan="2">{{ $data[0]['full_name'] }}</th>
+        </tr>
     </table>
 </header>
+
+
 
 {{--<footer>--}}
 
@@ -112,25 +117,25 @@
                 <th style="width: 10%">BODY NUMBER</th>
                 <th style="width: 10%">DATE</th>
                 <th>TAX YEAR</th>
-                <th>OPERATOR</th>
+{{--                <th>OPERATOR</th>--}}
                 <th>OR NUMBER</th>
                 <th>AMOUNT</th>
-                <th>MTFRB CASE NO</th>
-                <th>VALIDITY DATE</th>
+{{--                <th>MTFRB CASE NO</th>--}}
+{{--                <th>VALIDITY DATE</th>--}}
             </tr>
         </thead>
 
         <tbody>
-            @foreach($mtop_charges as $charge)
+            @foreach($data as $value)
                 <tr>
-                    <td>{{ $charge['body_number'] }}</td>
-                    <td >{{ $charge['trnx_date'] }}</td>
-                    <td>{{ $charge['inc_desc'] }}</td>
-                    <td>{{ $charge['operator'] }}</td>
-                    <td>{{ $charge['or_number'] }}</td>
-                    <td>{{ $charge['amount'] }}</td>
-                    <td>{{ $charge['mtfrb_case_no'] }}</td>
-                    <td>{{ $charge['validity_date'] }}</td>
+                    <td>{{ $value['body_number'] }}</td>
+                    <td >{{ $value['trnx_date'] }}</td>
+                    <td>{{ $value['inc_desc'] }}</td>
+{{--                    <td>{{ $value['operator'] }}</td>--}}
+                    <td>{{ $value['or_number'] }}</td>
+                    <td>{{ $value['ln_amnt'] }}</td>
+{{--                    <td>{{ $charge['mtfrb_case_no'] }}</td>--}}
+{{--                    <td>{{ $charge['validity_date'] }}</td>--}}
                 </tr>
             @endforeach
         </tbody>

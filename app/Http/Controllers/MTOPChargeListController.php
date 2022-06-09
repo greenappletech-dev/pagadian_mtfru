@@ -15,14 +15,15 @@ class MTOPChargeListController extends Controller
         return view('report.mtop_charge_list');
     }
 
-    public function fetchSearchedDataByOperator($operator_id, $taxyear) {
+    public function fetchSearchedDataByOperator($operator_id) {
+
         $mtop_application_annual_taxes = MtopApplication::leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
         ->leftJoin('collne2', 'collne2.or_code', 'colhdr.or_code')
         ->leftJoin('otherinc', 'otherinc.inc_code','collne2.inc_code')
         ->leftJoin('taxpayer', 'taxpayer.id', 'mtop_applications.taxpayer_id')
         ->where('otherinc.annual_tax','Y')
         ->where('mtop_applications.taxpayer_id', $operator_id)
-        ->where('otherinc.inc_desc', 'LIKE', '%' . $taxyear .'%')
+//        ->where('otherinc.inc_desc', 'LIKE', '%' . $taxyear .'%')
         ->select(
             'colhdr.trnx_date',
             'collne2.inc_desc',
@@ -56,7 +57,7 @@ class MTOPChargeListController extends Controller
                 ->leftJoin('otherinc', 'collne2.inc_code', 'otherinc.inc_code')
                 ->where('otherinc.annual_tax', 'Y')
                 ->where('or_number', 'LIKE', '%' . $old_data['or_number'] . '%')
-                ->where('otherinc.inc_desc', 'LIKE', '%' . $taxyear .'%')
+//                ->where('otherinc.inc_desc', 'LIKE', '%' . $taxyear .'%')
                 ->select('otherinc.inc_desc')
                 ->first();
 
@@ -79,8 +80,8 @@ class MTOPChargeListController extends Controller
         return $mtop_application_annual_taxes;
     }
 
-    public function filter_operator($operator_id, $taxyear) {
-        $data = $this->fetchSearchedDataByOperator($operator_id, $taxyear);
+    public function filter_operator($operator_id) {
+        $data = $this->fetchSearchedDataByOperator($operator_id);
         return response()->json(['charges' => $data], 200);
     }
 

@@ -276,7 +276,13 @@ Route::group(['middleware'=> 'auth'], function() {
         /* ANNUAL TAX */
 
         Route::get('annualtax', [MtopAnnualTaxController::class, 'index']);
-        Route::get('annualtax/filter/{from}/{to}', [MtopAnnualTaxController::class, 'filter']);
+        Route::get('annual_tax/search_operator/{option}/{string}', [MtopAnnualTaxController::class, 'operator']);
+        Route::get('annual_tax/get_tricycles/{operator_id}', [MtopAnnualTaxController::class, 'tricycles']);
+        Route::post('annual_tax/store', [MtopAnnualTaxController::class, 'store']);
+        Route::get('annual_tax/edit/{id}', [MtopAnnualTaxController::class, 'edit']);
+        Route::patch('annual_tax/update', [MtopAnnualTaxController::class, 'update']);
+
+
         Route::get('searchBodyNumber/{bodyNumber}', [MtopAnnualTaxController::class, 'searchBodyNumber']);
         Route::post('annualtax/save', [MtopAnnualTaxController::class, 'save']);
         Route::get('annualtax/stab/{id}', [MtopAnnualTaxController::class, 'stab']);
@@ -286,6 +292,13 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('expired_franchise/{filter}/{size}/{orientation}', [\App\Http\Controllers\ExpirationReportController::class, 'downloadPDF']);
         Route::get('expired_franchise_excel/{filter}', [\App\Http\Controllers\ExpirationReportController::class, 'downloadExcel']);
 
+
+        /* Annual Tax Report */
+        Route::get('tax_report', [\App\Http\Controllers\MtopAnnualTaxReportController::class, 'index']);
+        Route::get('tax_report/search_operator/{string}', [\App\Http\Controllers\MtopAnnualTaxReportController::class, 'search_operator']);
+        Route::get('tax_report/get_data/{filter}/{data}', [\App\Http\Controllers\MtopAnnualTaxReportController::class, 'process_data']);
+        Route::get('tax_report/pdf/{filter}/{data}/{size}/{orientation}', [\App\Http\Controllers\MtopAnnualTaxReportController::class, 'pdf']);
+        Route::get('tax_report/export/{filter}/{data}', [\App\Http\Controllers\MtopAnnualTaxReportController::class, 'export']);
 
 
 

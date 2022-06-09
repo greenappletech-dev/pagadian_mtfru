@@ -17,35 +17,39 @@
 
 <body>
 
-    <table>
-        <thead>
-            <tr>
-                <th style="width: 5%">BODY NUMBER</th>
-                <th>DATE</th>
-                <th>TAX YEAR</th>
-                <th>OPERATOR</th>
-                <th>OR NUMBER</th>
-                <th>AMOUNT</th>
-                <th>MTFRB CASE NO</th>
-                <th>VALIDITY DATE</th>
-            </tr>
-        </thead>
 
-        <tbody>
-            @foreach($data as $charge)
-                <tr>
-                    <td style="text-align: center">{{ $charge['body_number'] }}</td>
-                    <td style="text-align: center">{{ $charge['trnx_date'] }}</td>
-                    <td>{{ $charge['inc_desc'] }}</td>
-                    <td style="text-align: left">{{ $charge['operator'] }}</td>
-                    <td>{{ $charge['or_number'] }}</td>
-                    <td style="text-align: right">{{ $charge['amount'] }}</td>
-                    <td>{{ $charge['mtfrb_case_no'] }}</td>
-                    <td style="text-align: center">{{ $charge['validity_date'] }}</td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+<table width="100%">
+    <thead>
+        <tr>
+            <th>{{ $data[0]['full_name'] }}</th>
+        </tr>
+        <tr>
+            <th style="width: 10%">BODY NUMBER</th>
+            <th style="width: 10%">DATE</th>
+            <th>TAX YEAR</th>
+            {{--                <th>OPERATOR</th>--}}
+            <th>OR NUMBER</th>
+            <th>AMOUNT</th>
+            {{--                <th>MTFRB CASE NO</th>--}}
+            {{--                <th>VALIDITY DATE</th>--}}
+        </tr>
+    </thead>
+
+    <tbody>
+    @foreach($data as $value)
+        <tr>
+            <td>{{ $value['body_number'] }}</td>
+            <td >{{ $value['trnx_date'] }}</td>
+            <td>{{ $value['inc_desc'] }}</td>
+            {{--                    <td>{{ $value['operator'] }}</td>--}}
+            <td>{{ $value['or_number'] }}</td>
+            <td>{{ $value['ln_amnt'] }}</td>
+            {{--                    <td>{{ $charge['mtfrb_case_no'] }}</td>--}}
+            {{--                    <td>{{ $charge['validity_date'] }}</td>--}}
+        </tr>
+    @endforeach
+    </tbody>
+</table>
 
 </body>
 

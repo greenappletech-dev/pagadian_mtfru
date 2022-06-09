@@ -323,7 +323,7 @@ return [
                 [
                     'text' => 'Annual Tax',
                     'icon' => 'far fa-file-alt',
-                    'url'  => '/mtop_charges_list',
+                    'url'  => '/tax_report',
                     'role' => ''
                 ],
             ]

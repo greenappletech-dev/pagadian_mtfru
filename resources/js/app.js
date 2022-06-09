@@ -124,6 +124,7 @@ Vue.component('fvr_report-component', require('./components/FVRReportComponent.v
 
 /* ANNUAL TAX */
 Vue.component('annual-component', require('./components/AnnualTaxComponent.vue').default);
+Vue.component('annual_tax_report-component', require('./components/MTOPAnnualTaxReportComponent.vue').default);
 
 
 /**

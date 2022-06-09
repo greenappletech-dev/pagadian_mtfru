@@ -294,16 +294,16 @@ export default {
                 this.err = true;
                 return;
             }
+            //
+            // if(!this.taxyear)
+            // {
+            //     this.err_msg = 'Please select Tax year!';
+            //     this.err = true;
+            //     return;
+            // }
 
-            if(!this.taxyear)
-            {
-                this.err_msg = 'Please select Tax year!';
-                this.err = true;
-                return;
-            }
 
-
-            axios.get('mtop_charges_list/filter_operator/' + this.operator_id + '/' + this.taxyear)
+            axios.get('mtop_charges_list/filter_operator/' + this.operator_id)
             .then(response => {
                 if(response.data.charges.length === 0) {
                     this.err_msg = 'No record found!';

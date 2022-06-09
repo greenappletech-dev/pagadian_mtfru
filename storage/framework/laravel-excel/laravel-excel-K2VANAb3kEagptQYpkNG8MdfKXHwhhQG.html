@@ -1,0 +1,145 @@
+<html>
+<title>PDF Report</title>
+<head>
+    <style>
+        @page  {
+            margin: 0cm 0cm;
+        }
+
+        .pagenum:before {
+            content: counter(page);
+        }
+
+        /** Define now the real margins of every page in the PDF **/
+        body {
+            margin: 150px 50px 30px 50px;
+            font-family: Arial, sans-serif;
+        }
+
+        /* header */
+
+        header  {
+            position: fixed;
+            padding: 50px 50px 0px 50px;
+            height: 75px;
+        }
+
+        header .table-header tr th{
+            text-align: left;
+            padding: 1px 0px;
+            font-size: 13px;
+            font-weight: normal;
+        }
+
+        header .table-header tr .company {
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        header .table-header tr .report-title {
+            font-weight: bold;
+        }
+
+
+        /* main */
+
+        main {
+            font-size: 11px;
+        }
+
+        main table thead {
+            border: 1px solid #000;
+        }
+
+        main table thead tr th {
+            padding: 5px 0px;
+            font-weight: normal;
+            text-align: left;
+        }
+
+        main table thead tr th:first-child {
+            padding-left: 10px;
+        }
+
+        main table thead tr th:last-child {
+            padding-right: 10px;
+        }
+
+        main table tbody tr td {
+            padding: 2px 2px;
+        }
+
+        main table tbody tr td:first-child {
+            padding-left: 10px;
+        }
+
+        main table tbody tr td:last-child {
+            padding-right: 10px;
+        }
+
+
+    </style>
+</head>
+<body>
+<!-- Define header and footer blocks before your content -->
+<header>
+    <table class="table-header" width="100%;">
+        <tr>
+            <th width="75%" class="company">MTFRU</th>
+            <th>User ID: <span class="username">FEBRER, PRINCE</span></th>
+        </tr>
+        <tr>
+            <th class="city">Pagadian City</th>
+            <th class="page-number">Page No: <span class="pagenum"></span></th>
+        </tr>
+        <tr>
+            <th class="report-title">Operator's Annual Tax</th>
+            <th class="datetime">06/09/2022 06:15:27 PM</th>
+        </tr>
+        <tr>
+            <th colspan="2">MIJOS, FREDDIE A.</th>
+        </tr>
+    </table>
+</header>
+
+
+
+
+
+
+
+<!-- Wrap the content of your PDF inside a main tag -->
+
+<main>
+    <table width="100%">
+        <thead>
+            <tr>
+                <th style="width: 10%">BODY NUMBER</th>
+                <th style="width: 10%">DATE</th>
+                <th>TAX YEAR</th>
+
+                <th>OR NUMBER</th>
+                <th>AMOUNT</th>
+
+
+            </tr>
+        </thead>
+
+        <tbody>
+                            <tr>
+                    <td>3311</td>
+                    <td >2021-10-24</td>
+                    <td>ANNUAL FIXED TAX CY2021</td>
+
+                    <td>000000003566587</td>
+                    <td>500.00</td>
+
+
+                </tr>
+                    </tbody>
+    </table>
+</main>
+</body>
+</html>
+
+
