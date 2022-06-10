@@ -316,7 +316,7 @@ class MtopAnnualTaxController extends Controller
                 $store->engine_motor_no = $tricycle_info->engine_motor_no;
                 $store->chassis_no = $tricycle_info->chassis_no;
                 $store->plate_no = $tricycle_info->plate_no;
-                $store->status = 1;
+//                $store->status = 1;
                 $store->save();
 
                 $idArr[] = $store->id;
