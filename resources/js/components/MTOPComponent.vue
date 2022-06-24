@@ -89,7 +89,7 @@
                             <select name="" id="" class="form-control" v-model="searchOption">
                                 <option value="body_number">Body Number</option>
                                 <option value="mtfrb_case_no">MTFRB #</option>
-                                <option value="body_number">Body Number</option>
+<!--                                <option value="body_number">Body Number</option>-->
                             </select>
                         </div>
                         <input type="text" class="form-control" v-model="searchValue">
