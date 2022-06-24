@@ -73,7 +73,7 @@ class MtopApplication extends Model
                 'mtop_applications.id as application_id',
                 'mtop_applications.created_at as created_at',
                 'mtop_applications.updated_at as updated_at')
-            ->orderBy('status', 'DESC')
+            ->orderBy('status')
             ->orderBy('mtop_applications.id', 'DESC')
             ->paginate(10);
     }
@@ -105,7 +105,7 @@ class MtopApplication extends Model
                 'mtop_applications.id as application_id',
                 'mtop_applications.created_at as created_at',
                 'mtop_applications.updated_at as updated_at')
-            ->orderBy('status', 'DESC')
+            ->orderBy('status')
             ->orderBy('mtop_applications.id', 'DESC')
             ->paginate(10);
     }
