@@ -82,8 +82,9 @@ class DriverController extends Controller
         : response()->json([ 'message' => 'Driver Successfully Deleted!'],200);
     }
 
-    public function export() {
-        return Excel::download(new DriverExport(), 'drivers_' . date('mdy') . '.xlsx');
+    public function export() {{}
+        return Excel::download(new DriverExport(), 'drivers_' . date('mdy') . '.xlxs');
+
     }
 
 

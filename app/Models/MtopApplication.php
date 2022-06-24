@@ -65,7 +65,6 @@ class MtopApplication extends Model
                     $query->whereBetween('transact_date', [$from, $to]);
                 }
             })
-            ->orderBy('status')
             ->select(
                 'mtop_applications.*',
                 'taxpayer.*',
@@ -76,7 +75,39 @@ class MtopApplication extends Model
                 'mtop_applications.updated_at as updated_at')
             ->orderBy('status', 'DESC')
             ->orderBy('mtop_applications.id', 'DESC')
-            ->get();
+            ->paginate(10);
+    }
+
+    public function fetchsSearchedData($from, $to, $barangay_id, $option, $value) {
+        return MtopApplication::leftJoin('taxpayer', 'taxpayer.id', 'mtop_applications.taxpayer_id')
+            ->leftJoin('barangay', 'barangay.id','mtop_applications.barangay_id')
+            ->leftJoin('tricycles', 'tricycles.id','mtop_applications.tricycle_id')
+            ->where(function($query) use ($barangay_id) {
+                if($barangay_id !== 'null') {
+                    $query->where('mtop_applications.barangay_id', $barangay_id);
+                }
+            })
+            ->where(function($query) use ($from, $to) {
+                if($from !== 'null' && $to !== 'null') {
+                    $query->whereBetween('transact_date', [$from, $to]);
+                }
+            })
+            ->where(function($query) use ($option, $value) {
+                if($option !== 'null' && $value !== 'null') {
+                    $query->where('mtop_applications.' . $option, 'LIKE', '%' . $value . '%');
+                }
+            })
+            ->select(
+                'mtop_applications.*',
+                'taxpayer.*',
+                'barangay.*' ,
+                'tricycles.*',
+                'mtop_applications.id as application_id',
+                'mtop_applications.created_at as created_at',
+                'mtop_applications.updated_at as updated_at')
+            ->orderBy('status', 'DESC')
+            ->orderBy('mtop_applications.id', 'DESC')
+            ->paginate(10);
     }
 
     public function fetchFilteredDataRenewal($from, $to, $barangay_id) {

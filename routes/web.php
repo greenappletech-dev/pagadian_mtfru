@@ -96,6 +96,7 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('mtop', [MtopApplicationController::class, 'index']);
         Route::get('mtop/getdata', [MtopApplicationController::class, 'getdata']);
         Route::get('mtop/getdata_filtered/{from}/{to}/{barangay_id}', [MtopApplicationController::class, 'getdata_filtered']);
+        Route::get('mtop/getdata_search/{from}/{to}/{barangay_id}/{option}/{value}', [MtopApplicationController::class, 'getdata_searched']);
         Route::get('mtop/pdf_application/{id}/{form_to_print}', [MtopApplicationController::class, 'pdfApplication']);
         Route::get('mtop_create', [MtopApplicationController::class, 'create']);
         Route::get('mtop_edit/{id}', [MtopApplicationController::class, 'edit']);

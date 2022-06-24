@@ -82,6 +82,35 @@
                 </div>
             </div>
 
+            <div class="row mt-2 mb-2">
+                <div class="col-6">
+                    <div class="input-group" style="width: 500px">
+                        <div class="input-group-prepend">
+                            <select name="" id="" class="form-control" v-model="searchOption">
+                                <option value="body_number">Body Number</option>
+                                <option value="mtfrb_case_no">MTFRB #</option>
+                                <option value="body_number">Body Number</option>
+                            </select>
+                        </div>
+                        <input type="text" class="form-control" v-model="searchValue">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" style="font-size: 13px" v-on:click="getDataSearched()">Search</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6 ">
+                    <div class="input-group d-flex align-items-center" style="width: 200px; float:right">
+                        <div class="input-group-prepend">
+                            <div class="mr-3">Page: {{ currentPage }} of {{ totalPageNumber }}</div>
+                        </div>
+                        <input type="text" class="form-control" v-model="pageNumber">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" style="font-size: 13px" v-on:click="getDataFiltered()">Go</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <!--   Table     -->
             <div class="main-content-table">
                 <div class="row">
@@ -243,7 +272,8 @@ export default {
                     action: 'Action',
                 },
                 sortable: ['mtfrb_case_no', 'body_number', 'transact_date'],
-                filterable: ['mtfrb_case_no', 'body_number', 'transact_date'],
+                // filterable: ['mtfrb_case_no', 'body_number', 'transact_date'],
+                filterable: false,
                 templates: {
                     hol_date: function(h, row) {
                         return row.hol_date !== null ? moment(row.hol_date).format('YYYY-MM-DD') : null;
@@ -295,6 +325,11 @@ export default {
             barangayCodeValue: '',
             statusValue: '',
             or_no: '',
+            totalPageNumber: '',
+            pageNumber: 1,
+            currentPage: 1,
+            searchValue: '',
+            searchOption: '',
 
             err_msg: '',
             err: false,
@@ -495,11 +530,16 @@ export default {
             this.tableData = [];
             let optional_route = this.barangayCodeValue === '' ? '/null' : '/'  + this.barangayCodeValue;
 
-            axios.get('mtop/getdata_filtered/' + this.fromDateValue + '/' + this.toDateValue + optional_route)
+            axios.get('mtop/getdata_filtered/' + this.fromDateValue + '/' + this.toDateValue + optional_route + '?page=' + this.pageNumber)
             .then(response => {
-                this.tableData = response.data.mtop_applications;
+                this.tableData = response.data.mtop_applications.data;
+                this.totalPageNumber = response.data.mtop_applications.last_page;
+
+                console.log(response.data.mtop_applications.last_page);
             })
             .finally(()=> this.loader = false);
+
+            this.currentPage = this.pageNumber;
         },
 
         destroyRecord(id) {
@@ -582,7 +622,24 @@ export default {
                 this.err_msg = error.response.data.err_msg;
             })
             .finally(()=> this.loader = false);
-        }
+        },
+
+        getDataSearched() {
+            this.loader = true;
+            this.tableData = [];
+            let optional_route = this.barangayCodeValue === '' ? '/null' : '/'  + this.barangayCodeValue;
+
+            axios.get('mtop/getdata_search/' + this.fromDateValue + '/' + this.toDateValue + optional_route + '/' + this.searchOption + '/' + this.searchValue + '?page=' + this.pageNumber)
+                .then(response => {
+                    this.tableData = response.data.mtop_applications.data;
+                    this.totalPageNumber = response.data.mtop_applications.last_page;
+
+                    console.log(response.data.mtop_applications.last_page);
+                })
+                .finally(()=> this.loader = false);
+
+            this.currentPage = this.pageNumber;
+        },
 
 
     },

@@ -64,6 +64,7 @@ class Driver extends Model
                 DB::raw("TO_CHAR(drivers.created_at, 'MM/DD/YYYY') AS date_added"))
             ->orderBy('tricycles.body_number')
             ->orderBy('drivers.created_at', 'DESC')
+//            ->take(3)
             ->get();
     }
 
