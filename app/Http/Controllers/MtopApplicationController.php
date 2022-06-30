@@ -191,14 +191,16 @@ class MtopApplicationController extends Controller
 
     public function validateData(Request $request) {
 
-        $isEdit = isset($request->id) ? ',' . $request->id : '';
 
-        $request->validate([
-            'mtfrb_case_no' => 'required|unique:mtop_applications,mtfrb_case_no' . $isEdit
-        ],[
-            'mtfrb_case_no.required' => 'MTFRB Case No. is required!',
-            'mtfrb_case_no.unique' => 'MTFRB Case no. Already Exists!',
-        ]);
+        /* get transaction type */
+
+        $currentTransactions =  MtopApplication::where('mtfrb_case_no', $request->mtfrb_case_no)->where('status','!=', 4)->get();
+
+        if($currentTransactions->count() !== 0)
+        {
+            return response()->json(['err_msg' => 'This MTFB Case Number has a pending transaction. Unable to Proceed with this transaction'], 400);
+        }
+
 
     }
 
@@ -278,7 +280,13 @@ class MtopApplicationController extends Controller
 
     public function store(StoreMTOPApplication $request) {
 
-        $this->validateData($request);
+        $validate = $this->validateData($request);
+
+
+        if(!empty($validate))
+        {
+            return $validate;
+        }
 
         $mtop_application = new MtopApplication();
         return $this->saveDBValues($mtop_application, $request, 'MTOP Application Created on this MTFRB # ' . $request->mtfrb_case_no);
