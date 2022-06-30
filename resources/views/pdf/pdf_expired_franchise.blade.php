@@ -146,7 +146,7 @@
                 <td style="text-align: left">{{ $data['body_number'] }}</td>
                 <td style="text-align: left">{{ $data['full_name'] }}</td>
                 <td style="text-align: left">{{ $data['address1'] }}</td>
-                <td style="text-align: left">{{ $data['tel_num'] }}</td>
+                <td style="text-align: left">{{ $data['mobile'] }}</td>
                 <td style="text-align: center">{{ $data['make_type'] }}</td>
                 <td style="text-align: center">{{ date('m/d/Y', strtotime($data['validity_date'])) }}</td>
                 <td style="text-align: center">{{ $data['status'] }}</td>

@@ -29,7 +29,7 @@ class ExpirationReportController extends Controller
                     'tricycles.plate_no',
                     'mtop_applications.validity_date',
                     'taxpayer.address1',
-                    'taxpayer.tel_num',
+                    'taxpayer.mobile',
                     'taxpayer.full_name'
                 )
                 ->join('mtop_applications', 'mtop_applications.id', 'tricycles.mtop_application_id')
@@ -59,7 +59,7 @@ class ExpirationReportController extends Controller
                     'tricycles.plate_no',
                     'mtop_applications.validity_date',
                     'taxpayer.address1',
-                    'taxpayer.tel_num',
+                    'taxpayer.mobile',
                     'taxpayer.full_name'
                 )
                 ->join('mtop_applications', 'mtop_applications.id', 'tricycles.mtop_application_id')
