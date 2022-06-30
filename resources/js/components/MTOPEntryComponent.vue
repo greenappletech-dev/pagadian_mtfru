@@ -95,7 +95,6 @@
                                 id="mrfrb_case_no"
                                 class="form-control"
                                 v-model="MTFRBCaseValue">
-
                             <label for="operator">Operator</label>
                             <div class="col-12 p-0">
 

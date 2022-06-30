@@ -27,7 +27,10 @@ class ExpirationReportController extends Controller
                     'tricycles.engine_motor_no',
                     'tricycles.chassis_no',
                     'tricycles.plate_no',
-                    'mtop_applications.validity_date'
+                    'mtop_applications.validity_date',
+                    'taxpayer.address1',
+                    'taxpayer.tel_num',
+                    'taxpayer.full_name'
                 )
                 ->join('mtop_applications', 'mtop_applications.id', 'tricycles.mtop_application_id')
                 ->join('taxpayer', 'taxpayer.id', 'tricycles.operator_id')
@@ -54,7 +57,10 @@ class ExpirationReportController extends Controller
                     'tricycles.engine_motor_no',
                     'tricycles.chassis_no',
                     'tricycles.plate_no',
-                    'mtop_applications.validity_date'
+                    'mtop_applications.validity_date',
+                    'taxpayer.address1',
+                    'taxpayer.tel_num',
+                    'taxpayer.full_name'
                 )
                 ->join('mtop_applications', 'mtop_applications.id', 'tricycles.mtop_application_id')
                 ->join('taxpayer', 'taxpayer.id', 'tricycles.operator_id')

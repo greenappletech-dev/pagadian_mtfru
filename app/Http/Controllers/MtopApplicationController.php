@@ -189,6 +189,19 @@ class MtopApplicationController extends Controller
         return $arr;
     }
 
+    public function validateData(Request $request) {
+
+        $isEdit = isset($request->id) ? ',' . $request->id : '';
+
+        $request->validate([
+            'mtfrb_case_no' => 'required|unique:mtop_applications,mtfrb_case_no' . $isEdit
+        ],[
+            'mtfrb_case_no.required' => 'MTFRB Case No. is required!',
+            'mtfrb_case_no.unique' => 'MTFRB Case no. Already Exists!',
+        ]);
+
+    }
+
 
     public function saveDBValues(MtopApplication $data, Request $request, $message) {
 
@@ -264,6 +277,9 @@ class MtopApplicationController extends Controller
     }
 
     public function store(StoreMTOPApplication $request) {
+
+        $this->validateData($request);
+
         $mtop_application = new MtopApplication();
         return $this->saveDBValues($mtop_application, $request, 'MTOP Application Created on this MTFRB # ' . $request->mtfrb_case_no);
     }
@@ -370,6 +386,9 @@ class MtopApplicationController extends Controller
     }
 
     public function update(StoreMTOPApplication $request) {
+
+        $this->validateData($request);
+
         $mtop_application = MtopApplication::where('id', $request->id)->first();
         return $this->updateDBValues($request,$mtop_application, 'Application Successfully Updated!');
     }
