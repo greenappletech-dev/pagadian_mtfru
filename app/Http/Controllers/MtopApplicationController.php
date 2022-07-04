@@ -194,11 +194,11 @@ class MtopApplicationController extends Controller
 
         /* get transaction type */
 
-        $currentTransactions =  MtopApplication::where('mtfrb_case_no', $request->mtfrb_case_no)->where('status','!=', 4)->get();
+        $currentTransactions =  MtopApplication::where('body_number', $request->body_number)->where('status','!=', 4)->get();
 
         if($currentTransactions->count() !== 0)
         {
-            return response()->json(['err_msg' => 'This MTFB Case Number has a pending transaction. Unable to Proceed with this transaction'], 400);
+            return response()->json(['err_msg' => 'This Body Number has a pending transaction. Unable to Proceed with this transaction'], 400);
         }
 
 
