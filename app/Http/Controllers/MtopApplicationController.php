@@ -10,6 +10,7 @@ use App\Models\MtopApplicationCharge;
 use App\Models\OperatorImage;
 use App\Models\Taxpayer;
 use App\Models\Tricycle;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -194,7 +195,10 @@ class MtopApplicationController extends Controller
 
         /* get transaction type */
 
-        $currentTransactions =  MtopApplication::where('body_number', $request->body_number)->where('status','!=', 4)->get();
+        $currentTransactions =  MtopApplication::where('body_number', $request->body_number)
+            ->where(\DB::raw('extract(year from transact_date)'), date('Y'))
+            ->where('status','!=', 4)
+            ->get();
 
         if($currentTransactions->count() !== 0)
         {
