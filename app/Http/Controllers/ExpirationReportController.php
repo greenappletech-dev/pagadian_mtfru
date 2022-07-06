@@ -22,6 +22,7 @@ class ExpirationReportController extends Controller
             $data = Tricycle::query()
                 ->select(
                     'mtop_applications.mtfrb_case_no',
+                    'mtop_applications.transact_date',
                     'tricycles.body_number',
                     'tricycles.make_type',
                     'tricycles.engine_motor_no',
@@ -32,8 +33,8 @@ class ExpirationReportController extends Controller
                     'taxpayer.mobile',
                     'taxpayer.full_name'
                 )
-                ->join('mtop_applications', 'mtop_applications.id', 'tricycles.mtop_application_id')
-                ->join('taxpayer', 'taxpayer.id', 'tricycles.operator_id')
+                ->leftJoin('mtop_applications', 'mtop_applications.id', 'tricycles.mtop_application_id')
+                ->leftJoin('taxpayer', 'taxpayer.id', 'tricycles.operator_id')
                 ->where('mtop_applications.validity_date', '<', date('Y-m-d'))
                 ->where('mtop_applications.mtfrb_case_no', '!=', '')
                 ->orderBy('validity_date')
@@ -43,6 +44,7 @@ class ExpirationReportController extends Controller
                     $item->status = 'EXPIRED';
                     return $item;
                 });
+
         }
         else
         {
@@ -52,6 +54,7 @@ class ExpirationReportController extends Controller
             $data = Tricycle::query()
                 ->select(
                     'mtop_applications.mtfrb_case_no',
+                    'mtop_applications.transact_date',
                     'tricycles.body_number',
                     'tricycles.make_type',
                     'tricycles.engine_motor_no',
@@ -62,8 +65,8 @@ class ExpirationReportController extends Controller
                     'taxpayer.mobile',
                     'taxpayer.full_name'
                 )
-                ->join('mtop_applications', 'mtop_applications.id', 'tricycles.mtop_application_id')
-                ->join('taxpayer', 'taxpayer.id', 'tricycles.operator_id')
+                ->leftJoin('mtop_applications', 'mtop_applications.id', 'tricycles.mtop_application_id')
+                ->leftJoin('taxpayer', 'taxpayer.id', 'tricycles.operator_id')
                 ->whereBetween('mtop_applications.validity_date', [$startDate, $endDate])
                 ->where('mtop_applications.mtfrb_case_no', '!=', '')
                 ->orderBy('validity_date')

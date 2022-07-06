@@ -128,6 +128,7 @@
             <th style="text-align: left">ADDRESS</th>
             <th style="text-align: left">CONTACT #</th>
             <th style="text-align: center">MAKE TYPE</th>
+            <th style="text-align: center">DATE OF APPLICATION</th>
             <th style="text-align: center">VALIDITY DATE</th>
             <th style="text-align: center">STATUS</th>
         </tr>
@@ -148,6 +149,7 @@
                 <td style="text-align: left">{{ $data['address1'] }}</td>
                 <td style="text-align: left">{{ $data['mobile'] }}</td>
                 <td style="text-align: center">{{ $data['make_type'] }}</td>
+                <td style="text-align: center">{{ date('m/d/Y', strtotime($data['transact_date'])) }}</td>
                 <td style="text-align: center">{{ date('m/d/Y', strtotime($data['validity_date'])) }}</td>
                 <td style="text-align: center">{{ $data['status'] }}</td>
             </tr>
