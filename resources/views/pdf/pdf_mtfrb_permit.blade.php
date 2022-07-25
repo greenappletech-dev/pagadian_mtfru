@@ -180,83 +180,93 @@
 </header>
 <body>
 
-@for($i = 1; $i <= 4; $i++)
-    <div class="page">
+{{--@for($i = 1; $i <= 4; $i++)--}}
+{{--   --}}
+{{--@endfor--}}
 
-        <img class="form" src="{{ asset('image/forms/MTOP_PERMIT.jpg') }}" alt="">
+<div class="page">
 
-        {{--    OPERATORS IMAGE    --}}
-        @if($data[2] !== null)
-            <img class="operator_img" src="{{ asset('image/operator_image/' . $data[2]['name']) }}" alt="">
-        @endif
+    <img class="form" src="{{ asset('image/forms/MTOP_PERMIT.jpg') }}" alt="">
+
+    {{--    OPERATORS IMAGE    --}}
+    @if($data[2] !== null)
+        <img class="operator_img" src="{{ asset('image/operator_image/' . $data[2]['name']) }}" alt="">
+    @endif
 
 
-        <div class="operator_name">{{ $data[0]['full_name'] }}</div>
-        <div class="mtfrb_case_no">{{ $data[0]['mtfrb_case_no'] }}</div>
-        <div class="address">{{ $data[0]['address'] . ' / ' . $data[0]['mobile']}}</div>
-        <div class="body_number">{{ $data[0]['body_number'] }}</div>
+    <div class="operator_name">{{ $data[0]['full_name'] }}</div>
+    <div class="mtfrb_case_no">{{ $data[0]['mtfrb_case_no'] }}</div>
+    <div class="address">{{ $data[0]['address'] . ' / ' . $data[0]['mobile']}}</div>
+    <div class="body_number">{{ $data[0]['body_number'] }}</div>
 
-        <div class="pertain_operator_name">{{$data[0]['full_name']}}</div>
-        <div class="pertain_address">{{ $data[0]['address']}}</div>
+    <div class="pertain_operator_name">{{$data[0]['full_name']}}</div>
+    <div class="pertain_address">{{ $data[0]['address']}}</div>
 
-        <div class="make_type">{{ $data[0]['make_type'] }}</div>
-        <div class="engine_motor_no">{{ $data[0]['engine_motor_no'] }}</div>
-        <div class="chassis_no">{{ $data[0]['chassis_no'] }}</div>
-        <div class="plate_no">{{ $data[0]['plate_no'] }}</div>
+    <div class="make_type">{{ $data[0]['make_type'] }}</div>
+    <div class="engine_motor_no">{{ $data[0]['engine_motor_no'] }}</div>
+    <div class="chassis_no">{{ $data[0]['chassis_no'] }}</div>
+    <div class="plate_no">{{ $data[0]['plate_no'] }}</div>
 
-        <div class="expiration_date">{{ date('F d, Y', strtotime($data[0]['validity_date'])) }}</div>
+    <div class="expiration_date">{{ date('F d, Y', strtotime($data[0]['validity_date'])) }}</div>
 
-        {{ $day = date('j', strtotime($data[0]['trnx_date'])) }}
-        {{ $last_digit = substr($day, -1) }}
+    {{ $day = date('j', strtotime($data[0]['trnx_date'])) }}
+    {{ $last_digit = substr($day, -1) }}
+    {{ $ordinal = 'th' }}
+
+    @if($day < 21 && $day > 4)
+        {{$ordinal = 'th'}}
+    @elseif(($last_digit % 100) === 3)
+        {{ $ordinal = 'rd' }}
+    @elseif(($last_digit % 100) === 2)
+        {{ $ordinal = 'nd' }}
+    @elseif(($last_digit % 100) === 1)
+        {{ $ordinal = 'st' }}
+    @elseif(($last_digit % 100) === 0)
         {{ $ordinal = 'th' }}
+    @endif
 
-        @if($day < 21 && $day > 4)
-            {{$ordinal = 'th'}}
-        @elseif(($last_digit % 100) === 3)
-            {{ $ordinal = 'rd' }}
-        @elseif(($last_digit % 100) === 2)
-            {{ $ordinal = 'nd' }}
-        @elseif(($last_digit % 100) === 1)
-            {{ $ordinal = 'st' }}
-        @elseif(($last_digit % 100) === 0)
-            {{ $ordinal = 'th' }}
-        @endif
+    <div class="issue_day">{{ $day.$ordinal }}</div>
+    <div class="issue_month">{{ date('F', strtotime($data[0]['trnx_date'])) . ', ' . date('Y', strtotime($data[0]['trnx_date'])) }}</div>
 
-        <div class="issue_day">{{ $day.$ordinal }}</div>
-        <div class="issue_month">{{ date('F', strtotime($data[0]['trnx_date'])) . ', ' . date('Y', strtotime($data[0]['trnx_date'])) }}</div>
 
-        @if($i == 1)
-            <table>
-                <tr>
-                    <th style="width: 50px">{{ $data[3] }}</th>
-                    <th style="width: 120px">OWNER'S COPY</th>
-                </tr>
-            </table>
-        @elseif($i == 2)
-            <table>
-                <tr>
-                    <th style="width: 50px">{{ $data[3] }}</th>
-                    <th style="width: 120px">MTFRU COPY</th>
-                </tr>
-            </table>
-        @elseif($i == 3)
-            <table>
-                <tr>
-                    <th style="width: 50px">{{ $data[3] }}</th>
-                    <th style="width: 120px">MTFRB COPY</th>
-                </tr>
-            </table>
-        @elseif($i == 4)
-            <table>
-                <tr>
-                    <th style="width: 50px">{{ $data[3] }}</th>
-                    <th style="width: 120px">LTO COPY</th>
-                </tr>
-            </table>
-        @endif
+    <table>
+        <tr>
+            <th style="width: 50px">{{ $data[3] }}</th>
+            {{--                <th style="width: 120px">OWNER'S COPY</th>--}}
+        </tr>
+    </table>
 
-    </div>
-@endfor
+    {{--        @if($i == 1)--}}
+    {{--            <table>--}}
+    {{--                <tr>--}}
+    {{--                    <th style="width: 50px">{{ $data[3] }}</th>--}}
+    {{--                    <th style="width: 120px">OWNER'S COPY</th>--}}
+    {{--                </tr>--}}
+    {{--            </table>--}}
+    {{--        @elseif($i == 2)--}}
+    {{--            <table>--}}
+    {{--                <tr>--}}
+    {{--                    <th style="width: 50px">{{ $data[3] }}</th>--}}
+    {{--                    <th style="width: 120px">MTFRU COPY</th>--}}
+    {{--                </tr>--}}
+    {{--            </table>--}}
+    {{--        @elseif($i == 3)--}}
+    {{--            <table>--}}
+    {{--                <tr>--}}
+    {{--                    <th style="width: 50px">{{ $data[3] }}</th>--}}
+    {{--                    <th style="width: 120px">MTFRB COPY</th>--}}
+    {{--                </tr>--}}
+    {{--            </table>--}}
+    {{--        @elseif($i == 4)--}}
+    {{--            <table>--}}
+    {{--                <tr>--}}
+    {{--                    <th style="width: 50px">{{ $data[3] }}</th>--}}
+    {{--                    <th style="width: 120px">LTO COPY</th>--}}
+    {{--                </tr>--}}
+    {{--            </table>--}}
+    {{--        @endif--}}
+
+</div>
 
 
 </body>
