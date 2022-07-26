@@ -518,7 +518,7 @@ class MtopApplicationController extends Controller
 
         $checkOR = DB::table('colhdr')
             ->where('mtop_application_id', $data['application_id'])
-            ->orderBy('cancel', 'desc')
+            ->orderBy('or_number', 'desc')
             ->first();
 
         /* OR IS CANCELLED */
