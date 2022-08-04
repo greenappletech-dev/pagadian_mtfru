@@ -61,6 +61,7 @@
                             :options="options">
                             <span slot="actions" slot-scope="{row}">
                                 <button v-on:click="printStab(row.id)" class="btn btn-primary d-inline-block mb-2"><i class="fas fa-print mr-2"></i>Print Stab</button>
+                                <button v-on:click="printTaripa(row.id)" class="btn btn-primary d-inline-block mb-2"><i class="fas fa-print mr-2"></i>Print Taripa</button>
                                 <button v-on:click="openModalToEdit(row.id)" class="btn btn-success mb-2"><i class="fas fa-edit mr-1"></i>Edit</button>
                                 <button v-on:click="destroyRecord(row.id)" class="btn btn-danger mb-2"><i class="fas fa-trash mr-1"></i>Delete</button>
                             </span>
@@ -388,6 +389,12 @@ export default {
 
         exportExcel(){
             window.open('tricycle/export');
+        },
+
+        printTaripa(id) {
+
+            window.open('tricycle/taripa/' + id);
+
         },
     },
 

@@ -80,6 +80,10 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('tricycle/pdf/{size}/{orientation}', [TricycleController::class, 'pdf']);
         Route::post('tricycle/store',[TricycleController::class, 'store']);
         Route::patch('tricycle/update/{id}',[TricycleController::class, 'update']);
+        Route::get('tricycle/taripa/{id}',[TricycleController::class, 'taripa']);
+
+
+
 
         /* Operator */
         Route::get('operator', [OperatorController::class, 'index']);

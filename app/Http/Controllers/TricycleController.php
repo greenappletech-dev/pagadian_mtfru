@@ -139,4 +139,21 @@ class TricycleController extends Controller
     public function export() {
         return Excel::download(new TricycleExport(), 'tricycle_' . date('mdy') . '.xlsx');
     }
+
+    public function taripa($id) {
+
+        $data = Tricycle::query()
+            ->leftJoin('taxpayer', 'taxpayer.id', 'tricycles.operator_id')
+            ->leftJoin('operator_images', 'operator_images.taxpayer_id', 'taxpayer.id')
+            ->select('taxpayer.id', 'taxpayer.full_name', 'taxpayer.address1', 'tricycles.body_number', 'operator_images.name as image')
+            ->where('tricycles.id', $id)
+            ->first();
+
+
+        $pdf = \App::make('dompdf.wrapper');
+        $pdf->getDomPDF()->set_option("enable_php", true);
+        $pdf->loadView('pdf.taripa', compact('data'))->setPaper('a4', 'landscape');
+        return $pdf->stream();
+
+    }
 }
