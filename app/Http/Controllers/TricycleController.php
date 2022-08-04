@@ -152,7 +152,7 @@ class TricycleController extends Controller
 
         $pdf = \App::make('dompdf.wrapper');
         $pdf->getDomPDF()->set_option("enable_php", true);
-        $pdf->loadView('pdf.taripa', compact('data'))->setPaper('a4', 'landscape');
+        $pdf->loadView('pdf.taripa', compact('data'))->setPaper('legal', 'landscape');
         return $pdf->stream();
 
     }
