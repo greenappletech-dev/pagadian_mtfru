@@ -25,13 +25,13 @@
         position: absolute;
         top: 0;
         width: 100%;
-        height: 795px;
+        height: 820px;
     }
 
     .operator_id {
         position: absolute;
         top: 145px;
-        left: 310px;
+        left: 380px;
         font-size: 20px;
         font-weight: bold;
         width: 470px;
@@ -41,8 +41,8 @@
     .address {
 
         position: absolute;
-        top: 145px;
-        right: 29px;
+        top: 150px;
+        right: 50px;
         width: 300px;
         text-align: center;
         font-weight: bold;
@@ -53,9 +53,9 @@
 
         position: absolute;
         top: 25px;
-        right: 150px;
+        right: 170px;
         color: white;
-        font-size: 80px;
+        font-size: 85px;
         font-weight: bold;
 
     }
@@ -65,8 +65,8 @@
         position: absolute;
         top: 25px;
         right: 33px;
-        width: 102px;
-        height: 98px;
+        width: 120px;
+        height: 103px;
 
     }
 
