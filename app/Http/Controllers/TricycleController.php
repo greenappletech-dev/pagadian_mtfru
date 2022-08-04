@@ -145,7 +145,7 @@ class TricycleController extends Controller
         $data = Tricycle::query()
             ->leftJoin('taxpayer', 'taxpayer.id', 'tricycles.operator_id')
             ->leftJoin('operator_images', 'operator_images.taxpayer_id', 'taxpayer.id')
-            ->select('taxpayer.id', 'taxpayer.full_name', 'taxpayer.address1', 'tricycles.body_number', 'operator_images.name as image')
+            ->select('taxpayer.id', 'taxpayer.full_name', 'taxpayer.address1', 'tricycles.body_number', 'operator_images.name as image', 'taxpayer.mobile')
             ->where('tricycles.id', $id)
             ->first();
 

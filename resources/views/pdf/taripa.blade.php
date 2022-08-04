@@ -52,10 +52,10 @@
     .body_number {
 
         position: absolute;
-        top: 45px;
-        right: 180px;
+        top: 25px;
+        right: 150px;
         color: white;
-        font-size: 50px;
+        font-size: 80px;
         font-weight: bold;
 
     }
@@ -89,7 +89,7 @@
         <div class="operator_id">{{ $data['full_name'] }}</div>
 
 
-        <div class="address">{{ $data['address1'] }}</div>
+        <div class="address">{{ $data['address1'] . ' / ' . $data['mobile'] }}</div>
 
 
         <img class="operator_image" src="{{ asset('image/operator_image/' . $data['image']) }}" alt="">
