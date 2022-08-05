@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exports\TricycleExport;
 use App\Http\Requests\StoreTricycle;
+use App\Models\OperatorImage;
 use App\Models\Taxpayer;
 use App\Models\Tricycle;
 use Illuminate\Http\Request;
@@ -144,10 +145,16 @@ class TricycleController extends Controller
 
         $data = Tricycle::query()
             ->leftJoin('taxpayer', 'taxpayer.id', 'tricycles.operator_id')
-            ->leftJoin('operator_images', 'operator_images.taxpayer_id', 'taxpayer.id')
-            ->select('taxpayer.id', 'taxpayer.full_name', 'taxpayer.address1', 'tricycles.body_number', 'operator_images.name as image', 'taxpayer.mobile')
+            ->select('taxpayer.id', 'taxpayer.full_name', 'taxpayer.address1', 'tricycles.body_number', 'taxpayer.mobile')
             ->where('tricycles.id', $id)
-            ->first();
+            ->first()
+            ->toArray();
+
+        $image = OperatorImage::where('taxpayer_id', $data['id'])->orderBy('id','desc')->first();
+
+        $data['image'] = $image->name;
+
+        $data = collect($data);
 
 
         $pdf = \App::make('dompdf.wrapper');
