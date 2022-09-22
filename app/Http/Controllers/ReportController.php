@@ -43,6 +43,10 @@ class ReportController extends Controller
             $transact_type = $this->mtop_applications->getApplicationType(explode(',', $data->transact_type));
             $driver_details = Driver::where('tricycle_id', $data->id)->select('full_name as driver', 'driver_license_no')->orderBy('created_at', 'DESC')->first();
 
+
+
+
+
             array_push($arr,
             [
                 'mtfrb_case_no' => $data->mtfrb_case_no,
@@ -64,6 +68,7 @@ class ReportController extends Controller
                 'transact_type' => !empty($data->transact_type) ? $transact_type : '',
                 'driver' => $driver_details['driver'] ?? '',
                 'driver_license_no' => $driver_details['driver_license_no'] ?? '',
+                'barangay' => $data->barangay,
             ]);
 
         }

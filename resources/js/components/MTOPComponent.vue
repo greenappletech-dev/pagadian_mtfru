@@ -534,8 +534,6 @@ export default {
             .then(response => {
                 this.tableData = response.data.mtop_applications.data;
                 this.totalPageNumber = response.data.mtop_applications.last_page;
-
-                console.log(response.data.mtop_applications.last_page);
             })
             .finally(()=> this.loader = false);
 

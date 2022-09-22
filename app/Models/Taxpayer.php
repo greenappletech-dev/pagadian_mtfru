@@ -15,7 +15,8 @@ class Taxpayer extends Model
     public function fetchDataPaginated() {
         return Taxpayer::leftJoin('barangay', 'barangay.brgy_code' , 'taxpayer.brgy_code')
             ->select('taxpayer.*', 'barangay.brgy_desc as brgy_desc')
-            ->orderBy('id', 'DESC')->paginate(10);
+            ->orderBy('id', 'DESC')
+            ->paginate(10);
     }
 
     public function fetchSearchedData($string) {

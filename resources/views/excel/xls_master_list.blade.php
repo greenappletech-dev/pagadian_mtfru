@@ -23,6 +23,7 @@
             <tr>
                 <th rowspan="2">SIDECAR NUMBER</th>
                 <th rowspan="2">OPERATOR</th>
+                <th rowspan="2">BARANGAY</th>
                 <th rowspan="2">DRIVER</th>
                 <th rowspan="2">DRIVER'S LICENSE NO</th>
                 <th rowspan="2">MTFRB CASE NO.</th>
@@ -54,6 +55,7 @@
                 <tr>
                     <td>{{ $application['body_number'] }}</td>
                     <td>{{ $application['full_name'] }}</td>
+                    <td>{{ $application['barangay'] }}</td>
                     <td>{{ $application['driver'] }}</td>
                     <td>{{ $application['driver_license_no'] }}</td>
                     <td>{{ $application['mtfrb_case_no'] }}</td>

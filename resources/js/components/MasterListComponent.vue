@@ -71,7 +71,7 @@
                     </div>
                 </div>
                 <div class="col-12 d-flex justify-content-end">
-                    <a class="p-2 pl-4 pr-4 rounded" style="background: #1abc9c; font-size: 14px; box-shadow: 2px 2px 2px rgba(165, 165, 165, 1); color: #fff; text-decoration: none;" v-on:click="exportExcel">Export to Excel</a>
+                    <a class="p-2 pl-4 pr-4 rounded" style="pointer: cursor; background: #1abc9c; font-size: 14px; box-shadow: 2px 2px 2px rgba(165, 165, 165, 1); color: #fff; text-decoration: none;" v-on:click="exportExcel">Export to Excel</a>
                 </div>
             </div>
 
@@ -140,13 +140,14 @@ export default {
 
     data() {
         return {
-            columns: ['body_number', 'mtfrb_case_no', 'full_name', 'driver', 'driver_license_no', 'date_registered','transact_date','validity_date', 'transact_type', 'make_type', 'engine_motor_no', 'chassis_no', 'plate_no', 'approve_date', 'payment_date', 'or_no', 'amount'],
+            columns: ['body_number', 'mtfrb_case_no', 'full_name', 'barangay', 'driver', 'driver_license_no', 'date_registered','transact_date','validity_date', 'transact_type', 'make_type', 'engine_motor_no', 'chassis_no', 'plate_no', 'approve_date', 'payment_date', 'or_no', 'amount'],
             tableData: [],
             options: {
                 headings: {
                     body_number         :       'Body Number',
                     mtfrb_case_no       :       'MFTRB Case Number',
                     full_name           :       'Operator',
+                    barangay            :       'Barangay',
                     driver              :       'Driver',
                     driver_license_no   :       'License No',
                     date_registered     :       'Date Registered',

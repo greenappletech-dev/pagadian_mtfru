@@ -44,6 +44,7 @@ class Tricycle extends Model
 
     public function masterList() {
         return Tricycle::leftJoin('taxpayer','taxpayer.id', 'tricycles.operator_id')
+        ->leftJoin('barangay', 'barangay.brgy_code', 'taxpayer.brgy_code')
         ->leftJoin('mtop_applications', 'mtop_applications.id', 'tricycles.mtop_application_id')
         ->leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
         ->leftJoin('collne2', 'collne2.or_code', 'colhdr.or_code')
@@ -65,6 +66,7 @@ class Tricycle extends Model
             'taxpayer.full_name',
             'taxpayer.address1',
             'taxpayer.mobile',
+            'barangay.brgy_desc as barangay',
             'mtop_applications.approve_date',
             'colhdr.or_number as or_no',
             'colhdr.or_code',
@@ -91,6 +93,7 @@ class Tricycle extends Model
             'mtop_applications.approve_date',
             'colhdr.or_number',
             'colhdr.or_code',
+            'barangay.brgy_desc'
         )
         ->whereNull('colhdr.canc_date')
         ->get();
