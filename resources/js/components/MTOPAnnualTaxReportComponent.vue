@@ -42,7 +42,7 @@
             <div class="col-6 p-0">
                 <div class="card">
                     <div class="card-body">
-                        <label for="">Search Operator/Tricycle</label>
+                        <label>Search Operator/Tricycle</label>
                         <div class="input-group">
                             <select class="form-control" v-on:change="onChangeSearchOption" v-model="filter_value">
                                 <option value="operator">Operator</option>

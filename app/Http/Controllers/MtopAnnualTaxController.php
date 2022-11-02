@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\MtopAnnualTax;
+use App\Models\MtopAnnualTaxCharge;
 use App\Models\MtopAnnualTaxItem;
 use App\Models\MtopApplication;
 use App\Models\Taxpayer;
@@ -152,11 +153,11 @@ class MtopAnnualTaxController extends Controller
 
 
     public function index() {
-        $annualtax = MtopAnnualTax::leftJoin('otherinc', 'otherinc.id', 'mtop_annual_taxes.otherinc_id')
-            ->select('mtop_annual_taxes.id','transaction_date', 'name', 'inc_desc', 'status')
-            ->orderBy('mtop_annual_taxes.id')
+        $annualtax = MtopAnnualTax::select('mtop_annual_taxes.id','transaction_date', 'name', 'status')
+            ->orderBy('mtop_annual_taxes.created_at')
             ->get();
-        $otherinc = \DB::table('otherinc')->where('annual_tax', 'Y')->get();
+
+        $otherinc = \DB::table('otherinc')->where('tricycle', 'Y')->get();
 
         return view('mtfru.mtop_annual_tax', compact('annualtax', 'otherinc'));
     }
@@ -236,10 +237,8 @@ class MtopAnnualTaxController extends Controller
     {
         $request->validate([
             'operator_id' => 'required',
-            'otherinc_id' => 'required',
         ],[
             'operator_id.required' => 'You must Select Operator First',
-            'otherinc_id.required' => 'Please Select Annual Tax Year',
         ]);
     }
 
@@ -247,10 +246,10 @@ class MtopAnnualTaxController extends Controller
 
         $this->validateData($request);
 
-        if($this->checkIfTheTricycleNoRepeated($request))
-        {
-            return response()->json(['invalid_msg' => 'invalid'], 400);
-        }
+//        if($this->checkIfTheTricycleNoRepeated($request))
+//        {
+//            return response()->json(['invalid_msg' => 'invalid'], 400);
+//        }
 
         \DB::beginTransaction();
 
@@ -259,7 +258,7 @@ class MtopAnnualTaxController extends Controller
             $query = new MtopAnnualTax();
             $this->storeParentData($request, $query);
             $this->storeChildData($request->tricycle_details, $query->id);
-
+            $this->storeChargesData($request->charges, $query->id);
         }
         catch(QueryException $ex)
         {
@@ -277,7 +276,6 @@ class MtopAnnualTaxController extends Controller
 
         $operator_info = Taxpayer::where('id', $request->operator_id)->first();
         $query->operator_id = $request->operator_id;
-        $query->otherinc_id = $request->otherinc_id;
         $query->name = $operator_info->full_name;
         $query->address = $operator_info->address1;
         $query->mobile_number = $operator_info->mobile_number;
@@ -329,6 +327,36 @@ class MtopAnnualTaxController extends Controller
         }
     }
 
+    public function storeChargesData($charges, $id)
+    {
+
+        $idArr = [];
+
+        foreach($charges as $charge)
+        {
+            if(isset($charge['id']))
+            {
+                $data = MtopAnnualTaxCharge::where('id', $charge['id'])->first();
+            }
+            else
+            {
+                $data = new MtopAnnualTaxCharge();
+            }
+
+            $data->mtop_annual_tax_id = $id;
+            $data->otherinc_id = $charge['inc_id'];
+            $data->amount =  $charge['amount'];
+            $data->qty =  $charge['qty'];
+            $data->total =  $charge['total'];
+            $data->save();
+
+            $idArr[] = $data->id;
+
+        }
+
+        MtopAnnualTaxCharge::whereNotIn('id', $idArr)->where('mtop_annual_tax_id', $id)->delete();
+    }
+
 
     public function edit($id)
     {
@@ -340,6 +368,11 @@ class MtopAnnualTaxController extends Controller
             ->first();
 
         $tricycles = Tricycle::where('operator_id', $mtop_tax->operator_id)->get();
+
+        $charges = MtopAnnualTaxCharge::leftJoin('otherinc', 'otherinc.id', 'mtop_annual_tax_charges.otherinc_id')
+            ->select('mtop_annual_tax_charges.*', 'otherinc.inc_code', 'otherinc.inc_desc', 'otherinc.id as inc_id')
+            ->where('mtop_annual_tax_id', $mtop_tax->id)->get();
+
         $dataArr = array();
 
         foreach($tricycles as $tricycle)
@@ -383,7 +416,7 @@ class MtopAnnualTaxController extends Controller
         }
 
 
-        return response()->json(['data' => $mtop_tax, 'annual_details' => $dataArr ,'operator_data' => $operator_data], 200);
+        return response()->json(['data' => $mtop_tax, 'annual_details' => $dataArr ,'operator_data' => $operator_data, 'charges' => $charges], 200);
 
     }
 
@@ -391,11 +424,11 @@ class MtopAnnualTaxController extends Controller
     {
 
         $this->validateData($request);
-
-        if($this->checkIfTheTricycleNoRepeated($request))
-        {
-            return response()->json(['invalid_msg' => 'invalid'], 400);
-        }
+//
+//        if($this->checkIfTheTricycleNoRepeated($request))
+//        {
+//            return response()->json(['invalid_msg' => 'invalid'], 400);
+//        }
 
         \DB::beginTransaction();
 
@@ -404,7 +437,7 @@ class MtopAnnualTaxController extends Controller
             $query = MtopAnnualTax::where('id', $request->id)->first();
             $this->storeParentData($request, $query);
             $this->storeChildData($request->tricycle_details, $query->id);
-
+            $this->storeChargesData($request->charges, $query->id);
         }
         catch(QueryException $ex)
         {

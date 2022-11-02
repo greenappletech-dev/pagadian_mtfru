@@ -82,7 +82,7 @@
 
 
 
-            <div class="modal" id="create_modal" name="modal_create">
+            <div class="modal" id="create_modal" name="modal_create" style="max-height: 1000px; overflow-y: auto">
                 <div class="modal-dialog modal-xl">
                     <div class="modal-content">
                         <div class="modal-header d-flex align-items-center">
@@ -101,7 +101,7 @@
 
                                         <div class="input-group">
                                             <div class="input-group-prepend">
-                                                <span class="input-group-text">Search By</span>
+                                                <span class="input-group-text" style="font-size: 13px;">Search By</span>
                                             </div>
                                             <select class="form-control" v-model="filter_value" v-on:change="filterOnChange($event)">
                                                 <option value="body_number">Body Number</option>
@@ -112,7 +112,7 @@
                                         <div class="input-group mt-2 mb-2">
                                             <input type="text" class="form-control" id="search" v-model="search_value">
                                             <div class="input-group-append">
-                                                <button class="btn btn-secondary" v-on:click="resultOperator"><i class="fa fa-search mr-2"></i>View Results</button>
+                                                <button class="btn btn-secondary" v-on:click="resultOperator" style="font-size: 13px;"><i class="fa fa-search mr-2"></i>View Results</button>
                                             </div>
                                         </div>
                                     </div>
@@ -121,35 +121,70 @@
 
                             <div class="col-12">
                                 <div class="card">
+                                    <div class="card-header">
+                                        <h4 style="font-size: 15px; margin: 0">Operator Information</h4>
+                                    </div>
                                     <div class="card-body">
                                         <table class="mb-3">
                                             <tr>
-                                                <th style="width: 80px">Name</th>
-                                                <th style="width: 80px">:</th>
+                                                <td style="width: 80px">Name</td>
+                                                <td style="width: 80px">:</td>
                                                 <td>{{ this.operator_data.operator }}</td>
                                             </tr>
                                             <tr>
-                                                <th style="width: 80px">Contact #</th>
-                                                <th style="width: 80px">:</th>
+                                                <td style="width: 80px">Contact #</td>
+                                                <td style="width: 80px">:</td>
                                                 <td>{{ this.operator_data.tel_num }}</td>
                                             </tr>
                                         </table>
+                                    </div>
+                                </div>
+                            </div>
 
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h4 style="font-size: 15px; margin: 0">Tricycle List for Payment</h4>
+                                    </div>
+                                    <div class="card-body">
+                                        <v-client-table
+                                            :data="tricycle_tableData"
+                                            :columns="tricycle_columns"
+                                            :options="tricycle_options">
+                                            <span slot="action" slot-scope="row">
+                                                <input type="checkbox" v-on:change="onTricyclesCheck(row, $event)" :checked="row.row.checked">
+                                            </span>
+                                        </v-client-table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <h4 style="font-size: 15px; margin: 0">Charges</h4>
+                                            <button class="btn btn-primary" style="font-size: 13px;" v-on:click="addCharges"><i class="fa fa-plus mr-2" aria-hidden="true"></i> Add Charges</button>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
                                         <div class="row">
-                                            <div class="col-6 mb-2">
-                                                <label>Annual Tax Year</label>
-                                                <select class="form-control" v-model="other_inc_value">
-                                                    <option v-for="data in otherinc" v-bind:value="data.id">{{ data.inc_desc }}</option>
-                                                </select>
-                                            </div>
-
                                             <div class="col-md-12">
                                                 <v-client-table
-                                                    :data="tricycle_tableData"
-                                                    :columns="tricycle_columns"
-                                                    :options="tricycle_options">
+                                                    :data="charges_tableData"
+                                                    :columns="charges_columns"
+                                                    :options="charges_options">
+
+                                                    <span slot="afterTable">
+                                                         <div class="d-flex justify-content-between align-items-center p-1">
+                                                             <h4 style="font-size: 15px; font-weight: bold">TOTALS:</h4>
+                                                             <h4 style="font-size: 15px; font-weight: bold">{{ totals }}</h4>
+                                                         </div>
+                                                    </span>
+
+
                                                     <span slot="action" slot-scope="row">
-                                                        <input type="checkbox" v-on:change="onTricyclesCheck(row, $event)" :checked="row.row.checked">
+                                                        <button type="button" v-on:click="removeCharges(row)" class="btn btn-danger" style="font-size: 13px"><i class="fa fa-trash mr-2" aria-hidden="true"></i>Remove</button>
                                                     </span>
                                                 </v-client-table>
                                             </div>
@@ -183,8 +218,8 @@
                                         :data="operator_tableData"
                                         :columns="operator_columns"
                                         :options="operator_options">
-                                        <template slot="action" slot-scope="data">
-                                            <button class="btn btn-secondary" v-on:click="selectOperator(data.index - 1)"><i class="fa fa-check mr-2"></i>Select Operator</button>
+                                        <template slot="action" slot-scope="row">
+                                            <button class="btn btn-primary" v-on:click="selectOperator(row.index - 1)" style="font-size: 13px"><i class="fa fa-check mr-2"></i>Select Operator</button>
                                         </template>
                                     </v-client-table>
                                 </div>
@@ -197,41 +232,35 @@
                 </div>
             </div>
 
-<!--            <div class="modal" name="modal_result" id="tricycle_result">-->
-<!--                <div class="modal-dialog modal-xl">-->
-<!--                    <div class="modal-content">-->
-<!--                        <div class="modal-header d-flex align-items-center">-->
-<!--                            <h4 style="font-size: 15px; margin: 0">Tricycles</h4>-->
-<!--                            <button style="border: none; background: none" data-dismiss="modal">-->
-<!--                                &times;-->
-<!--                            </button>-->
-<!--                        </div>-->
-<!--                        <div class="modal-body">-->
-<!--                            <div class="row">-->
-<!--                                <div class="col-md-12">-->
-<!--                                    <v-client-table-->
-<!--                                        :data="result_tricycle_tableData"-->
-<!--                                        :columns="result_tricycle_columns"-->
-<!--                                        :options="result_tricycle_options">-->
-
-<!--                                        <span slot="action" slot-scope="data">-->
-<!--                                            <input type="checkbox" v-on:change="onTricyclesCheck(data.index,data.row, $event)">-->
-<!--                                        </span>-->
-
-<!--                                    </v-client-table>-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
-<!--                        <div class="modal-footer d-flex justify-content-end">-->
-<!--                            <button class="btn btn-secondary" v-on:click="selectTricycle" style="font-size: 12px"><i class="fa fa-check mr-3"></i>Add Tricycle</button>-->
-<!--                            <button class="btn btn-light" data-dismiss="modal" style="font-size: 12px">Dismiss</button>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-
-
-
+            <div class="modal" name="other_inc_modal" id="other_inc_modal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header d-flex align-items-center">
+                            <h4 style="font-size: 15px; margin: 0">Charges</h4>
+                            <button style="border: none; background: none" data-dismiss="modal">
+                                &times;
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <v-client-table
+                                        :data="otherinc_tableData"
+                                        :columns="otherinc_columns"
+                                        :options="otherinc_options">
+                                        <span slot="action" slot-scope="row">
+                                            <button class="btn btn-success" style="font-size: 13px" v-on:click="selectCharges(row)">Add</button>
+                                        </span>
+                                    </v-client-table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer d-flex justify-content-end">
+                            <button class="btn btn-light" data-dismiss="modal" style="font-size: 12px">Dismiss</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         </div>
     </div>
@@ -245,13 +274,12 @@ export default {
 
     data() {
         return {
-            columns: [ 'transaction_date', 'name', 'inc_desc', 'status', 'created_at', 'updated_at','action'],
+            columns: [ 'transaction_date', 'name', 'status', 'created_at', 'updated_at','action'],
             tableData: this.annualtax,
             options: {
                 headings: {
                     transaction_date: 'Transaction Date',
                     name: 'Operator',
-                    inc_desc: 'Tax year',
                     status: 'Status',
                     created_at: 'Created At',
                     updated_at: 'Updated At',
@@ -307,36 +335,6 @@ export default {
                 },
             },
 
-
-            // Select Tricycles
-
-            // result_tricycle_columns: ['trnx_date', 'body_number',  'inc_desc','action'],
-            // result_tricycle_tableData: [],
-            // result_tricycle_options: {
-            //     headings: {
-            //         trnx_date: 'Payment Date',
-            //         body_number: 'Body Number',
-            //         inc_desc: 'Last Tax Year Paid',
-            //         action: 'Action',
-            //     },
-            //     sortable: [],
-            //     filterable: false,
-            //     templates: {
-            //         hol_date: function(h, row) {
-            //             return row.hol_date !== null ? moment(row.hol_date).format('YYYY-MM-DD') : null;
-            //         },
-            //         transact_date: function(h, row) {
-            //             return row.trnx_date !== null ? moment(row.trnx_date).format('MM/DD/YYYY') : null;
-            //         },
-            //         created_at: function(h, row) {
-            //             return row.created_at !== null ? moment(row.created_at).format('YYYY-MM-DD hh:mm:ss') : null;
-            //         },
-            //         updated_at: function(h, row) {
-            //             return row.updated_at !== null ? moment(row.updated_at).format('YYYY-MM-DD hh:mm:ss') : null;
-            //         }
-            //     },
-            // },
-
             tricycle_columns: ['tricycle_id', 'body_number', 'make_type', 'engine_motor_no', 'chassis_no', 'plate_no', 'trnx_date', 'inc_desc', 'action'],
             tricycle_tableData: [],
             tricycle_options: {
@@ -350,6 +348,7 @@ export default {
                     inc_desc: 'Last Annual Tax Paid',
                     action: 'Select',
                 },
+                perPage: 5,
                 sortable: [],
                 filterable: false,
                 templates: {
@@ -371,6 +370,48 @@ export default {
                 }
             },
 
+
+
+
+
+            charges_columns: ['inc_code', 'inc_desc', 'qty', 'amount', 'total', 'action'],
+            charges_tableData: [],
+            charges_options: {
+                headings: {
+                    inc_desc: 'Charge',
+                    qty: 'Qty',
+                    amount: 'Amount',
+                    total: 'Total',
+                    action: 'Select',
+                },
+                sortable: [],
+                filterable: false,
+                texts: {
+                    count: ''
+                }
+            },
+
+
+
+            otherinc_columns: ['inc_code', 'inc_desc', 'price', 'action'],
+            otherinc_tableData: this.otherinc,
+            otherinc_options: {
+                headings: {
+                    inc_code: 'Code',
+                    inc_desc: 'Description',
+                    price: 'Price',
+                    action: 'Select',
+                },
+                sortable: [],
+                filterable: false,
+                texts: {
+                    count: ''
+                }
+            },
+
+
+
+            totals: 0,
             errors: [],
 
             err_msg: '',
@@ -392,6 +433,7 @@ export default {
 
         }
     },
+
     methods: {
 
         displayStatus(status) {
@@ -509,121 +551,46 @@ export default {
             $('#operator_result').modal('hide');
         },
 
-        // searchTricycle() {
-        //
-        //     if(this.filter_value.length === 0)
-        //     {
-        //         alert('Search By is Required');
-        //         return;
-        //     }
-        //
-        //     if(this.search_value.length === 0)
-        //     {
-        //         alert('Search Value is Required');
-        //         return;
-        //     }
-        //
-        //
-        //     if(this.operator_data.length === 0)
-        //     {
-        //         alert('Must select Operator');
-        //         return;
-        //     }
-        //
-        //
-        //     axios.get('annual_tax/get_tricycles/' + this.operator_data.id)
-        //     .then(response => {
-        //         this.result_tricycle_tableData = response.data.data;
-        //     })
-        //
-        //     $('#tricycle_result').modal('show');
-        //
-        // },
-
         onTricyclesCheck(row, e) {
             this.tricycle_tableData[row.index - 1]['checked'] = e.target.checked;
+
+
+            if(this.charges_tableData.length > 0)
+            {
+                /* recompute all the charges */
+
+                Object.keys(this.charges_tableData).forEach(key => {
+
+                   let amount = this.charges_tableData[key].amount;
+                   let qty = this.numberOfTricycles();
+                   let totals = amount * qty;
+
+                    this.charges_tableData[key].qty = qty;
+                    this.charges_tableData[key].total = totals
+                    this.totals += totals;
+                });
+            }
         },
-
-        // arraySearch(arr, val) {
-        //     for(let i = 0; i < arr.length; i++)
-        //     {
-        //         if(arr[i].id === val)
-        //         {
-        //             return i;
-        //         }
-        //     }
-        // },
-
-        // selectTricycle() {
-        //
-        //     this.tricycle_tableData = [];
-        //
-        //     const dataArr = [];
-        //
-        //     for(let i = 0; i < this.tricycle_selected.length; i++)
-        //     {
-        //         dataArr[i] = {
-        //             id : this.tricycle_selected[i].id,
-        //             body_number : this.tricycle_selected[i].body_number,
-        //             make_type : this.tricycle_selected[i].make_type,
-        //             engine_motor_no : this.tricycle_selected[i].engine_motor_no,
-        //             chassis_no : this.tricycle_selected[i].chassis_no,
-        //             plate_no : this.tricycle_selected[i].plate_no,
-        //             trnx_date : this.tricycle_selected[i].trnx_date,
-        //             inc_desc : this.tricycle_selected[i].inc_desc
-        //         };
-        //     }
-        //
-        //     this.tricycle_tableData = dataArr;
-        //     $('#tricycle_result').modal('hide');
-        // },
 
         createRecord() {
 
-            if(this.tricycle_tableData.length === 0)
+            if(this.numberOfTricycles() === 0)
             {
                 alert('Must add Tricycle');
                 return false;
             }
 
-            let other_inc_id = this.other_inc_value;
-            let checkCount = 0;
-            let exitBool = false;
-            let message = '';
-
-            this.tricycle_tableData.map(function(item, key) {
-
-                if(item.checked === true)
-                {
-                    checkCount++;
-                }
-
-
-                if(item.checked === true && item.otherinc_id === other_inc_id)
-                {
-                    message = 'The Selected Tricycle is Already Paid in the Selected Tax Year in row number ' + parseInt(key + 1);
-                    exitBool = true;
-                }
-
-            });
-
-            if(exitBool)
+            if(this.charges_tableData.length === 0)
             {
-                alert(message);
-                return false;
-            }
-
-            if(checkCount === 0)
-            {
-                alert('Select Tricycle for Payment');
+                alert('Must add Charges');
                 return false;
             }
 
 
             axios.post('annual_tax/store', {
                 operator_id : this.operator_data.id,
-                otherinc_id : this.other_inc_value,
                 tricycle_details : this.tricycle_tableData,
+                charges : this.charges_tableData,
             }).then(response => {
                 this.returnSuccess(response);
             }).catch(error => {
@@ -634,8 +601,7 @@ export default {
             });
         },
 
-        editRecord(id)
-        {
+        editRecord(id){
             this.adding = false;
 
             axios.get('annual_tax/edit/' + id)
@@ -644,50 +610,29 @@ export default {
                 this.operator_data = response.data.operator_data;
                 this.other_inc_value = response.data.data.otherinc_id;
                 this.tricycle_tableData = response.data.annual_details;
+                this.charges_tableData = response.data.charges;
+
+                Object.keys(this.charges_tableData).forEach(key => {
+                    this.totals += parseFloat(this.charges_tableData[key].total);
+                })
+
+
                 $('#create_modal').modal('show');
             });
 
         },
 
-
         updateRecord() {
 
-            if(this.tricycle_tableData.length === 0)
+            if(this.numberOfTricycles() === 0)
             {
                 alert('Must add Tricycle');
                 return false;
             }
 
-            let other_inc_id = this.other_inc_value;
-            let checkCount = 0;
-            let exitBool = false;
-            let message = '';
-
-            this.tricycle_tableData.map(function(item, key) {
-
-                if(item.checked === true)
-                {
-                    checkCount++;
-                }
-
-
-                if(item.checked === true && item.otherinc_id === other_inc_id)
-                {
-                    message = 'The Selected Tricycle is Already Paid in the Selected Tax Year in row number ' + parseInt(key + 1);
-                    exitBool = true;
-                }
-
-            });
-
-            if(exitBool)
+            if(this.charges_tableData.length === 0)
             {
-                alert(message);
-                return false;
-            }
-
-            if(checkCount === 0)
-            {
-                alert('Select Tricycle for Payment');
+                alert('Must add Charges');
                 return false;
             }
 
@@ -695,8 +640,8 @@ export default {
             axios.patch('annual_tax/update', {
                 id: this.mtop_tax.id,
                 operator_id : this.operator_data.id,
-                otherinc_id : this.other_inc_value,
                 tricycle_details : this.tricycle_tableData,
+                charges : this.charges_tableData,
             }).then(response => {
                 this.returnSuccess(response);
             });
@@ -737,7 +682,62 @@ export default {
             //         this.err_msg = error.response.data.err_msg;
             //     })
             //     .finally(()=> this.loader = false);
-        }
+        },
+
+        removeCharges(props) {
+
+            Object.keys(this.charges_tableData).forEach(key => {
+                if(this.charges_tableData[key].inc_code === props.row.inc_code) {
+                    this.totals -= this.charges_tableData[key].total;
+                    this.charges_tableData.splice(key, 1);
+                }
+            });
+
+        },
+
+        numberOfTricycles()  {
+            let quantity = 0;
+
+            Object.keys(this.tricycle_tableData).forEach(key => {
+                if(this.tricycle_tableData[key].checked) {
+                    quantity += 1;
+                }
+            });
+
+            return quantity;
+        },
+
+        addCharges() {
+
+            if(this.numberOfTricycles() === 0) {
+                alert('Add Tricycle First');
+                return false;
+            }
+
+
+            $('#other_inc_modal').modal('show');
+        },
+
+        selectCharges(props) {
+
+            let noTricycle = this.numberOfTricycles();
+            let price = props.row.price;
+            let totals = noTricycle * price;
+
+            let obj = {
+                inc_id : this.otherinc_tableData[props.index - 1].id,
+                inc_code : this.otherinc_tableData[props.index - 1].inc_code,
+                inc_desc : this.otherinc_tableData[props.index - 1].inc_desc,
+                qty : noTricycle,
+                amount : price,
+                total : totals
+            }
+
+            this.totals += totals;
+
+            this.charges_tableData.push(obj);
+
+        },
 
     },
 
