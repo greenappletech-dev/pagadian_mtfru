@@ -394,9 +394,8 @@ class MtopAnnualTaxController extends Controller
 
             $mtop_tax_item = MtopAnnualTaxItem::where('mtop_annual_tax_id', $mtop_tax->id)
                 ->where('tricycle_id', $tricycle->id)
-                ->first();
-
-            dd($mtop_tax_item);
+                ->first()
+                ->toArray();
 
 
             $dataArr[] = [
