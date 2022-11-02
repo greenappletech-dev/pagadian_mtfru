@@ -396,26 +396,26 @@ class MtopAnnualTaxController extends Controller
                 ->where('tricycle_id', $tricycle->id)
                 ->first();
 
+            $tricycle_id = '';
 
             if($mtop_tax_item)
             {
-                $dataArr[] = [
-                    'id' => $mtop_tax_item['id'],
-                    'tricycle_id' => $tricycle->id,
-                    'body_number' => $tricycle->body_number,
-                    'make_type' => $tricycle->make_type,
-                    'engine_motor_no' => $tricycle->engine_motor_no,
-                    'chassis_no' => $tricycle->chassis_no,
-                    'plate_no' => $tricycle->plate_no,
-                    'trnx_date' => $data ? $data->trnx_date : '',
-                    'inc_desc' => $data ? $data->inc_desc : '',
-                    'otherinc_id' => $data ? $data->otherinc_id : '',
-                    'checked' => (bool)$mtop_tax_item,
-                ];
+                $tricycle_id = $mtop_tax_item['id'];
             }
 
-
-
+            $dataArr[] = [
+                'id' => $tricycle_id,
+                'tricycle_id' => $tricycle->id,
+                'body_number' => $tricycle->body_number,
+                'make_type' => $tricycle->make_type,
+                'engine_motor_no' => $tricycle->engine_motor_no,
+                'chassis_no' => $tricycle->chassis_no,
+                'plate_no' => $tricycle->plate_no,
+                'trnx_date' => $data ? $data->trnx_date : '',
+                'inc_desc' => $data ? $data->inc_desc : '',
+                'otherinc_id' => $data ? $data->otherinc_id : '',
+                'checked' => (bool)$mtop_tax_item,
+            ];
 
         }
 
