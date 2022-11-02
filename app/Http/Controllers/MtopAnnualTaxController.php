@@ -367,12 +367,11 @@ class MtopAnnualTaxController extends Controller
             ->where('taxpayer.id', $mtop_tax->operator_id)
             ->first();
 
-        $tricycles = Tricycle::where('operator_id', $mtop_tax->operator_id)->get();
-
         $charges = MtopAnnualTaxCharge::leftJoin('otherinc', 'otherinc.id', 'mtop_annual_tax_charges.otherinc_id')
             ->select('mtop_annual_tax_charges.*', 'otherinc.inc_code', 'otherinc.inc_desc', 'otherinc.id as inc_id')
             ->where('mtop_annual_tax_id', $mtop_tax->id)->get();
 
+        $tricycles = Tricycle::where('operator_id', $mtop_tax->operator_id)->get();
         $dataArr = array();
 
         foreach($tricycles as $tricycle)
@@ -397,6 +396,7 @@ class MtopAnnualTaxController extends Controller
                 ->where('tricycle_id', $tricycle->id)
                 ->first();
 
+            dd($mtop_tax_item);
 
 
             $dataArr[] = [
