@@ -10,7 +10,7 @@
 @section('content')
 
     <div id="app">
-        <annual-component :annualtax="{{ $annualtax }}" :otherinc="{{ $otherinc }}"></annual-component>
+        <annual-component :otherinc="{{ $otherinc }}"></annual-component>
     </div>
 
 @stop

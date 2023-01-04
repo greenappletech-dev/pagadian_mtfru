@@ -119,6 +119,14 @@
             font-size: 15px;
         }
 
+        .series-year {
+            position: absolute;
+            bottom: 75px;
+            left: 42px;
+            font-size: 14px;
+        }
+
+
 
 
     </style>
@@ -142,7 +150,7 @@
 
     <span class="declaration">{{ $data[0]['full_name'] }}</span>
     <span class="declaration_signature">{{ $data[0]['full_name'] }}</span>
-
+    <span class="series-year">{{ date('Y') }}</span>
 
 </body>
 </html>

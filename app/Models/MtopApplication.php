@@ -49,6 +49,7 @@ class MtopApplication extends Model
             ->where('colhdr.cancel', null)
             ->where('mtop_applications.id', $id)
             ->first();
+
     }
 
     public function fetchFilteredData($from, $to, $barangay_id) {

@@ -281,11 +281,12 @@ Route::group(['middleware'=> 'auth'], function() {
         /* ANNUAL TAX */
 
         Route::get('annualtax', [MtopAnnualTaxController::class, 'index']);
-        Route::get('annual_tax/search_operator/{option}/{string}', [MtopAnnualTaxController::class, 'operator']);
+        Route::get('annual_tax/initialData/{from}/{to}', [MtopAnnualTaxController::class, 'initialData']);
+        Route::get('annual_tax/search_tricycle/{body_number}', [MtopAnnualTaxController::class, 'searchBodyNumber']);
         Route::get('annual_tax/get_tricycles/{operator_id}', [MtopAnnualTaxController::class, 'tricycles']);
         Route::post('annual_tax/store', [MtopAnnualTaxController::class, 'store']);
         Route::get('annual_tax/edit/{id}', [MtopAnnualTaxController::class, 'edit']);
-        Route::patch('annual_tax/update', [MtopAnnualTaxController::class, 'update']);
+        Route::get('annual_tax/destroy/{id}', [MtopAnnualTaxController::class, 'destroy']);
 
 
         Route::get('searchBodyNumber/{bodyNumber}', [MtopAnnualTaxController::class, 'searchBodyNumber']);
@@ -293,7 +294,9 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('annualtax/stab/{id}', [MtopAnnualTaxController::class, 'stab']);
         Route::get('annualtax/destroy/{id}', [MtopAnnualTaxController::class, 'destroy']);
 
+
         ################## REPORT FOR EXPIRATION #####################
+
         Route::get('expired_franchise/{filter}/{size}/{orientation}', [\App\Http\Controllers\ExpirationReportController::class, 'downloadPDF']);
         Route::get('expired_franchise_excel/{filter}', [\App\Http\Controllers\ExpirationReportController::class, 'downloadExcel']);
 

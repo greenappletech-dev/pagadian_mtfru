@@ -18,8 +18,6 @@ class CreateMtopAnnualTaxChargesTable extends Migration
             $table->foreignId('mtop_annual_tax_id')->constrained('mtop_annual_taxes')->onUpdate('cascade')->onDelete('restrict');
             $table->foreignId('otherinc_id')->constrained('otherinc')->onUpdate('cascade')->onDelete('restrict');
             $table->decimal('amount');
-            $table->integer('qty')->nullable();
-            $table->decimal('total');
             $table->timestamps();
         });
     }

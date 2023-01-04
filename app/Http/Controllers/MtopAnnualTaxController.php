@@ -153,92 +153,117 @@ class MtopAnnualTaxController extends Controller
 
 
     public function index() {
-        $annualtax = MtopAnnualTax::select('mtop_annual_taxes.id','transaction_date', 'name', 'status')
+        $otherinc = DB::table('otherinc')->where('tricycle', 'Y')->get();
+        return view('mtfru.mtop_annual_tax', compact('otherinc'));
+    }
+
+    public function filterDate($from, $to) {
+        return MtopAnnualTax::leftJoin('taxpayer', 'taxpayer.id', 'mtop_annual_taxes.operator_id')
+            ->select('mtop_annual_taxes.id',
+                'mtop_annual_taxes.transaction_date',
+                'mtop_annual_taxes.name as operator',
+                'mtop_annual_taxes.status',
+                'mtop_annual_taxes.body_number',
+                'mtop_annual_taxes.make_type',
+                'mtop_annual_taxes.engine_motor_no',
+                'mtop_annual_taxes.chassis_no',
+                'mtop_annual_taxes.plate_no')
+            ->whereBetween('transaction_date', [$from, $to])
             ->orderBy('mtop_annual_taxes.created_at')
             ->get();
-
-        $otherinc = \DB::table('otherinc')->where('tricycle', 'Y')->get();
-
-        return view('mtfru.mtop_annual_tax', compact('annualtax', 'otherinc'));
     }
 
-    public function operator($option, $string) {
+    public function initialData($from, $to) {
+        return response()->json(['data' => $this->filterDate($from, $to)]);
+    }
 
-        $data = Taxpayer::query()
-            ->leftJoin('tricycles', 'tricycles.operator_id', 'taxpayer.id')
-            ->where(function($query) use ($option, $string) {
+    public function getLastPaidAnnualTax($tricycle_id) {
 
-                if($option === 'body_number')
-                {
-                    $query->where('tricycles.body_number', 'LIKE', '%' . $string . '%');
-                }
-                else
-                {
-                    $query->where('tricycles.body_number', 'LIKE', '%' . $string . '%');
-                }
-
-            })
-            ->select('taxpayer.id', 'tricycles.body_number', 'taxpayer.full_name as operator', 'taxpayer.tel_num')
-            ->get()
-            ->map(function($item) {
-
-                $units = Tricycle::where('operator_id', $item->id)->groupBy('id')->count();
-                $item->no_of_unit = $units;
-                return $item;
-
-            });
-
-        return response()->json(['data' => $data], 200);
+        return DB::table('colhdr')
+            ->select(
+                'colhdr.trnx_date',
+                'otherinc.inc_desc',
+                'otherinc.id as otherinc_id',
+            )
+            ->leftJoin('collne2', 'collne2.or_code', 'colhdr.or_code')
+            ->leftJoin('otherinc', 'otherinc.inc_code', 'collne2.inc_code')
+            ->leftJoin('mtop_applications', 'mtop_applications.id', 'colhdr.mtop_application_id')
+            ->leftJoin('tricycles', 'tricycles.id', 'mtop_applications.tricycle_id')
+            ->where('tricycles.id', $tricycle_id)
+            ->where('annual_tax_year', '!=', null)
+            ->where('otherinc.annual_tax', 'Y')
+            ->orderBy('trnx_date', 'desc')
+            ->first();
 
     }
 
-    public function tricycles($operator_id) {
+    public function searchBodyNumber($body_number) {
 
-        $tricycles = Tricycle::where('operator_id', $operator_id)->get();
-        $dataArr = array();
+        $data = Tricycle::leftJoin('taxpayer','taxpayer.id', 'tricycles.operator_id')
+            ->select(
+                'tricycles.id as tricycle_id',
+                'tricycles.body_number',
+                'tricycles.make_type',
+                'tricycles.engine_motor_no',
+                'tricycles.chassis_no',
+                'tricycles.plate_no',
+                'taxpayer.id as operator_id',
+                'taxpayer.full_name',
+                'taxpayer.address1 as address',
+                'taxpayer.mobile')
+            ->where('tricycles.body_number', $body_number)
+            ->first();
 
-        foreach($tricycles as $tricycle)
+        if(!$data)
         {
-            $data = \DB::table('colhdr')
-                ->select(
-                    'colhdr.trnx_date',
-                    'otherinc.inc_desc',
-                    'otherinc.id as otherinc_id',
-                )
-                ->leftJoin('collne2', 'collne2.or_code', 'colhdr.or_code')
-                ->leftJoin('otherinc', 'otherinc.inc_code', 'collne2.inc_code')
-                ->leftJoin('mtop_applications', 'mtop_applications.id', 'colhdr.mtop_application_id')
-                ->leftJoin('tricycles', 'tricycles.id', 'mtop_applications.tricycle_id')
-                ->where('tricycles.id', $tricycle->id)
-                ->where('otherinc.annual_tax', 'Y')
-                ->orderBy('trnx_date', 'desc')
-                ->first();
-
-
-            $dataArr[] = [
-                'tricycle_id' => $tricycle->id,
-                'body_number' => $tricycle->body_number,
-                'make_type' => $tricycle->make_type,
-                'engine_motor_no' => $tricycle->engine_motor_no,
-                'chassis_no' => $tricycle->chassis_no,
-                'plate_no' => $tricycle->plate_no,
-                'trnx_date' => $data ? $data->trnx_date : '',
-                'inc_desc' => $data ? $data->inc_desc : '',
-                'otherinc_id' => $data ? $data->otherinc_id : '',
-                'checked' => false,
-
-            ];
+            return response()->json(['err_msg' => 'Not Result'], 400);
         }
 
-        return response()->json(['data' => $dataArr], 200);
+        $previousAnnualTax = $this->getLastPaidAnnualTax($data->tricycle_id);
+
+        if($previousAnnualTax)
+        {
+            $data->annual_tax = $previousAnnualTax->inc_desc;
+        }
+        else
+        {
+            $data->annual_tax = '';
+        }
+
+
+
+        $defaultCharges = collect([]);
+
+        $charges = DB::table('otherinc')->where('annual_tax', 'Y')
+            ->get();
+
+        foreach($charges as $charge)
+        {
+
+            if((int)$charge->annual_tax_year == date('Y') || $charge->annual_tax_year == null)
+            {
+                $defaultCharges->push([
+                    'id' => $charge->id,
+                    'inc_desc' => $charge->inc_desc,
+                    'price' => $charge->price
+                ]);
+            }
+
+
+        }
+
+        return response()->json(['data' => $data, 'default_charges' => $defaultCharges], 200);
+
     }
 
     public function validateData(Request $request)
     {
         $request->validate([
             'operator_id' => 'required',
+            'transaction_date' => 'required',
         ],[
             'operator_id.required' => 'You must Select Operator First',
+            'transaction_date' => 'Transaction Date is Required'
         ]);
     }
 
@@ -246,258 +271,151 @@ class MtopAnnualTaxController extends Controller
 
         $this->validateData($request);
 
-//        if($this->checkIfTheTricycleNoRepeated($request))
-//        {
-//            return response()->json(['invalid_msg' => 'invalid'], 400);
-//        }
-
         \DB::beginTransaction();
 
         try
         {
-            $query = new MtopAnnualTax();
-            $this->storeParentData($request, $query);
-            $this->storeChildData($request->tricycle_details, $query->id);
-            $this->storeChargesData($request->charges, $query->id);
+
+            if(isset($request->id))
+            {
+                $data = MtopAnnualTax::where('id', $request->id)->first();
+            }
+            else
+            {
+                $data = new MtopAnnualTax();
+            }
+
+            $this->storeData($request, $data);
+
         }
         catch(QueryException $ex)
         {
-            \DB::rollBack();
+            DB::rollBack();
             return response()->json(['err_msg' => $ex], 400);
         }
 
-        \DB::commit();
+        DB::commit();
 
         return response()->json(['data' => 'success'], 200);
 
     }
 
-    public function storeParentData(Request $request, MtopAnnualTax $query) {
+    public function storeData(Request $request, MtopAnnualTax $query) {
 
         $operator_info = Taxpayer::where('id', $request->operator_id)->first();
         $query->operator_id = $request->operator_id;
         $query->name = $operator_info->full_name;
         $query->address = $operator_info->address1;
         $query->mobile_number = $operator_info->mobile_number;
-        $query->transaction_date = date('Y-m-d');
+        $query->transaction_date = $request->transaction_date;
+        $query->tricycle_id = $request->tricycle_id;
+        $query->body_number = $request->body_number;
+        $query->make_type = $request->make_type;
+        $query->engine_motor_no = $request->engine_motor_no;
+        $query->chassis_no = $request->chassis_no;
+        $query->plate_no = $request->plate_no;
         $query->status = 1;
         $query->user_id = auth()->user()->id;
         $query->save();
 
-    }
 
-    public function storeChildData($details, $id)
-    {
-        $idArr = [];
+        /* store charges */
 
-        foreach($details as $detail)
-        {
-            if($detail['checked'] === true)
-            {
-
-                if(isset($detail['id']))
-                {
-                    /* this is an old data */
-                    $store = MtopAnnualTaxItem::where('id', $detail['id'])->first();
-                    $idArr[] = $detail['id'];
-                }
-                else
-                {
-                    $store = new MtopAnnualTaxItem();
-                }
-
-                $tricycle_info = Tricycle::where('id', $detail['tricycle_id'])->first();
-                $store->mtop_annual_tax_id = $id;
-                $store->tricycle_id = $tricycle_info->id;
-                $store->body_number = $tricycle_info->body_number;
-                $store->make_type = $tricycle_info->make_type;
-                $store->engine_motor_no = $tricycle_info->engine_motor_no;
-                $store->chassis_no = $tricycle_info->chassis_no;
-                $store->plate_no = $tricycle_info->plate_no;
-//                $store->status = 1;
-                $store->save();
-
-                $idArr[] = $store->id;
-            }
-        }
-
-        if(count($idArr) > 0)
-        {
-            MtopAnnualTaxItem::whereNotIn('id', $idArr)->where('mtop_annual_tax_id', $id)->delete();
-        }
-    }
-
-    public function storeChargesData($charges, $id)
-    {
-
-        $idArr = [];
+        $charges = $request->charges;
+        $changesCurrentIdValues = [];
 
         foreach($charges as $charge)
         {
-            if(isset($charge['id']))
+
+            if(isset($charge['mtop_annual_tax_charge_id']))
             {
-                $data = MtopAnnualTaxCharge::where('id', $charge['id'])->first();
+                $data = MtopAnnualTaxCharge::where('id', $charge['mtop_annual_tax_charge_id'])->first();
             }
             else
             {
                 $data = new MtopAnnualTaxCharge();
+                $data->mtop_annual_tax_id = $query->id;
             }
 
-            $data->mtop_annual_tax_id = $id;
-            $data->otherinc_id = $charge['inc_id'];
-            $data->amount =  $charge['amount'];
-            $data->qty =  $charge['qty'];
-            $data->total =  $charge['total'];
+            $data->otherinc_id = $charge['id'];
+            $data->amount = $charge['price'];
             $data->save();
 
-            $idArr[] = $data->id;
+            $changesCurrentIdValues[] = $data->id;
 
         }
 
-        MtopAnnualTaxCharge::whereNotIn('id', $idArr)->where('mtop_annual_tax_id', $id)->delete();
-    }
+        MtopAnnualTaxCharge::whereNotIn('id', $changesCurrentIdValues)->where('mtop_annual_tax_id',$query->id)->delete();
 
+    }
 
     public function edit($id)
     {
-        $mtop_tax = MtopAnnualTax::where('id', $id)->first();
 
-        $operator_data = Taxpayer::select('taxpayer.id','full_name as operator', 'body_number', 'tel_num')
-            ->leftJoin('tricycles', 'tricycles.operator_id', 'taxpayer.id')
-            ->where('taxpayer.id', $mtop_tax->operator_id)
+        $data = MtopAnnualTax::where('mtop_annual_taxes.id', $id)
+            ->leftJoin('taxpayer','taxpayer.id','mtop_annual_taxes.operator_id')
+            ->select(
+                'mtop_annual_taxes.id',
+                'mtop_annual_taxes.operator_id',
+                'mtop_annual_taxes.tricycle_id',
+                'mtop_annual_taxes.address',
+                'mtop_annual_taxes.body_number',
+                'mtop_annual_taxes.make_type',
+                'mtop_annual_taxes.engine_motor_no',
+                'mtop_annual_taxes.chassis_no',
+                'mtop_annual_taxes.plate_no',
+                'mtop_annual_taxes.transaction_date',
+                'taxpayer.full_name',
+                'taxpayer.address1')
             ->first();
 
-        $charges = MtopAnnualTaxCharge::leftJoin('otherinc', 'otherinc.id', 'mtop_annual_tax_charges.otherinc_id')
-            ->select('mtop_annual_tax_charges.*', 'otherinc.inc_code', 'otherinc.inc_desc', 'otherinc.id as inc_id')
-            ->where('mtop_annual_tax_id', $mtop_tax->id)->get();
+        $charges = collect([]);
 
-        $tricycles = Tricycle::where('operator_id', $mtop_tax->operator_id)->get();
-        $dataArr = array();
-
-        foreach($tricycles as $tricycle)
+        if($data)
         {
-            $data = \DB::table('colhdr')
-                ->select(
-                    'colhdr.trnx_date',
-                    'otherinc.inc_desc',
-                    'otherinc.id as otherinc_id',
-                )
-                ->leftJoin('collne2', 'collne2.or_code', 'colhdr.or_code')
-                ->leftJoin('otherinc', 'otherinc.inc_code', 'collne2.inc_code')
-                ->leftJoin('mtop_applications', 'mtop_applications.id', 'colhdr.mtop_application_id')
-                ->leftJoin('tricycles', 'tricycles.id', 'mtop_applications.tricycle_id')
-                ->where('tricycles.id', $tricycle->id)
-                ->where('otherinc.annual_tax', 'Y')
-                ->orderBy('trnx_date', 'desc')
-                ->first();
+            $previousAnnualTax = $this->getLastPaidAnnualTax($data->tricycle_id);
 
-
-            $mtop_tax_item = MtopAnnualTaxItem::where('mtop_annual_tax_id', $mtop_tax->id)
-                ->where('tricycle_id', $tricycle->id)
-                ->first();
-
-            $tricycle_id = '';
-
-            if($mtop_tax_item)
+            if($previousAnnualTax)
             {
-                $tricycle_id = $mtop_tax_item['id'];
+                $data->annual_tax = $previousAnnualTax->inc_desc;
+            }
+            else
+            {
+                $data->annual_tax = '';
             }
 
-            $dataArr[] = [
-                'id' => $tricycle_id,
-                'tricycle_id' => $tricycle->id,
-                'body_number' => $tricycle->body_number,
-                'make_type' => $tricycle->make_type,
-                'engine_motor_no' => $tricycle->engine_motor_no,
-                'chassis_no' => $tricycle->chassis_no,
-                'plate_no' => $tricycle->plate_no,
-                'trnx_date' => $data ? $data->trnx_date : '',
-                'inc_desc' => $data ? $data->inc_desc : '',
-                'otherinc_id' => $data ? $data->otherinc_id : '',
-                'checked' => (bool)$mtop_tax_item,
-            ];
-
+            $charges = MtopAnnualTaxCharge::where('mtop_annual_tax_id', $data->id)
+                ->leftJoin('otherinc', 'otherinc.id', 'mtop_annual_tax_charges.otherinc_id')
+                ->select(
+                    'otherinc.inc_desc',
+                    'mtop_annual_tax_charges.id as mtop_annual_tax_charge_id',
+                    'mtop_annual_tax_charges.otherinc_id as id',
+                    'mtop_annual_tax_charges.amount as price')
+                ->get();
         }
 
 
-        return response()->json(['data' => $mtop_tax, 'annual_details' => $dataArr ,'operator_data' => $operator_data, 'charges' => $charges], 200);
+
+        return response()->json(['data' => $data, 'charges' => $charges], 200);
 
     }
 
-    public function update(Request $request)
-    {
-
-        $this->validateData($request);
-//
-//        if($this->checkIfTheTricycleNoRepeated($request))
-//        {
-//            return response()->json(['invalid_msg' => 'invalid'], 400);
-//        }
-
-        \DB::beginTransaction();
+    public function destroy($id) {
 
         try
         {
-            $query = MtopAnnualTax::where('id', $request->id)->first();
-            $this->storeParentData($request, $query);
-            $this->storeChildData($request->tricycle_details, $query->id);
-            $this->storeChargesData($request->charges, $query->id);
+            MtopAnnualTaxCharge::where('mtop_annual_tax_id', $id)->delete();
+            MtopAnnualTax::where('id', $id)->delete();
         }
-        catch(QueryException $ex)
+        catch(QueryException $exception)
         {
-            \DB::rollBack();
-            return response()->json(['err_msg' => $ex], 200);
+            return response()->json(['err_msg' => $exception->getMessage()], 400);
         }
 
-        \DB::commit();
 
         return response()->json(['data' => 'success'], 200);
+
     }
-
-    public function checkIfTheTricycleNoRepeated(Request $request) {
-
-        $getSameApplication = MtopAnnualTax::query()
-            ->leftJoin('mtop_annual_tax_items', 'mtop_annual_tax_items.mtop_annual_tax_id', 'mtop_annual_taxes.id')
-            ->where('operator_id', $request->operator_id)
-            ->where('otherinc_id', $request->otherinc_id)
-            ->where(function($query) use ($request) {
-                if(isset($request->id))
-                {
-                    $query->where('mtop_annual_taxes.id', '!=', $request->id);
-                }
-            })
-            ->get();
-
-        foreach($getSameApplication as $value)
-        {
-            foreach($request->tricycle_details as $tricycle)
-            {
-                if($tricycle['checked'] && $value->tricycle_id == $tricycle['tricycle_id'])
-                {
-                    return true;
-                }
-            }
-        }
-    }
-
-    public function findor($or_no) {
-
-//        $getOR = DB::table('colhdr')
-//            ->leftJoin('collne2', 'collne2.or_code', 'colhdr.or_code')
-//            ->where('colhdr.or_number', 'LIKE', '%'. $or_no . '%')
-//            ->where('mtop_application_id', '<=', 0)
-//            ->get();
-//
-//        return response()->json(['data'=> $getOR]);
-    }
-
-    public function tagOR(Request $request)
-    {
-//        DB::table('colhdr')->where('id', $request->or_no)->update(['mtop_application_id' => $request->application_id]);
-//        return response()->json(['message' => 'OR Tagged Successfully!']);
-    }
-
-
 
 
 

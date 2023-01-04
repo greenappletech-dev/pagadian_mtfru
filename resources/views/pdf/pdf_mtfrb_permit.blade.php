@@ -190,6 +190,7 @@
 
     {{--    OPERATORS IMAGE    --}}
     @if($data[2] !== null)
+
         <img class="operator_img" src="{{ asset('image/operator_image/' . $data[2]['name']) }}" alt="">
     @endif
 

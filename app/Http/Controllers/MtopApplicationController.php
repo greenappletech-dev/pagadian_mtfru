@@ -591,7 +591,9 @@ class MtopApplicationController extends Controller
     public function pdfApplication($id, $form_to_print) {
         $mtop_application = $this->mtop_applications->fetchDataForPrinting($id);
         $charges = DB::table('collne2')->where('or_code', $mtop_application->or_code)->get();
+
         $operator_img = $this->operator_img->fetchDataById($mtop_application->taxpayer_id);
+
 
         /* must check if the application is new, renewal, dropping or change unit */
 
