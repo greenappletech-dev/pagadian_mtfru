@@ -150,7 +150,7 @@
 
     <span class="declaration">{{ $data[0]['full_name'] }}</span>
     <span class="declaration_signature">{{ $data[0]['full_name'] }}</span>
-    <span class="series-year">{{ date('Y') }}</span>
+    <span class="series-year">{{ date('Y', strtotime($data[0]['transact_date'])) }}</span>
 
 </body>
 </html>
