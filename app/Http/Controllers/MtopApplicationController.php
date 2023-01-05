@@ -582,10 +582,10 @@ class MtopApplicationController extends Controller
     }
 
     public function destroy($id) {
-        $mtop_application = $this->mtop_applications->fetchDataById($id);
-        return $mtop_application->delete()
-            ? response()->json(['message' => 'Application Deleted'], 200)
-            : response()->json(['message' => 'Something When Wrong'], 401);
+        Tricycle::where('mtop_application_id', $id)->update(['mtop_application_id' => null]);
+        MtopApplicationCharge::where('mtop_application_id', $id)->delete();
+        MtopApplication::where('id', $id)->delete();
+        return response()->json(['message' => 'Application Deleted'], 200);
     }
 
     public function pdfApplication($id, $form_to_print) {
