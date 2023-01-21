@@ -13,11 +13,12 @@ class SystemParameterController extends Controller
 
     public function getrecord() {
 
-        $mtfrb_case_no = DB::table('m99')->get();
+        $systemParameter = DB::table('m99')->get();
 
         return response()->json([
-            'body_number_from' => $mtfrb_case_no[0]->body_number_from,
-            'body_number_to' => $mtfrb_case_no[0]->body_number_to
+            'body_number_from' => $systemParameter[0]->body_number_from,
+            'body_number_to' => $systemParameter[0]->body_number_to,
+            'mtfru_chairman' => $systemParameter[0]->mtfru_chairman
         ], 200);
     }
 
@@ -28,9 +29,11 @@ class SystemParameterController extends Controller
             ], 401);
         }
 
-        DB::table('m99')->where('par_code', '001')->update(
-            ['body_number_from' => $request->body_number_from,
-            'body_number_to' => $request->body_number_to]);
+        DB::table('m99')->where('par_code', '001')->update([
+                'body_number_from' => $request->body_number_from,
+                'body_number_to' => $request->body_number_to,
+                'mtfru_chairman' => $request->mtfru_chairman
+            ]);
 
         return response()->json([
             'message' => 'Successfully Updated!'

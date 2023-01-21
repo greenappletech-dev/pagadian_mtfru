@@ -55,6 +55,11 @@
                             <input type="text" class="form-control" id="body_number_to" v-model="bodyNumberToValue">
                         </div>
 
+
+                        <label for="mtfru_chairman">MTFRU Chairman</label>
+                        <input type="text" class="form-control mb-3" id="mtfru_chairman" v-model="mtfruChairman">
+
+
                         <button v-if="adding" class="form-control btn btn-primary d-inline-block" v-on:click="saveRecord">
                             <i class="fas fa-check mr-1"></i>Save
                         </button>
@@ -86,6 +91,7 @@ export default {
             //values
             bodyNumberToValue: null,
             bodyNumberFromValue: null,
+            mtfruChairman : null,
 
             err_msg: null,
             suc_msg: null,
@@ -121,6 +127,7 @@ export default {
             {
                 this.bodyNumberFromValue = response.data.body_number_from;
                 this.bodyNumberToValue = response.data.body_number_to;
+                this.mtfruChairman = response.data.mtfru_chairman;
             });
         },
 
@@ -140,6 +147,7 @@ export default {
             this.adding = true;
             $('#body_number_from').attr('readonly', false);
             $('#body_number_to').attr('readonly', false);
+            $('#mtfru_chairman').attr('readonly', false);
         },
 
         saveRecord() {
@@ -147,7 +155,8 @@ export default {
 
             axios.patch('parameter/update', {
                 body_number_from: this.bodyNumberFromValue,
-                body_number_to: this.bodyNumberToValue
+                body_number_to: this.bodyNumberToValue,
+                mtfru_chairman: this.mtfruChairman
             })
             .then(response =>
             {
@@ -156,6 +165,7 @@ export default {
                 this.initialData();
                 $('#body_number_from').attr('readonly', true);
                 $('#body_number_to').attr('readonly', true);
+                $('#mtfru_chairman').attr('readonly', true);
             })
             .catch(error =>
             {
@@ -170,7 +180,7 @@ export default {
     mounted() {
         $('#body_number_from').attr('readonly', true);
         $('#body_number_to').attr('readonly', true);
-
+        $('#mtfru_chairman').attr('readonly', true);
         this.initialData();
     }
 }

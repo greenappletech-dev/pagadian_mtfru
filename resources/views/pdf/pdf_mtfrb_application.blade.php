@@ -126,6 +126,13 @@
             font-size: 14px;
         }
 
+        .chairman {
+            position: absolute;
+            bottom: 20px;
+            right: 10px;
+            font-size: 13px;
+        }
+
 
 
 
@@ -151,6 +158,7 @@
     <span class="declaration">{{ $data[0]['full_name'] }}</span>
     <span class="declaration_signature">{{ $data[0]['full_name'] }}</span>
     <span class="series-year">{{ date('Y', strtotime($data[0]['transact_date'])) }}</span>
+
 
 </body>
 </html>

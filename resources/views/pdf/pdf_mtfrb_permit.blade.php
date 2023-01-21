@@ -170,6 +170,12 @@
             page-break-after: always;
         }
 
+        .chairman {
+            position: absolute;
+            bottom: 130px;
+            right: 110px;
+        }
+
         /*.page:last-child {*/
         /*    page-break-after: unset;*/
         /*}*/
@@ -266,6 +272,8 @@
     {{--                </tr>--}}
     {{--            </table>--}}
     {{--        @endif--}}
+
+    <div class="chairman">{{ $data[4]->mtfru_chairman }}</div>
 
 </div>
 

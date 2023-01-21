@@ -599,6 +599,7 @@ class MtopApplicationController extends Controller
 
         $transaction_type = explode(',',$mtop_application->transact_type);
         $application_type = $this->mtop_applications->getApplicationType($transaction_type);
+        $system_parameter = DB::table('m99')->where('par_code', '001')->first();
 
 
         $data = [$mtop_application, $charges, $operator_img];
@@ -613,8 +614,9 @@ class MtopApplicationController extends Controller
 
         if((int)$form_to_print === 4) {
             $blade = 'pdf_mtfrb_permit';
-            array_push($data, $application_type);
+            array_push($data, $application_type, $system_parameter);
         }
+
 
         $pdf = \App::make('dompdf.wrapper');
         $pdf->getDomPDF()->set_option("enable_php", true);
