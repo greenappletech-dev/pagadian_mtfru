@@ -186,9 +186,7 @@
 </header>
 <body>
 
-{{--@for($i = 1; $i <= 4; $i++)--}}
-{{--   --}}
-{{--@endfor--}}
+@for($i = 1; $i <= 4; $i++)
 
 <div class="page">
 
@@ -243,39 +241,42 @@
         </tr>
     </table>
 
-    {{--        @if($i == 1)--}}
-    {{--            <table>--}}
-    {{--                <tr>--}}
-    {{--                    <th style="width: 50px">{{ $data[3] }}</th>--}}
-    {{--                    <th style="width: 120px">OWNER'S COPY</th>--}}
-    {{--                </tr>--}}
-    {{--            </table>--}}
-    {{--        @elseif($i == 2)--}}
-    {{--            <table>--}}
-    {{--                <tr>--}}
-    {{--                    <th style="width: 50px">{{ $data[3] }}</th>--}}
-    {{--                    <th style="width: 120px">MTFRU COPY</th>--}}
-    {{--                </tr>--}}
-    {{--            </table>--}}
-    {{--        @elseif($i == 3)--}}
-    {{--            <table>--}}
-    {{--                <tr>--}}
-    {{--                    <th style="width: 50px">{{ $data[3] }}</th>--}}
-    {{--                    <th style="width: 120px">MTFRB COPY</th>--}}
-    {{--                </tr>--}}
-    {{--            </table>--}}
-    {{--        @elseif($i == 4)--}}
-    {{--            <table>--}}
-    {{--                <tr>--}}
-    {{--                    <th style="width: 50px">{{ $data[3] }}</th>--}}
-    {{--                    <th style="width: 120px">LTO COPY</th>--}}
-    {{--                </tr>--}}
-    {{--            </table>--}}
-    {{--        @endif--}}
+            @if($i == 1)
+                <table>
+                    <tr>
+                        <th style="width: 50px">{{ $data[3] }}</th>
+                        <th style="width: 120px">OWNER'S COPY</th>
+                    </tr>
+                </table>
+            @elseif($i == 2)
+                <table>
+                    <tr>
+                        <th style="width: 50px">{{ $data[3] }}</th>
+                        <th style="width: 120px">MTFRU COPY</th>
+                    </tr>
+                </table>
+            @elseif($i == 3)
+                <table>
+                    <tr>
+                        <th style="width: 50px">{{ $data[3] }}</th>
+                        <th style="width: 120px">MTFRB COPY</th>
+                    </tr>
+                </table>
+            @elseif($i == 4)
+                <table>
+                    <tr>
+                        <th style="width: 50px">{{ $data[3] }}</th>
+                        <th style="width: 120px">LTO COPY</th>
+                    </tr>
+                </table>
+            @endif
 
     <div class="chairman">{{ $data[4]->mtfru_chairman }}</div>
 
 </div>
+
+
+@endfor
 
 
 </body>
