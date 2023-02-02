@@ -28,6 +28,11 @@
 
 
             <tr>
+                <th colspan="4" style="font-size: 20px;"><b>{{ date('F Y') }}</b></th>
+            </tr>
+
+
+            <tr>
                 <th>MAKE TYPE</th>
                 <th>{{ $array[$count - 1][0] }}</th>
                 <th>{{ $array[$count - 1][1] }}</th>

@@ -335,7 +335,7 @@ class ReportController extends Controller
         return $report;
     }
 
-        public function new_franchise_summary_report($from, $to, $barangay_id) {
+    public function new_franchise_summary_report($from, $to, $barangay_id) {
 
         $report = array();
 
