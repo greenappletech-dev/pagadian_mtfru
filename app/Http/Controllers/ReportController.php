@@ -578,7 +578,7 @@ class ReportController extends Controller
 
         }
 
-        $return_data = collect($data)->sortBy('body_number')->toArray();
+        $return_data = collect($data)->sortByDesc('payment_date')->sortBy('body_number')->toArray();
         $dup_body_number = '';
         $dup_key = '';
         $paymentDate = '';
@@ -588,7 +588,7 @@ class ReportController extends Controller
             if($value['body_number'] == $dup_body_number)
             {
                 /* removing duplicate based on the previous id inserted */
-                unset($return_data[strtotime($value['payment_date']) < strtotime($paymentDate) ? $dup_key : $key]);
+                unset($return_data[$dup_key]);
             }
 
             $dup_key = $key;
