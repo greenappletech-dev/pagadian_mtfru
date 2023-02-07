@@ -234,7 +234,7 @@
 
     {{--  GET VALIDITY DATE AND MINUS TO 2  --}}
     @if($data[3] === 'CU')
-        {{ $year = \Carbon\Carbon::parse($year)->subYears(2)->format() }}
+        {{ $year = \Carbon\Carbon::parse($data[0]['validity_date'])->subYears(2)->format('Y') }}
     @endif
 
 
