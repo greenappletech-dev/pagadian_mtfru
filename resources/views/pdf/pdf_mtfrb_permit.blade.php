@@ -173,7 +173,7 @@
         .chairman {
             position: absolute;
             bottom: 130px;
-            right: 110px;
+            right: 90px;
         }
 
         /*.page:last-child {*/
