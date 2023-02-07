@@ -234,12 +234,12 @@
 
     {{--  GET VALIDITY DATE AND MINUS TO 2  --}}
     @if($data[3] === 'CU')
-        {{ $year = \Carbon\Carbon::parse($year)->subYears(2)->format('Y') }}
+        {{ $year = \Carbon\Carbon::parse($year)->subYears(2)->format() }}
     @endif
 
 
     <div class="issue_day">{{ $day.$ordinal }}</div>
-    <div class="issue_month">{{ $year }}</div>
+    <div class="issue_month">{{ date('F', strtotime($data[3] === 'CU' ? $data[0]['validity_date'] : $data[0]['trnx_date'])) . ', ' . $year }}</div>
 
 
     <table>
