@@ -463,7 +463,7 @@ export default {
                 this.print = false;
                 this.formToPrint = '';
                 $('#print-modal').modal('hide');
-                setTimeout(function(){ $('#filter').click(); }  , 1000);
+                // setTimeout(function(){ $('#filter').click(); }  , 1000);
             }
             else
             {

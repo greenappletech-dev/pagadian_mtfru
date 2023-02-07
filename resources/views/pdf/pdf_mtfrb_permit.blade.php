@@ -214,7 +214,7 @@
 
     <div class="expiration_date">{{ date('F d, Y', strtotime($data[0]['validity_date'])) }}</div>
 
-    {{ $day = date('j', strtotime($data[0]['trnx_date'])) }}
+    {{ $day = date('j', strtotime($data[3] === 'CU' ? $data[0]['validity_date'] : $data[0]['trnx_date'])) }}
     {{ $last_digit = substr($day, -1) }}
     {{ $ordinal = 'th' }}
 
@@ -230,8 +230,16 @@
         {{ $ordinal = 'th' }}
     @endif
 
+    {{ $year = date('Y', strtotime($data[0]['trnx_date'])) }}
+
+    {{--  GET VALIDITY DATE AND MINUS TO 2  --}}
+    @if($data[3] === 'CU')
+        {{ $year = $year - 2 }}
+    @endif
+
+
     <div class="issue_day">{{ $day.$ordinal }}</div>
-    <div class="issue_month">{{ date('F', strtotime($data[0]['trnx_date'])) . ', ' . date('Y', strtotime($data[0]['trnx_date'])) }}</div>
+    <div class="issue_month">{{ date('F', strtotime($data[3] === 'CU' ? $data[0]['validity_date'] : $data[0]['trnx_date'])) . ', ' . date('Y', strtotime($year)) }}</div>
 
 
     <table>
@@ -247,6 +255,11 @@
                         <th style="width: 50px">{{ $data[3] }}</th>
                         <th style="width: 120px">OWNER'S COPY</th>
                     </tr>
+                    @if($data[3] === 'CU')
+                        <tr>
+                            <th style="width: 120px" colspan="2">{{ date('d/m/Y', strtotime($data[0]['trnx_date'])) }}</th>
+                        </tr>
+                    @endif
                 </table>
             @elseif($i == 2)
                 <table>
@@ -254,6 +267,11 @@
                         <th style="width: 50px">{{ $data[3] }}</th>
                         <th style="width: 120px">MTFRU COPY</th>
                     </tr>
+                    @if($data[3] === 'CU')
+                        <tr>
+                            <th style="width: 120px" colspan="2">{{ date('d/m/Y', strtotime($data[0]['trnx_date'])) }}</th>
+                        </tr>
+                    @endif
                 </table>
             @elseif($i == 3)
                 <table>
@@ -261,6 +279,11 @@
                         <th style="width: 50px">{{ $data[3] }}</th>
                         <th style="width: 120px">MTFRB COPY</th>
                     </tr>
+                    @if($data[3] === 'CU')
+                        <tr>
+                            <th style="width: 120px" colspan="2">{{ date('d/m/Y', strtotime($data[0]['trnx_date'])) }}</th>
+                        </tr>
+                    @endif
                 </table>
             @elseif($i == 4)
                 <table>
@@ -268,6 +291,11 @@
                         <th style="width: 50px">{{ $data[3] }}</th>
                         <th style="width: 120px">LTO COPY</th>
                     </tr>
+                    @if($data[3] === 'CU')
+                        <tr>
+                            <th style="width: 120px" colspan="2">{{ date('d/m/Y', strtotime($data[0]['trnx_date'])) }}</th>
+                        </tr>
+                    @endif
                 </table>
             @endif
 

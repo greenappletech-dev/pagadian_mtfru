@@ -92,8 +92,6 @@ class MtopApplicationController extends Controller
 
         $previous = $this->mtop_applications->fetchDataById($operator[0]->mtop_application_id);
 
-        $mtfrb_case_no = '';
-
         $mtfrb_case_no = $operator[0]->body_number;
 
         if($previous !== null) {
@@ -614,6 +612,9 @@ class MtopApplicationController extends Controller
 
         if((int)$form_to_print === 4) {
             $blade = 'pdf_mtfrb_permit';
+
+
+            /* get the previous application */
             array_push($data, $application_type, $system_parameter);
         }
 
