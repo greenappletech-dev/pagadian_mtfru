@@ -257,7 +257,7 @@
                     </tr>
                     @if($data[3] === 'CU')
                         <tr>
-                            <th style="width: 120px" colspan="2">{{ date('d/m/Y', strtotime($data[0]['trnx_date'])) }}</th>
+                            <th style="width: 120px" colspan="2">{{ date('F d, Y', strtotime($data[0]['trnx_date'])) }}</th>
                         </tr>
                     @endif
                 </table>
@@ -269,7 +269,7 @@
                     </tr>
                     @if($data[3] === 'CU')
                         <tr>
-                            <th style="width: 120px" colspan="2">{{ date('d/m/Y', strtotime($data[0]['trnx_date'])) }}</th>
+                            <th style="width: 120px" colspan="2">{{ date('F d, Y', strtotime($data[0]['trnx_date'])) }}</th>
                         </tr>
                     @endif
                 </table>
@@ -281,7 +281,7 @@
                     </tr>
                     @if($data[3] === 'CU')
                         <tr>
-                            <th style="width: 120px" colspan="2">{{ date('d/m/Y', strtotime($data[0]['trnx_date'])) }}</th>
+                            <th style="width: 120px" colspan="2">{{ date('F d, Y', strtotime($data[0]['trnx_date'])) }}</th>
                         </tr>
                     @endif
                 </table>
@@ -293,7 +293,7 @@
                     </tr>
                     @if($data[3] === 'CU')
                         <tr>
-                            <th style="width: 120px" colspan="2">{{ date('d/m/Y', strtotime($data[0]['trnx_date'])) }}</th>
+                            <th style="width: 120px" colspan="2">{{ date('F d, Y', strtotime($data[0]['trnx_date'])) }}</th>
                         </tr>
                     @endif
                 </table>
