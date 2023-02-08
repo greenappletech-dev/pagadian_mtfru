@@ -274,6 +274,9 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('/association/edit/{id}', [TricycleAssociationController::class, 'edit']);
         Route::patch('/association/update', [TricycleAssociationController::class, 'update']);
         Route::get('/association/delete/{id}', [TricycleAssociationController::class, 'destroy']);
+        Route::get('/association/showMembers/{id}', [TricycleAssociationController::class, 'showMembers']);
+        Route::get('/association/showOperators', [TricycleAssociationController::class, 'showOperators']);
+        Route::post('/association/saveMembers', [TricycleAssociationController::class, 'saveMembers']);
 
 
 

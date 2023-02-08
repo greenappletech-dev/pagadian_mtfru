@@ -201,7 +201,7 @@
 
     <div class="operator_name">{{ $data[0]['full_name'] }}</div>
     <div class="mtfrb_case_no">{{ $data[0]['mtfrb_case_no'] }}</div>
-    <div class="address">{{ $data[0]['address'] . ' / ' . $data[0]['mobile']}}</div>
+    <div class="address">{{ $data[0]['address'] . ' / ' . $data[0]['mobile']  . ' / ' . $data[5] }}</div>
     <div class="body_number">{{ $data[0]['body_number'] }}</div>
 
     <div class="pertain_operator_name">{{$data[0]['full_name']}}</div>

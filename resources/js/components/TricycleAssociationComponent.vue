@@ -64,6 +64,7 @@
                                 <p v-else>No</p>
                             </span>
                             <span slot="actions" slot-scope="{row}">
+                                <button v-on:click="openModalMembers(row.id)" class="btn btn-primary mb-2"><i class="fa fa-plus mr-1" aria-hidden="true"></i> Add Member</button>
                                 <button v-on:click="openModalToEdit(row.id)" class="btn btn-success mb-2"><i class="fas fa-edit mr-1"></i>Edit</button>
                                 <button v-on:click="destroyRecord(row.id)" class="btn btn-danger mb-2"><i class="fas fa-trash mr-1"></i>Delete</button>
                             </span>
@@ -123,6 +124,64 @@
                 </div>
             </div>
         </div>
+
+
+
+
+        <div class="modal" id="member-modal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5>Member List</h5>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="text-right mb-2">
+                            <button v-on:click="showOperators" class="btn btn-success" style="font-size: 13px">Add Operator</button>
+                        </div>
+
+                        <v-client-table
+                            :data="tableDataMembers"
+                            :columns="columnsMembers"
+                            :options="optionsMembers">
+                            <span slot="actions" slot-scope="props">
+                                <button v-on:click="removeMember(props)" class="btn btn-danger mb-2"><i class="fas fa-trash mr-1"></i>Delete</button>
+                            </span>
+                        </v-client-table>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" style="font-size: 13px" v-on:click="saveMember">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="modal" id="select-member-modal">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5>Member List</h5>
+                    </div>
+                    <div class="modal-body">
+                        <v-client-table
+                            :data="tableDataMemberSelect"
+                            :columns="columnsMemberSelect"
+                            :options="optionsMemberSelect">
+                            <span slot="actions" slot-scope="props">
+                                <button v-on:click="selectOperatorData(props)" class="btn btn-success">Select</button>
+                            </span>
+                        </v-client-table>
+                    </div>
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 </template>
 
@@ -162,6 +221,41 @@ export default {
 
             },
 
+
+            tableDataMembers : [],
+            columnsMembers : ['taxpayer_id','operator','actions'],
+            optionsMembers : {
+                headings: {
+                    taxpayer_id : 'Taxpayer ID',
+                    operator: 'Name',
+                    action: 'Action',
+                },
+                sortable: ['taxpayer_id','operator'],
+                filterable: ['taxpayer_id','operator'],
+                texts : {
+                    filter: 'Search:',
+                },
+            },
+
+
+
+            tableDataMemberSelect : [],
+            columnsMemberSelect : ['taxpayer_id','operator','actions'],
+            optionsMemberSelect : {
+                headings: {
+                    taxpayer_id : 'Taxpayer ID',
+                    operator: 'Name',
+                    action: 'Action',
+                },
+                sortable: ['taxpayer_id','operator'],
+                filterable: ['taxpayer_id','operator'],
+                texts : {
+                    filter: 'Search:',
+                },
+            },
+
+
+
             //dropdowns
             errors: [],
             association: [],
@@ -173,6 +267,7 @@ export default {
             err: false,
             suc_msg: '',
             suc: false,
+            dataId : '',
 
             loader: false,
             adding: false,
@@ -287,6 +382,63 @@ export default {
                     })
                     .finally(()=> this.loader = false);
             }
+        },
+
+        openModalMembers(id) {
+            this.dataId = id;
+            axios.get('association/showMembers/' + id).then(response => {
+                this.tableDataMembers = response.data.data;
+                $('#member-modal').modal('show');
+            });
+        },
+
+
+        showOperators() {
+            axios.get('association/showOperators').then(response => {
+                this.tableDataMemberSelect = response.data.data;
+                $('#select-member-modal').modal('show');
+            });
+        },
+
+        selectOperatorData(props) {
+            console.log(props.row.taxpayer_id);
+            let isExist = false;
+            for(const key in Object.keys(this.tableDataMembers)) {
+                if(parseInt(this.tableDataMembers[key].taxpayer_id) === parseInt(props.row.taxpayer_id)) {
+                    isExist = true;
+                }
+            }
+
+            if(isExist) {
+                alert('This member already exist');
+                return true;
+            }
+
+            this.tableDataMembers.push(props.row);
+            $('#select-member-modal').modal('hide');
+        },
+
+        removeMember(props) {
+            let keyValue = 0;
+            for(const key in Object.keys(this.tableDataMembers)) {
+                if(this.tableDataMembers[key].id === props.row.id) {
+                    keyValue = key;
+                }
+            }
+            this.tableDataMembers.splice(keyValue, 1);
+        },
+
+        saveMember() {
+            axios.post('association/saveMembers', {
+                id : this.dataId,
+                details : this.tableDataMembers
+            })
+            .then(response => {
+                if(response.status === 200) {
+                    alert('Data Successfully Saved');
+                    location.reload();
+                }
+            })
         },
 
         exportExcel(){

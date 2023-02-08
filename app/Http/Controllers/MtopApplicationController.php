@@ -10,6 +10,7 @@ use App\Models\MtopApplicationCharge;
 use App\Models\OperatorImage;
 use App\Models\Taxpayer;
 use App\Models\Tricycle;
+use App\Models\TricycleAssociationMember;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -613,9 +614,19 @@ class MtopApplicationController extends Controller
         if((int)$form_to_print === 4) {
             $blade = 'pdf_mtfrb_permit';
 
+            $association = '';
+            $getAssociation = TricycleAssociationMember::select('tricycle_associations.name as association')
+                ->where('taxpayer_id', $mtop_application->taxpayer_id)
+                ->leftJoin('tricycle_associations', 'tricycle_associations.id', 'tricycle_association_members.tricycle_association_id')
+                ->first();
+
+            if($getAssociation) {
+                $association = $getAssociation->association;
+            }
+
 
             /* get the previous application */
-            array_push($data, $application_type, $system_parameter);
+            array_push($data, $application_type, $system_parameter, $association);
         }
 
 
