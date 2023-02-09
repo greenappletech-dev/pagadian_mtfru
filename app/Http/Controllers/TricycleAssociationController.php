@@ -57,6 +57,7 @@ class TricycleAssociationController extends Controller
     }
 
     public function destroy($id) {
+        TricycleAssociationMember::where('tricycle_association_id', $id)->delete();
         TricycleAssociation::where('id', $id)->delete();
         return response()->json(['message' => 'Data Deleted'], 200);
     }
