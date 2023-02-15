@@ -150,10 +150,8 @@ class ReportController extends Controller
                 ->leftJoin('barangay', 'barangay.id', 'mtop_applications.barangay_id')
                 ->leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
                 ->leftJoin('collne2', 'collne2.or_code', 'colhdr.or_code')
-                ->where(function($query) use ($barangay_id)
-                {
-                    if($barangay_id !== 'null')
-                    {
+                ->where(function($query) use ($barangay_id) {
+                    if($barangay_id !== 'null') {
                         $query->where('mtop_applications.barangay_id', $barangay_id);
                     }
                 })
@@ -161,6 +159,10 @@ class ReportController extends Controller
                 ->where('transact_type', 'LIKE' , '%'. $transact[0] .'%')
                 ->where('colhdr.cancel', null)
                 ->whereBetween('transact_date', [$from, $to])
+                ->where(function($query) {
+                    $query->where('colhdr.trans_type', 'MTOP')
+                        ->orWhere('colhdr.trans_type', null);
+                })
                 ->select(
                     'mtop_applications.transact_date',
                     'mtop_applications.body_number',
@@ -367,12 +369,14 @@ class ReportController extends Controller
             ->whereBetween('mtop_applications.body_number', [$new_franchise->body_number_from, $new_franchise->body_number_to])
             ->where('colhdr.cancel', null)
             ->where('mtop_applications.transact_type', 4)
-            ->where(function($query) use ($barangay_id)
-            {
-                if($barangay_id !== 'null')
-                {
+            ->where(function($query) use ($barangay_id) {
+                if($barangay_id !== 'null') {
                     $query->where('mtop_applications.barangay_id', $barangay_id);
                 }
+            })
+            ->where(function($query) {
+                $query->where('colhdr.trans_type', 'MTOP')
+                    ->orWhere('colhdr.trans_type', null);
             })
             ->select(
                 DB::raw("date_trunc('month', colhdr.trnx_date) as month"),
@@ -490,9 +494,13 @@ class ReportController extends Controller
         $data = MtopApplication::leftJoin('taxpayer', 'taxpayer.id', 'mtop_applications.taxpayer_id')
             ->leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
             ->leftJoin('tricycles', 'tricycles.body_number', 'mtop_applications.body_number')
-            ->where('colhdr.cancel', null)
             ->whereDate('mtop_applications.transact_date', '<=' , $to)
             ->whereBetween('mtop_applications.body_number', [$new_franchise->body_number_from, $new_franchise->body_number_to])
+            ->where('colhdr.cancel', null)
+            ->where(function($query) {
+                $query->where('colhdr.trans_type', 'MTOP')
+                    ->orWhere('colhdr.trans_type', null);
+            })
             ->select(
                 'mtop_applications.id',
                 DB::raw("mtop_applications.body_number::INTEGER"),

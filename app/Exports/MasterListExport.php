@@ -46,6 +46,10 @@ class MasterListExport implements FromView, WithStyles,  WithColumnFormatting
             ->leftJoin('mtop_applications', 'mtop_applications.id', 'tricycles.mtop_application_id')
             ->leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
             ->leftJoin('collne2', 'collne2.or_code', 'colhdr.or_code')
+            ->where(function($query) {
+                $query->where('colhdr.trans_type', 'MTOP')
+                    ->orWhere('colhdr.trans_type', null);
+            })
             ->select(
                 'mtop_applications.mtfrb_case_no',
                 'mtop_applications.transact_date',

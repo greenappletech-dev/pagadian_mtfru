@@ -162,7 +162,7 @@ class MtopAnnualTaxController extends Controller
             ->select('mtop_annual_taxes.id',
                 'mtop_annual_taxes.transaction_date',
                 'mtop_annual_taxes.name as operator',
-                'mtop_annual_taxes.status',
+                DB::raw("(CASE WHEN CAST(mtop_annual_taxes.status AS INT) = 1 THEN 'FOR PAYMENT' ELSE 'COMPLETED' END) as status"),
                 'mtop_annual_taxes.body_number',
                 'mtop_annual_taxes.make_type',
                 'mtop_annual_taxes.engine_motor_no',

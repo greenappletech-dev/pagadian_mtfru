@@ -178,7 +178,7 @@ export default {
         return {
             data_values : [],
             table_data : [],
-            table_data_columns : ['transaction_date', 'body_number', 'operator', 'make_type', 'engine_motor_no', 'chassis_no', 'plate_no', 'totals', 'action'],
+            table_data_columns : ['transaction_date', 'body_number', 'operator', 'make_type', 'engine_motor_no', 'chassis_no', 'plate_no', 'status', 'action'],
             table_data_options : {
                 headings : {
                     transaction_date : 'Transaction Date',
@@ -188,7 +188,7 @@ export default {
                     engine_motor_no : 'Engine #',
                     chassis_no : 'Chassis #',
                     plate_no : 'Plate #',
-                    totals : 'Totals',
+                    status : 'Status',
                     action : 'Action',
                 },
                 filterable : false,

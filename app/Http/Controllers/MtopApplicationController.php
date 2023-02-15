@@ -489,7 +489,11 @@ class MtopApplicationController extends Controller
                 a additional button will be added to be able to tag the OR of the selected transaction.
             */
 
-            $colhdr = \DB::table('colhdr')->where('mtop_application_id', $application->application_id)->first();
+            $colhdr = \DB::table('colhdr')
+                ->where(function($query) {
+                    $query->where('colhdr.trans_type', 'MTOP')
+                        ->orWhere('colhdr.trans_type', null);})
+                ->where('mtop_application_id', $application->application_id)->first();
 
             if($application->status === 4)
             {
@@ -517,6 +521,10 @@ class MtopApplicationController extends Controller
 
         $checkOR = DB::table('colhdr')
             ->where('mtop_application_id', $data['application_id'])
+            ->where(function($query) {
+                $query->where('colhdr.trans_type', 'MTOP')
+                    ->orWhere('colhdr.trans_type', null);
+            })
             ->orderBy('or_number', 'desc')
             ->first();
 
@@ -659,6 +667,10 @@ class MtopApplicationController extends Controller
             ->leftJoin('collne2', 'collne2.or_code', 'colhdr.or_code')
             ->where('colhdr.or_number', 'LIKE', '%'. $or_no . '%')
             ->where('mtop_application_id', '<=', 0)
+            ->where(function($query) {
+                $query->where('colhdr.trans_type', 'MTOP')
+                    ->orWhere('colhdr.trans_type', null);
+            })
             ->get();
 
         return response()->json(['data'=> $getOR]);
@@ -666,7 +678,14 @@ class MtopApplicationController extends Controller
 
     public function tagOR(Request $request)
     {
-        DB::table('colhdr')->where('id', $request->or_no)->update(['mtop_application_id' => $request->application_id]);
+        DB::table('colhdr')
+            ->where('id', $request->or_no)
+            ->where(function($query) {
+                $query->where('colhdr.trans_type', 'MTOP')
+                    ->orWhere('colhdr.trans_type', null);
+            })
+            ->update(['mtop_application_id' => $request->application_id, 'trans_type' => 'MTOP']);
+
         return response()->json(['message' => 'OR Tagged Successfully!']);
     }
 
@@ -739,7 +758,12 @@ class MtopApplicationController extends Controller
                 a additional button will be added to be able to tag the OR of the selected transaction.
             */
 
-            $colhdr = \DB::table('colhdr')->where('mtop_application_id', $application->application_id)->first();
+            $colhdr = \DB::table('colhdr')->where('mtop_application_id', $application->application_id)
+                ->where(function($query) {
+                    $query->where('colhdr.trans_type', 'MTOP')
+                        ->orWhere('colhdr.trans_type', null);
+                })
+                ->first();
 
             if($application->status === 4)
             {
