@@ -31,12 +31,12 @@
         position: absolute;
         top: 0;
         width: 100%;
-        height: 820px;
+        height: 793px;
     }
 
     .operator_id {
         position: absolute;
-        top: 105px;
+        top: 103px;
         right: 175px;
         font-size: 18px;
         font-weight: bold;
@@ -47,7 +47,7 @@
     .address {
 
         position: absolute;
-        top: 140px;
+        top: 134px;
         right: 175px;
         width: 450px;
         text-align: right;
@@ -58,7 +58,7 @@
     .mobile {
 
         position: absolute;
-        top: 158px;
+        top: 150px;
         right: 175px;
         width: 450px;
         text-align: right;
@@ -82,7 +82,7 @@
     .operator_image {
 
         position: absolute;
-        top: 13px;
+        top: 7px;
         right: 18px;
         width: 143px;
         height: 150px;
