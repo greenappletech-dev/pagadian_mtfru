@@ -37,7 +37,7 @@
     .operator_id {
         position: absolute;
         top: 105px;
-        right: 190px;
+        right: 175px;
         font-size: 18px;
         font-weight: bold;
         width: 470px;
@@ -48,8 +48,19 @@
 
         position: absolute;
         top: 140px;
-        right: 195px;
-        width: 300px;
+        right: 175px;
+        width: 450px;
+        text-align: right;
+        font-weight: bold;
+        font-size: 13px;
+    }
+
+    .mobile {
+
+        position: absolute;
+        top: 158px;
+        right: 175px;
+        width: 450px;
         text-align: right;
         font-weight: bold;
         font-size: 13px;
@@ -73,7 +84,7 @@
         position: absolute;
         top: 13px;
         right: 18px;
-        width: 161px;
+        width: 143px;
         height: 150px;
 
     }
@@ -97,7 +108,9 @@
         <div class="operator_id">{{ $data['full_name'] }}</div>
 
 
-        <div class="address">{{ $data['address1'] . ' / ' . $data['mobile'] }}</div>
+        <div class="address">{{ $data['address1'] }}</div>
+
+        <div class="mobile">{{ $data['mobile'] }}</div>
 
 
         <img class="operator_image" src="{{ asset('image/operator_image/' . $data['image']) }}" alt="">
