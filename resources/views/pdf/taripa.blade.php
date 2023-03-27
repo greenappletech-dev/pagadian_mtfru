@@ -30,32 +30,34 @@
 
     .operator_id {
         position: absolute;
-        top: 145px;
-        left: 380px;
-        font-size: 20px;
+        top: 105px;
+        right: 190px;
+        font-size: 18px;
         font-weight: bold;
         width: 470px;
-        text-align: center;
+        text-align: right;
     }
 
     .address {
 
         position: absolute;
-        top: 150px;
-        right: 50px;
+        top: 140px;
+        right: 195px;
         width: 300px;
-        text-align: center;
+        text-align: right;
         font-weight: bold;
+        font-size: 13px;
+
 
     }
 
     .body_number {
 
         position: absolute;
-        top: 25px;
-        right: 170px;
-        color: white;
-        font-size: 85px;
+        top: 15px;
+        right: 185px;
+        color: #fff;
+        font-size: 70px;
         font-weight: bold;
 
     }
@@ -63,10 +65,10 @@
     .operator_image {
 
         position: absolute;
-        top: 25px;
-        right: 33px;
-        width: 120px;
-        height: 103px;
+        top: 13px;
+        right: 18px;
+        width: 161px;
+        height: 150px;
 
     }
 
@@ -80,7 +82,7 @@
 
 
 
-        <img class="background" src="{{ asset('image/forms/taripa-combine.jpg') }}" alt="">
+        <img class="background" src="{{ asset('image/forms/taripa-2.jpg') }}" alt="">
 
 
         <div class="body_number">{{ $data['body_number'] }}</div>

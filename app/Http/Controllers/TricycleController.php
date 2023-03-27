@@ -152,7 +152,7 @@ class TricycleController extends Controller
 
         $image = OperatorImage::where('taxpayer_id', $data['id'])->orderBy('id','desc')->first();
 
-        $data['image'] = $image->name;
+        $data['image'] = $image->name ?? '';
 
         $data = collect($data);
 
