@@ -75,6 +75,7 @@
 
 <body class="@yield('classes_body')" @yield('body_data')>
 
+
     {{-- Body Content --}}
     @yield('body')
 
@@ -103,6 +104,10 @@
 
     {{-- Custom Scripts --}}
     @yield('adminlte_js')
+
+
+
+
 
 </body>
 

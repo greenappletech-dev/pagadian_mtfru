@@ -5,7 +5,7 @@
 <style>
 
     @page {
-        size: A4 landscape;
+        size: legal landscape;
         margin: 0;
     }
 
@@ -37,7 +37,7 @@
     .operator_id {
         position: absolute;
         top: 103px;
-        right: 175px;
+        right: 210px;
         font-size: 18px;
         font-weight: bold;
         width: 470px;
@@ -48,7 +48,7 @@
 
         position: absolute;
         top: 134px;
-        right: 175px;
+        right: 215px;
         width: 450px;
         text-align: right;
         font-weight: bold;
@@ -59,7 +59,7 @@
 
         position: absolute;
         top: 150px;
-        right: 175px;
+        right: 215px;
         width: 450px;
         text-align: right;
         font-weight: bold;
@@ -72,7 +72,7 @@
 
         position: absolute;
         top: 15px;
-        right: 185px;
+        right: 210px;
         color: #fff;
         font-size: 70px;
         font-weight: bold;
@@ -83,9 +83,9 @@
 
         position: absolute;
         top: 7px;
-        right: 18px;
-        width: 143px;
-        height: 150px;
+        right: 17px;
+        width: 180px;
+        height: 153px;
 
     }
 
