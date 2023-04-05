@@ -5,7 +5,7 @@
 <style>
 
     @page {
-        size: 8.5in 13in landscape;
+        size: 9in 13in landscape;
         margin: 0;
     }
 
