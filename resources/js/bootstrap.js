@@ -29,7 +29,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.axios.defaults.baseURL = 'http://192.168.100.100/mtfru';
 
 //staging url
-window.axios.defaults.baseURL = 'http://staging-mtfru.ideasoftcloud.com';
+// window.axios.defaults.baseURL = 'http://staging-mtfru.ideasoftcloud.com';
 
 // window.axios.defaults.baseURL = 'http://mtfru.test';
 
