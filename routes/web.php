@@ -221,7 +221,7 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('fvr', [FvrApplicationController::class, 'index']);
         Route::get('fvr/getdata', [FvrApplicationController::class, 'getdata']);
         Route::get('fvr/getdata_filtered/{from}/{to}/{barangay_id}', [FvrApplicationController::class, 'getdata_filtered']);
-        Route::get('f/vr/pdf_application/{id}/{form_to_print}', [FvrApplicationController::class, 'pdfApplication']);
+        Route::get('fvr/pdf_application/{id}/{form_to_print}', [FvrApplicationController::class, 'pdfApplication']);
         Route::patch('fvr/payment', [FvrApplicationController::class, 'payment']);
         Route::get('fvr_edit/{id}', [FvrApplicationController::class, 'edit']);
         Route::get('fvr/pdf/{size}/{orientation}/{from}/{to}/{barangay_id}', [FvrApplicationController::class, 'pdf']);
