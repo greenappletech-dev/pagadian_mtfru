@@ -38,8 +38,8 @@
 
     .operator_id {
         position: absolute;
-        top: 105px;
-        right: 215px;
+        top: 115px;
+        right: 185px;
         font-size: 18px;
         font-weight: bold;
         width: 470px;
@@ -49,8 +49,8 @@
     .address {
 
         position: absolute;
-        top: 138px;
-        right: 215px;
+        top: 140px;
+        right: 185px;
         width: 450px;
         text-align: right;
         font-weight: bold;
@@ -61,7 +61,7 @@
 
         position: absolute;
         top: 155px;
-        right: 215px;
+        right: 185px;
         width: 450px;
         text-align: right;
         font-weight: bold;
@@ -73,8 +73,8 @@
     .body_number {
 
         position: absolute;
-        top: 15px;
-        right: 210px;
+        top: 30px;
+        right: 185px;
         color: #000;
         font-size: 70px;
         font-weight: bold;
@@ -85,8 +85,8 @@
 
         position: absolute;
         top: 14px;
-        right: 45px;
-        width: 159px;
+        right: 38px;
+        width: 140px;
         height: 146px;
 
     }
