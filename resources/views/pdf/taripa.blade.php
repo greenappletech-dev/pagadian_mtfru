@@ -20,6 +20,8 @@
     }
 
 
+
+
     * {
 
         margin: 0;
@@ -37,7 +39,7 @@
     .operator_id {
         position: absolute;
         top: 105px;
-        right: 195px;
+        right: 215px;
         font-size: 18px;
         font-weight: bold;
         width: 470px;
@@ -48,7 +50,7 @@
 
         position: absolute;
         top: 138px;
-        right: 195px;
+        right: 215px;
         width: 450px;
         text-align: right;
         font-weight: bold;
@@ -59,7 +61,7 @@
 
         position: absolute;
         top: 155px;
-        right: 195px;
+        right: 215px;
         width: 450px;
         text-align: right;
         font-weight: bold;
@@ -72,8 +74,8 @@
 
         position: absolute;
         top: 15px;
-        right: 190px;
-        color: #fff;
+        right: 210px;
+        color: #000;
         font-size: 70px;
         font-weight: bold;
 
@@ -83,7 +85,7 @@
 
         position: absolute;
         top: 14px;
-        right: 19px;
+        right: 45px;
         width: 159px;
         height: 146px;
 
@@ -98,8 +100,7 @@
     <div style="position:fixed; width: 100%; height: 100%;">
 
 
-
-        <img class="background" src="{{ asset('image/forms/taripa-2.jpg') }}" alt="">
+{{--        <img class="background" src="{{ asset('image/forms/taripa-2.jpg') }}" alt="">--}}
 
 
         <div class="body_number">{{ $data['body_number'] }}</div>
