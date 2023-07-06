@@ -85,7 +85,7 @@
 
         position: absolute;
         top: 26px;
-        right: 29px;
+        right: 31px;
         width: 140px;
         height: 140px;
         border: 1px solid #000;
