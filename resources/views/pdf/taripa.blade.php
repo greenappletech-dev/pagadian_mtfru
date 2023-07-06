@@ -73,10 +73,10 @@
     .body_number {
 
         position: absolute;
-        top: 22px;
-        right: 185px;
+        top: 25px;
+        right: 190px;
         color: #000;
-        font-size: 70px;
+        font-size: 68px;
         font-weight: bold;
 
     }
@@ -85,7 +85,7 @@
 
         position: absolute;
         top: 26px;
-        right: 30px;
+        right: 32px;
         width: 140px;
         height: 140px;
         border: 1px solid #000;
