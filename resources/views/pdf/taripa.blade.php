@@ -84,7 +84,7 @@
     .operator_image {
 
         position: absolute;
-        top: 24px;
+        top: 26px;
         right: 29px;
         width: 140px;
         height: 146px;
