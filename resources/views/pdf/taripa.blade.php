@@ -49,7 +49,7 @@
     .address {
 
         position: absolute;
-        top: 153px;
+        top: 148px;
         right: 185px;
         width: 450px;
         text-align: right;
@@ -60,7 +60,7 @@
     .mobile {
 
         position: absolute;
-        top: 168px;
+        top: 163px;
         right: 185px;
         width: 450px;
         text-align: right;
@@ -87,7 +87,8 @@
         top: 26px;
         right: 29px;
         width: 140px;
-        height: 146px;
+        height: 140px;
+        border: 1px solid #000;
 
     }
 
