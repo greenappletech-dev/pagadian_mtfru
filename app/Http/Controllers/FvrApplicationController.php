@@ -2,24 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreFVRApplication;
-use App\Models\AuxiliaryEngine;
-use App\Models\Banca;
-use App\Models\Barangay;
-use App\Models\BoatCaptain;
-use App\Models\BoatType;
-use App\Models\Charge;
-use App\Models\FvrApplication;
-use App\Models\FvrApplicationAuxiliaryEngine;
-use App\Models\FvrApplicationCharge;
-use App\Models\FvrCharges;
-use App\Models\OperatorImage;
-use App\Models\Taxpayer;
+use App;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Banca;
+use App\Models\Charge;
+use App\Models\Barangay;
+use App\Models\BoatType;
+use App\Models\Taxpayer;
+use App\Models\FvrCharges;
+use App\Models\BoatCaptain;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\OperatorImage;
+use App\Models\FvrApplication;
+use App\Models\AuxiliaryEngine;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Models\FvrApplicationCharge;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
+use App\Http\Requests\StoreFVRApplication;
+use App\Models\FvrApplicationAuxiliaryEngine;
 
 class FvrApplicationController extends Controller
 {
@@ -831,14 +833,17 @@ class FvrApplicationController extends Controller
             ];
 
         if((int)$form_to_print === 0) {
+            // $user_name = Auth::user()->name;
             $blade = 'pdf_fvr_affidavit';
         }
 
         if((int)$form_to_print === 1) {
+            // $user_name = Auth::user()->name;
             $blade = 'pdf_fvr_mbol';
         }
 
         if((int)$form_to_print === 2) {
+            $user_name = Auth::user()->name;
             $blade = 'pdf_fvr_supporting_docs';
         }
 
@@ -846,9 +851,9 @@ class FvrApplicationController extends Controller
 
 //        dd($data);
 
-        $pdf = \App::make('dompdf.wrapper');
+        $pdf = App::make('dompdf.wrapper');
         $pdf->getDomPDF()->set_option("enable_php", true);
-        $pdf->loadView('pdf.' . $blade , compact('data'));
+        $pdf->loadView('pdf.' . $blade , compact('data', 'user_name'));
         $pdf->setPaper($paper_size);
         return $pdf->stream();
     }
