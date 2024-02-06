@@ -833,12 +833,12 @@ class FvrApplicationController extends Controller
             ];
 
         if((int)$form_to_print === 0) {
-            // $user_name = Auth::user()->name;
+            $user_name = Auth::user()->name;
             $blade = 'pdf_fvr_affidavit';
         }
 
         if((int)$form_to_print === 1) {
-            // $user_name = Auth::user()->name;
+            $user_name = Auth::user()->name;
             $blade = 'pdf_fvr_mbol';
         }
 
