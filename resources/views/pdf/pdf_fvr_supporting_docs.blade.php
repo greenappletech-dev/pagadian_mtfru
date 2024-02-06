@@ -958,6 +958,29 @@
         page-break-after: always;
     }
 
+    .user {
+        position: absolute;
+        top: 875px;
+        left: -52px;
+        width: 400px;
+        text-align: center;
+   }
+
+   .user-inspection {
+        position: absolute;
+        top: 775px;
+        left: -22px;
+        width: 400px;
+        text-align: center;
+   }
+
+   .user-seaweed {
+        position: absolute;
+        top: 545px;
+        left: -150px;
+        width: 400px;
+        text-align: center;
+   }
 
 
 </style>
@@ -993,6 +1016,7 @@
             <div class="place_of_inspection">{{ strtoupper($data['comp_address']) }}</div>
             <div class="date_of_inspection">{{ date('F d, Y', strtotime($data['application']['or_date'])) }}</div>
 
+            <div class="user">{{ $user_name }}</div>
 
             <table>
                 <tr>
@@ -1191,6 +1215,9 @@
             <div class="validity_date">{{ date('F d, Y', strtotime($data['application']['validity_date'])) }}</div>
 
 {{--            <div class="or_number">{{ $data['application']['or_number'] }}</div>--}}
+
+
+        <div class="user-inspection">{{ $user_name }}</div>
 
         </div>
     </div>
@@ -1396,6 +1423,8 @@
         <div class="validity_date">{{ date('F d Y' , strtotime($data['application']['validity_date'])) }}</div>
 
         <div class="or_number">{{ $data['application']['or_number_2']  }}</div>
+
+        <div class="user-seaweed">{{ $user_name }}</div>
 
     </div>
 </div>
