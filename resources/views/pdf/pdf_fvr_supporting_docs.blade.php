@@ -960,8 +960,8 @@
 
     .user {
         position: absolute;
-        top: 875px;
-        left: -52px;
+        top: 890px;
+        left: -54px;
         width: 400px;
         text-align: center;
    }
