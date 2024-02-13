@@ -1410,7 +1410,9 @@
 
         <div class="address">{{ $data['application']['address'] }}</div>
 
-        <div class="fishing_gear">NET{{ $data['application']['fishing_gear'] }}</div>
+        <!-- <div class="fishing_gear">NET{{ $data['application']['fishing_gear'] }}</div> -->
+
+        <div class="fishing_gear">{{ $data['application']['fishing_gear'] }}</div>
 
         <div class="issue_date">{{ $day.$ordinal }}</div>
 
