@@ -119,7 +119,7 @@ $engineArr = array();
 
     array_push($engineArr, [
         'make_type'             => empty(!$data['application']['make_type']) ? '<td>' . $data['application']['make_type'] . '</td>' : '<td>NA</td>',
-        'horsepower'            => empty(!$data['application']['hoursepower']) ? '<td>' . $data['application']['hoursepower'] . '</td>' : '<td>NA</td>',
+        'horsepower'            => empty(!$data['application']['horsepower']) ? '<td>' . $data['application']['horsepower'] . '</td>' : '<td>NA</td>',
         'engine_motor_no'       => empty(!$data['application']['engine_motor_no']) ? '<td>' . $data['application']['engine_motor_no'] . '</td>' : '<td>NA</td>',
         'color'                 => empty(!$data['application']['color']) ? '<td>' . $data['application']['color'] . '</td>' : '<td>NA</td>',
         'cylinder'              => empty(!$data['application']['cylinder']) ? '<td>' . $data['application']['cylinder'] . '</td>' : '<td>NA</td>',
@@ -134,7 +134,7 @@ $engineArr = array();
             $engineArr[0]['horsepower'] .= '<td>:' . $auxEngine->horsepower . '</td>';
             $engineArr[0]['engine_motor_no'] .= '<td>:' . $auxEngine->engine_motor_no . '</td>';
             $engineArr[0]['cylinder'] .= '<td>:' . $auxEngine->cylinder . '</td>';
-        }
+        } 
     }
 
     $month = Carbon::parse($data['application']['or_date'])->format('F, Y');
