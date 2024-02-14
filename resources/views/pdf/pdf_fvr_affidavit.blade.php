@@ -181,16 +181,16 @@ $engineArr = array();
 
         @foreach($engineArr as $engine)
             <tr>
-                {!! $engine['make_type'] !!}
+                {!! implode('/', array_map('trim', explode(':', $engine['make_type']))) !!}
             </tr>
             <tr>
-                {!! $engine['engine_motor_no'] !!}
+                {!! implode('/', array_map('trim', explode(':', $engine['engine_motor_no']))) !!}
             </tr>
             <tr>
-                {!! $engine['color'] ?? ''  !!}
+                {!! implode('/', array_map('trim', explode(':', $engine['color'] ?? ''))) !!}
             </tr>
             <tr>
-                {!! $engine['horsepower'] !!}
+                {!! implode('/', array_map('trim', explode(':', $engine['horsepower']))) !!}
             </tr>
         @endforeach
 
