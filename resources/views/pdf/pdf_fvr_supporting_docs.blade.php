@@ -1016,7 +1016,7 @@
             <div class="place_of_inspection">{{ strtoupper($data['comp_address']) }}</div>
             <div class="date_of_inspection">{{ date('F d, Y', strtotime($data['application']['or_date'])) }}</div>
 
-            <div class="user">{{ $user_name }}</div>
+            <!-- <div class="user">{{ $user_name }}</div> -->
 
             <table>
                 <tr>
@@ -1426,7 +1426,7 @@
 
         <div class="or_number">{{ $data['application']['or_number_2']  }}</div>
 
-        <div class="user-seaweed">{{ $user_name }}</div>
+        <!-- <div class="user-seaweed">{{ $user_name }}</div> -->
 
     </div>
 </div>
