@@ -59,7 +59,6 @@
 </head>
 
 <body>
-
     <header>
         <table class="table-header" width="100%;">
             <tr>
@@ -78,7 +77,7 @@
     </header>
 
     <main>
-
+        
         <table style="width: 100%">
             {{ $temp_value = 0 }}
             {{ $totals = 0 }}
@@ -97,7 +96,7 @@
             </tr>
 
             @foreach($mtop_applications as $data)
-
+                @dd($data)
                 @if($temp_value !== $data['application_id'])
 
                     <tr>

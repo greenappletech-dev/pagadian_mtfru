@@ -48,7 +48,7 @@ class MtopApplication extends Model
             ->leftJoin('taxpayer', 'taxpayer.id', 'mtop_applications.taxpayer_id')
             ->where('colhdr.cancel', null)
             ->where('mtop_applications.id', $id)
-            ->first();
+            ->get();
 
     }
 
