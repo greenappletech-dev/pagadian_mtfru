@@ -130,7 +130,8 @@
                                     <button v-if="!row.cancelled && row.status !== 4" v-on:click="destroyRecord(row.application_id)" class="btn btn-danger d-inline-block"><i class="fas fa-trash mr-1"></i>Delete</button>
                                     <button v-if="!row.cancelled && row.status === 4 && row.transact_type === '3'" v-on:click="openModalToEditValidity(row.application_id)" class="btn btn-info d-inline-block"><i class="fas fa-edit mr-1"></i> Change Validity Date</button>
                                     <button v-if="row.cancelled" v-on:click="cancelTransaction(row.application_id)" class="btn btn-danger d-inline-block"><i class="fas fa-times mr-1"></i>Cancel Transaction. OR Cancelled</button>
-                                    <button v-if="!row.cancelled && row.status === 2" v-on:click="tagOrNumber(row.application_id)" class="btn btn-info d-inline-block"><i class="fas fa-check mr-1"></i>Tag OR Number</button>
+                                    <!-- <button v-if="!row.cancelled && row.status === 2" v-on:click="tagOrNumber(row.application_id)" class="btn btn-info d-inline-block"><i class="fas fa-check mr-1"></i>Tag OR Number</button> -->
+                                    <button v-if="!row.cancelled && row.status === 2" v-on:click="orModalList(row.application_id)" class="btn btn-info d-inline-block"><i class="fas fa-check mr-1"></i>Tag OR Number</button>
                                 </span>
                         </v-client-table>
                     </div>
@@ -208,6 +209,35 @@
             </div>
         </div>
 
+        <div class="modal fade" id="or_modal_list">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        OR Tag List
+                    </div>
+                    <div class="modal-body">
+                        <div class="d-flex justify-content-end mb-3">
+                            <button class="btn btn-primary" @click="tagOrNumber(OR_selected)">Add OR</button>
+                        </div>
+                        <table class="table">
+                            <tr>
+                                <th>OR #</th>
+                                <th>Name</th>
+                                <th>Action</th>
+                            </tr>
+                            <tr v-for="(item, index) in orList">
+                                <td>{{ item.or_number }}</td>
+                                <td>{{ item.full_name }}</td>
+                                <td><button class="btn btn-danger" @click="listRemove(index)">remove</button></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="btn btn-primary" v-on:click="submitOrTag">Tag OR Number</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <div class="modal fade" id="tag_or_modal">
             <div class="modal-dialog">
@@ -243,7 +273,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button class="btn btn-primary" v-on:click="submitOrTag">Tag OR Number</button>
+                        <button class="btn btn-primary" v-on:click="addToList">Add</button>
                     </div>
                 </div>
             </div>
@@ -343,9 +373,35 @@ export default {
             validity_update: false,
             paperSize: 'Letter',
             paperOrientation: 'Portrait',
+            OR_selected:"",
+            orList:[]
         }
     },
     methods: {
+        listRemove(key){
+            this.orList.splice(this.orList[key], 1);
+        },
+        addToList(){
+            console.log(this.orDetailsTableData[0]);
+            let checker = false;
+            this.orList.forEach(item=>{
+                if(item.id == this.orDetailsTableData[0].id){
+                    checker=true;
+                }
+            })
+            if(checker == false){
+                this.orList.push({id:this.orDetailsTableData[0].id, or_number:this.orDetailsTableData[0].or_number, full_name:this.orDetailsTableData[0].full_name});
+            }
+            else{
+                alert('Already in list');
+            }
+            $('#tag_or_modal').modal('hide');
+        },
+
+        orModalList(row){
+            this.OR_selected = row;
+            $('#or_modal_list').modal('show');
+        },
 
         displayStatus(status) {
             if(status === 1) {
@@ -412,6 +468,7 @@ export default {
             this.tagOR = false;
             this.validity_update = false;
             this.errors = [];
+             console.log('test');
             $('#print-modal').modal('show');
         },
 
@@ -589,6 +646,8 @@ export default {
             this.tagOR = true;
             this.validity_update = false;
             this.applicationIdValue = id;
+            this.or_no = "";
+            this.orDetailsTableData=[];
             $('#tag_or_modal').modal('show');
         },
 
@@ -607,13 +666,13 @@ export default {
 
         submitOrTag() {
             axios.patch('mtop/tagOR', {
-                or_no: this.orDetailsTableData[0].id,
+                or_list: this.orList,
                 application_id : this.applicationIdValue
             }).then(response => {
                 this.suc = true;
                 this.suc_msg = response.data.message;
 
-                $('#tag_or_modal').modal('hide');
+                $('#or_modal_list').modal('hide');
             })
             .catch(error => {
                 this.err = true;
