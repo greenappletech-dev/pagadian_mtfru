@@ -75,7 +75,7 @@
         .contan1{
             position: absolute;
             top: 0;
-            width: 380px;
+            width: 480px;
         }
         .contan2{
             position: absolute;
