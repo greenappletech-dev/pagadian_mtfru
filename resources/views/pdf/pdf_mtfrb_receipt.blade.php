@@ -19,7 +19,7 @@
         }
 
         .operator_name {
-            margin-right: 180px;
+            margin-right: 30%;
             font-size: 20px;
         }
 
@@ -66,14 +66,27 @@
         .cont{
             width: 760px;
             height: 250px;
-            text-align: center;
+            text-align: left;
             position: absolute;
-            top: 9%;
+            top: 8.9%;
             left: 0px;
             font-size: 20px;
         }
+        .contan1{
+            position: absolute;
+            top: 0;
+            width: 380px;
+        }
+        .contan2{
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+        }
         .cont2{
-            padding: 30px;
+            position: absolute;
+            top: 50;
+            right: 60;
         }
         .cont-3{
             width:100%;
@@ -97,8 +110,12 @@
 
 <img src="{{ asset('image/forms/RECEIPT_APPLICATION.jpg') }}" alt="">
 <div class="cont">
-    <span class="operator_name">{{ $data[$i][0]['full_name'] }}</span>
-    <span class="mtfrb_case_no">{{ $data[$i][0]['mtfrb_case_no'] }}</span>
+    <div class="contan1">
+        <span class="operator_name">{{ $data[$i][0]['full_name'] }}</span>
+    </div>
+    <div class="contan2">
+        <span class="mtfrb_case_no">{{ $data[$i][0]['mtfrb_case_no'] }}</span>
+    </div>
     <div class="cont2">
         <span class="body_number">{{ $data[$i][0]['body_number'] }}</span>
     </div>
