@@ -676,7 +676,8 @@ class MtopApplicationController extends Controller
             ->where('mtop_application_id', '<=', 0)
             ->where(function($query) {
                 $query->where('colhdr.trans_type', 'MTOP')
-                    ->orWhere('colhdr.trans_type', null);
+                    ->orWhere('colhdr.trans_type', null)
+                    ->orWhere('colhdr.trans_type', "'");
             })
             ->get();
 
