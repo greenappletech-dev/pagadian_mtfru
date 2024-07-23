@@ -400,8 +400,15 @@
                 </div>
 
                 <div class="card-body">
+                    <label for="or_group">Select Charge Group:</label>
+                    <select id="or_group" class="form-control mb-2" v-model="or_group" v-on:change="filterORGroup(or_group)">
+                        <option value="A">Charge A</option>
+                        <option value="B">Charge B</option>
+                        <option value="C">Charge C</option>
+                    </select>
+
                     <v-client-table
-                        :data="selectedChargesTableData"
+                        :data="filteredChargesTableData"
                         :columns="selected_charge_column"
                         :options="selected_charge_option">
                         <span slot="price" slot-scope="{row}">
@@ -510,6 +517,7 @@ export default {
 
             selected_charge_column: ['name','price', 'action'],
             selectedChargesTableData: [],
+            filteredChargesTableData: [],
             selected_charge_option: {
                 headings: {
                     name: 'Charge Name',
@@ -536,6 +544,8 @@ export default {
                     filter: 'Search:',
                 },
             },
+            // Charge Group
+            or_group:'A',
             // show/hide
             new_check_icon:false,
             renew_check_icon:false,
@@ -611,7 +621,9 @@ export default {
         }
     },
     methods: {
-
+        filterORGroup(or_group){
+            this.filteredChargesTableData = this.selectedChargesTableData.filter(function(item) { return item.or_group === or_group; });
+        },
         formatPrice(value) {
             let val = (value/1).toFixed(2).replace(',', '.')
             return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
@@ -779,24 +791,48 @@ export default {
         selectCharges(id) {
             let arr = [];
             let total;
+            let compute_qty;
+            let qty = this.qty;
+            let price = this.other_price;
+            let or_group = this.or_group;
+
 
             this.chargesTableData.forEach(function(item, index) {
 
                 if(parseInt(item['id']) === parseInt(id)) {
-                    arr.push(item);
-                    total = parseFloat(item['price']);
-                }
 
+                    if(item['price'] != 0) {
+                        price = item['price'];
+                    }
+
+                    arr.push({
+                        id: id,
+                        name: item['name'],
+                        price: price,
+                        or_group: or_group,
+                    });
+
+                    total = parseFloat(price);
+                }
             });
 
             this.transactionTotals += total;
             this.selectedChargesTableData.push(arr[0]);
             $('#search-modal').modal('hide');
+            this.other_price = 0;
+
+
+            /* filter the data to display */
+           this.filterORGroup(this.or_group);
         },
 
         removeCharges(id, price) {
+            let fill_index = id-1;
+            let remove_row = this.filteredChargesTableData[fill_index];
+            let remove_index = this.selectedChargesTableData.indexOf(remove_row);
+            this.selectedChargesTableData.splice(remove_index,1);
             this.transactionTotals -= parseFloat(price);
-            this.selectedChargesTableData.splice(id - 1,1);
+            this.filterORGroup(this.or_group);
         },
 
         storeRecord() {

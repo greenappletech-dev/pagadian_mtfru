@@ -269,6 +269,7 @@ class MtopApplicationController extends Controller
                 $charges->mtop_application_id = $data->id;
                 $charges->otherinc_id = $charge['id'];
                 $charges->price = $charge['price'];
+                $charges->or_group = $charge['or_group'];
                 $charges->save();
             }
 
