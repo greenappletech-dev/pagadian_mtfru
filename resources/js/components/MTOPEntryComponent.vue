@@ -440,7 +440,7 @@
                                     :columns="charges_column"
                                     :options="charges_option">
                                     <span slot="price" slot-scope="{row}">
-                                        <input v-if="row.price == 0" type="number" class="form-control">
+                                        <input v-if="row.price == 0" type="number" class="form-control" v-model="other_price">
                                         <span v-else>{{ formatPrice(row.price) }}</span>
                                     </span>
                                     <span slot="action" slot-scope="{row}">
