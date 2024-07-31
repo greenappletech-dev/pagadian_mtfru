@@ -545,6 +545,7 @@ export default {
                     filter: 'Search:',
                 },
             },
+            other_price: 0,
             // Charge Group
             or_group:'A',
             // show/hide
