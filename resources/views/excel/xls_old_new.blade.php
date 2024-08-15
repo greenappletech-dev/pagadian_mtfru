@@ -28,7 +28,7 @@
 
 
             <tr>
-                <th colspan="4" style="font-size: 20px;"><b>{{ date('F Y') }}</b></th>
+                <th style="font-weight: bold">{{ 'FROM: ' . date('m/d/Y', strtotime($from)) . ' TO: ' . date('m/d/Y', strtotime($to)) }}</th>
             </tr>
 
 
