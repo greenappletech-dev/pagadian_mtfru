@@ -26,10 +26,10 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 
 //production url
-// window.axios.defaults.baseURL = 'http://192.168.100.100/mtfru';
+window.axios.defaults.baseURL = 'http://192.168.100.100/mtfru';    
 
 //dev url
-window.axios.defaults.baseURL = 'http://localhost/pagadian_mtfru/';
+// window.axios.defaults.baseURL = 'http://localhost/pagadian_mtfru/';
 
 //staging url
 // window.axios.defaults.baseURL = 'http://staging-mtfru.ideasoftcloud.com';

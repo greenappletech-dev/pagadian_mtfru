@@ -45,7 +45,9 @@ class MTOPReportExport implements FromView, WithStyles, WithColumnFormatting
         {
             return view('excel.xls_old_new',
             [
-                'array' => $this->array
+                'array' => $this->array,
+                'from' => $this->from,
+                'to' => $this->to,
             ]);
         }
 
