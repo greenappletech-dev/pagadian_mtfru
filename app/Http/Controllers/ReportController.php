@@ -276,10 +276,12 @@ class ReportController extends Controller
             ->get();
 
 
-        $make_types = Tricycle::where('body_number', '<>', '')
-            ->select('make_type')
-            ->groupBy('make_type')
-            ->orderBy('make_type','DESC')
+        $make_types = Tricycle::leftjoin('mtop_applications','mtop_applications.tricycle_id','tricycles.id')
+            ->where('tricycles.body_number', '<>', '')
+            ->whereBetween('mtop_applications.transact_date', [$from, $to])
+            ->select('tricycles.make_type')
+            ->groupBy('tricycles.make_type')
+            ->orderBy('tricycles.make_type','DESC')
             ->get();
 
 
