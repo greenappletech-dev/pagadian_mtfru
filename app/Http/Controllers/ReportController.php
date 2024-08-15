@@ -249,7 +249,7 @@ class ReportController extends Controller
         return $report;
     }
 
-    public function summary_per_make_type_report() {
+    public function summary_per_make_type_report($from, $to) {
 
         $report = array();
 
@@ -637,7 +637,7 @@ class ReportController extends Controller
 
         if($type == 2)
         {
-            return $this->summary_per_make_type_report();
+            return $this->summary_per_make_type_report($from, $to);
         }
 
         if($type == 3)

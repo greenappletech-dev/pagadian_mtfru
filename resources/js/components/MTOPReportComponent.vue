@@ -59,7 +59,7 @@
 
                         <div id="filter_options_1">
 
-                            <div v-if="report.type !== '4' && report.type !== '5' && report.type !== '6'">
+                            <div v-if="report.type !== '4' && report.type !== '5' && report.type !== '6' && report.type !== '2'">
                                 <label for="barangay" class="mt-1">Specific Barangay</label>
                                     <select id="barangay" class="form-control" v-model="barangay.id">
                                         <option value=""></option>
@@ -200,13 +200,13 @@ export default {
 
         selectChange(e)
         {
-            const wout_range = ['2'];
-
-            if(wout_range.indexOf(this.report.type) < 0)
-            {
+            // const wout_range = ['2'];
+            // console.log(wout_range.indexOf(this.report.type));
+            // if(wout_range.indexOf(this.report.type) < 0)
+            // {
                 $('#filter_options_1').show();
                 return;
-            }
+            // }
 
 
             this.report.from = null;
@@ -302,7 +302,7 @@ export default {
 
             }
 
-            const wout_range = ['2'];
+            // const wout_range = ['2'];
 
             if(this.report.type === '6')
             {
@@ -314,8 +314,8 @@ export default {
             }
             else
             {
-                if(wout_range.indexOf(this.report.type) < 0)
-                {
+                // if(wout_range.indexOf(this.report.type) < 0)
+                // {
 
                     if(this.report.from == null || this.report.to == null)
                     {
@@ -325,7 +325,7 @@ export default {
 
                     }
 
-                }
+                // }
             }
 
             let optional_route = this.barangay.id == null || this.barangay.id === '' ? '/null' : '/'  + this.barangay.id;
