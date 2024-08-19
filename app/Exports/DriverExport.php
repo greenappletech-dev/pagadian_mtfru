@@ -28,6 +28,7 @@ class DriverExport implements FromCollection, WithHeadings, WithStyles
             'Body Number',
             'Drivers License No',
             'Drivers Name',
+            'Address',
             'Operators Name',
             'Make Type',
             'Engine Motor No',
@@ -39,7 +40,7 @@ class DriverExport implements FromCollection, WithHeadings, WithStyles
 
     public function styles(Worksheet $sheet)
     {
-        $cells = ['A','B', 'C', 'D', 'E', 'F', 'G', 'H', 'I'];
+        $cells = ['A','B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 
         foreach($cells as $cell) {
             $sheet->getColumnDimension($cell)->setAutoSize('true');

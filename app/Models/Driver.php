@@ -56,6 +56,7 @@ class Driver extends Model
                 'tricycles.body_number',
                 'drivers.driver_license_no',
                 'drivers.full_name as drivers_name',
+                'drivers.address as address',
                 'taxpayer.full_name as operator',
                 'tricycles.make_type',
                 'tricycles.engine_motor_no',
