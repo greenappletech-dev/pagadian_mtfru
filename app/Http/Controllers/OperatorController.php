@@ -55,6 +55,8 @@ class OperatorController extends Controller
         $operator->mobile = $request->mobile;
         $operator->email = strtoupper($request->email);
         $operator->brgy_code = $request->brgy_code;
+        $operator->city_mun = $request->city_mun;
+        $operator->purok = $request->purok;
         $operator->address1 = strtoupper($request->address);
         $operator->user_id = Auth::user()->name;
         $operator->full_name = strtoupper($request->last_name . ', ' . $request->first_name . ' ' . $request->mid_name);

@@ -41,6 +41,9 @@ class DriverController extends Controller
         $driver->last_name = strtoupper($request->last_name);
         $driver->first_name = strtoupper($request->first_name);
         $driver->middle_name = strtoupper($request->middle_name);
+        $driver->city = strtoupper($request->city);
+        $driver->barangay = strtoupper($request->barangay);
+        $driver->purok = strtoupper($request->purok);
         $driver->driver_license_no = strtoupper($request->driver_license_no);
         $driver->full_name = strtoupper($request->last_name . ', ' . $request->first_name . ' ' . $request->middle_name . '.');
         $driver->tricycle_id = $request->tricycle_id;
