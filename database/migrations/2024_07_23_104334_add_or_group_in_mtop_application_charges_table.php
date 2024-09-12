@@ -15,6 +15,7 @@ class AddOrGroupInMtopApplicationChargesTable extends Migration
     {
         Schema::table('mtop_application_charges', function (Blueprint $table) {
             //
+            
             $table->string('or_group',5)->nullable();
         });
     }
