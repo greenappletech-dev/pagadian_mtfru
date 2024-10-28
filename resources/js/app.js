@@ -127,6 +127,10 @@ Vue.component('annual-component', require('./components/AnnualTaxComponent.vue')
 Vue.component('annual_tax_report-component', require('./components/MTOPAnnualTaxReportComponent.vue').default);
 
 
+/* SIGNATORIES */
+Vue.component('signatories-component', require('./components/SignatoriesComponent.vue').default);
+
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

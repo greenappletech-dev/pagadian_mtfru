@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App;
+use App\Models\signatories;
 use Carbon\Carbon;
 use App\Models\Banca;
 use App\Models\Charge;
@@ -812,6 +813,32 @@ class FvrApplicationController extends Controller
 
         $license_number = implode('-', $arr_body_number);
 
+        $signatories = signatories::select(
+            'ac_officer',
+            'ac_verified',
+            'ac_noted',
+            'ac_approved',
+            'cn_recommending',
+            'cn_noted',
+            'cn_approved',
+            'sc_inspected',
+            'sc_noted',
+            'sc_approved',
+            'mo_recommending',
+            'mo_approved',
+            'bc_recommending',
+            'bc_approved',
+            'cf_recommending',
+            'cf_approved',
+            'sf_verified',
+            'sf_recommending',
+            'sf_approved',
+            'pb_certified',
+            )
+        ->first();
+
+
+        // dd($signatories);
 
         $transaction_type = $this->fvr_application->transactionType($fvr_application->transact_type);
 
@@ -830,6 +857,26 @@ class FvrApplicationController extends Controller
                 'birthdate' => $birthdate,
                 'comp_address' => $company_address,
                 'trading' => $trading,
+                'pb_certified' => $signatories->pb_certified,
+                'ac_officer' => $signatories->ac_officer,
+                'ac_verified' => $signatories->ac_verified,
+                'ac_noted' => $signatories->ac_noted,
+                'ac_approved' => $signatories->ac_approved,
+                'cn_recommending' => $signatories->cn_recommending,
+                'cn_noted' => $signatories->cn_noted,
+                'cn_approved' => $signatories->cn_approved,
+                'sc_inspected' => $signatories->sc_inspected,
+                'sc_noted' => $signatories->sc_noted,
+                'sc_approved' => $signatories->sc_approved,
+                'mo_recommending' => $signatories->mo_recommending,
+                'mo_approved' => $signatories->mo_approved,
+                'bc_recommending' => $signatories->bc_recommending,
+                'bc_approved' => $signatories->bc_approved,
+                'cf_recommending' => $signatories->cf_recommending,
+                'cf_approved' => $signatories->cf_approved,
+                'sf_verified' => $signatories->sf_verified,
+                'sf_recommending' => $signatories->sf_recommending,
+                'sf_approved' => $signatories->sf_approved,
             ];
 
         if((int)$form_to_print === 0) {
