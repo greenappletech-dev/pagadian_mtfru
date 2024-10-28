@@ -101,6 +101,15 @@
             left: 263px;
         }
 
+        .signatories{
+            position: absolute;
+            bottom: 70px;
+            left: 460px;
+            width: 250px;
+            justify-content: center;
+            text-align: center;
+        }
+
         .license_number_slide {
             text-align: center;
             width: 300px;
@@ -292,6 +301,10 @@
 
 <span class="license_number">{{ $data['license_num'] }}</span>
 <span class="license_number_slide">{{ $data['license_num'] }}</span>
+
+
+<span class="signatories">{{ $data['pb_certified'] }}</span>
+
 
 
 </body>

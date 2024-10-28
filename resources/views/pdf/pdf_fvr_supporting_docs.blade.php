@@ -12,6 +12,178 @@
         font-size: 15px;
     }
 
+    .ac_officer{
+        position: absolute;
+        bottom: 250px;
+        left: 445px;
+        width: 250px;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .ac_noted{
+        position: absolute;
+        bottom: 61px;
+        left: 221px;
+        width: 250px;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .ac_verified{
+        position: absolute;
+        bottom: 61px;
+        left: 15px;
+        width: 250px;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .ac_approved{
+        position: absolute;
+        bottom: 61px;
+        left: 450px;
+        width: 250px;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .cn_recommending{
+        position: absolute;
+        bottom: 61px;
+        left: 2px;
+        width: 250px;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .cn_noted{
+        position: absolute;
+        bottom: 61px;
+        left: 224px;
+        width: 250px;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .cn_approved{
+        position: absolute;
+        bottom: 61px;
+        left: 432px;
+        width: 250px;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .sc_inspected{
+        position: absolute;
+        bottom: 173px;
+        left: 50px;
+        width: 250px;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .sc_approved{
+        position: absolute;
+        bottom: 61px;
+        left: 218px;
+        width: 250px;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .sc_noted{
+        position: absolute;
+        bottom: 173px;
+        left: 395px;
+        width: 250px;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .mo_recommending{
+        position: absolute;
+        bottom: 108px;
+        left: 48px;
+        width: 250px;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .mo_approved{
+        position: absolute;
+        bottom: 108px;
+        left: 315px;
+        width: 250px;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .bc_recommending{
+        position: absolute;
+        bottom: 415px;
+        left: -35px;
+        width: 250px;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .bc_approved{
+        position: absolute;
+        bottom: 375px;
+        left: 230px;
+        width: 250px;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .cf_recommending{
+        position: absolute;
+        bottom: 385px;
+        left: -40px;
+        width: 250px;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .cf_approved{
+        position: absolute;
+        bottom: 337px;
+        left: 262px;
+        width: 250px;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .sf_verified{
+        position: absolute;
+        bottom: 395px;
+        left: -58px;
+        width: 250px;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .sf_recommending{
+        position: absolute;
+        bottom: 386px;
+        left: 290px;
+        width: 250px;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .sf_approved{
+        position: absolute;
+        bottom: 300px;
+        left: 137px;
+        width: 250px;
+        justify-content: center;
+        text-align: center;
+    }
+
+
     .admeasurement .full_name {
         text-align: center;
         width: 307px;
@@ -1016,6 +1188,11 @@
             <div class="place_of_inspection">{{ strtoupper($data['comp_address']) }}</div>
             <div class="date_of_inspection">{{ date('F d, Y', strtotime($data['application']['or_date'])) }}</div>
 
+            <span class="ac_officer">{{ $data['ac_officer'] }}</span>
+            <span class="ac_verified">{{ $data['ac_verified'] }}</span>
+            <span class="ac_noted">{{ $data['ac_noted'] }}</span>
+            <span class="ac_approved">{{ $data['ac_approved'] }}</span>
+
             <!-- <div class="user">{{ $user_name }}</div> -->
 
             <table>
@@ -1130,6 +1307,11 @@
 
             <div class="or_number">{{ $data['application']['or_number'] }}</div>
 
+            
+            <div class="cn_recommending">{{ $data['cn_recommending'] }}</div>
+            <div class="cn_noted">{{ $data['cn_noted'] }}</div>
+            <div class="cn_approved">{{ $data['cn_approved'] }}</div>
+
         </div>
     </div>
 
@@ -1219,6 +1401,10 @@
 
         <div class="user-inspection">{{ $user_name }}</div>
 
+        <div class="sc_inspected">{{ $data['sc_inspected'] }}</div>
+        <div class="sc_noted">{{ $data['cn_noted'] }}</div>
+        <div class="sc_approved">{{ $data['sc_approved'] }}</div>
+
         </div>
     </div>
 
@@ -1275,6 +1461,10 @@
 
             <div class="or_number">{{ $data['application']['or_number'] }}</div>
 
+            <div class="mo_recommending">{{ $data['mo_recommending'] }}</div>
+            <div class="mo_approved">{{ $data['mo_approved'] }}</div>
+
+
         </div>
     </div>
 
@@ -1317,6 +1507,10 @@
                 <div class="validity_date">{{ date('F d Y' , strtotime($data['application']['validity_date'])) }}</div>
 
                 <div class="or_number">{{ $data['application']['or_number_2'] }}</div>
+
+                <div class="bc_recommending">{{ $data['bc_recommending'] }}</div>
+                <div class="bc_approved">{{ $data['bc_approved'] }}</div>
+
             </div>
         </div>
     @endif
@@ -1370,6 +1564,9 @@
         <div class="validity_date">{{ date('F d Y' , strtotime($data['application']['validity_date'])) }}</div>
 
         <div class="or_number">{{ $data['application']['or_number_2'] }}</div>
+
+        <div class="cf_recommending">{{ $data['cf_recommending'] }}</div>
+        <div class="cf_approved">{{ $data['cf_approved'] }}</div>
 
     </div>
 </div>
@@ -1425,6 +1622,10 @@
         <div class="validity_date">{{ date('F d Y' , strtotime($data['application']['validity_date'])) }}</div>
 
         <div class="or_number">{{ $data['application']['or_number_2']  }}</div>
+
+        <div class="sf_verified">{{ $data['sf_verified'] }}</div>
+        <div class="sf_recommending">{{ $data['sf_recommending'] }}</div>
+        <div class="sf_approved">{{ $data['sf_approved'] }}</div>
 
         <!-- <div class="user-seaweed">{{ $user_name }}</div> -->
 

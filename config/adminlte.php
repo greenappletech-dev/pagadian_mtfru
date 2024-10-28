@@ -362,6 +362,11 @@ return [
             'icon' => 'fas fa-anchor',
         ],
         [
+            'text' => 'Signatories',
+            'url'  => 'signatories',
+            'icon' => 'fa fa-plus',
+        ],
+        [
             'text' => 'System Parameters',
             'url'  => 'parameter',
             'icon' => 'fas fa-cogs',

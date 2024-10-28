@@ -1,34 +1,36 @@
 <?php
 
-use App\Http\Controllers\FvrApplicationAuxiliaryEngineController;
-use App\Http\Controllers\MtopAnnualTaxController;
-use \App\Http\Controllers\MtopApplicationChargeController;
-use App\Http\Controllers\FvrApplicationChargeController;
+use App\Models\MtopAnnualTax;
+use App\Models\TricycleAssociation;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+use \App\Http\Controllers\HomeController;
+use App\Http\Controllers\BancaController;
+use App\Http\Controllers\PatchController;
+use App\Http\Controllers\DriverController;
+use App\Http\Controllers\ReportController;
+use \App\Http\Controllers\ChargeController;
+use App\Http\Controllers\BoatTypeController;
+use \App\Http\Controllers\OperatorController;
+use \App\Http\Controllers\TricycleController;
+use App\Http\Controllers\FvrReportController;
 use App\Http\Controllers\ScheduledController;
-use \App\Http\Controllers\SystemParameterController;
-use \App\Http\Controllers\MtopApplicationController;
-use App\Http\Controllers\MtopViewRenewalController;
-use App\Http\Controllers\AuxiliaryEngineController;
+use App\Http\Controllers\BoatCaptainController;
+use App\Http\Controllers\SignatoriesController;
+use \App\Http\Controllers\MTFRUReportController;
+use App\Http\Controllers\MtopAnnualTaxController;
 use App\Http\Controllers\FvrApplicationController;
 use App\Http\Controllers\FvrViewRenewalController;
 use App\Http\Controllers\MTOPChargeListController;
-use \App\Http\Controllers\MTFRUReportController;
-use App\Http\Controllers\BoatCaptainController;
+use App\Http\Controllers\AuxiliaryEngineController;
+use App\Http\Controllers\MtopViewRenewalController;
+use \App\Http\Controllers\MtopApplicationController;
+use \App\Http\Controllers\SystemParameterController;
 use App\Http\Controllers\TricycleAssociationController;
-use \App\Http\Controllers\TricycleController;
-use \App\Http\Controllers\OperatorController;
-use App\Http\Controllers\BoatTypeController;
-use \App\Http\Controllers\ChargeController;
-use App\Http\Controllers\DriverController;
-use App\Http\Controllers\ReportController;
-use \App\Http\Controllers\HomeController;
-use App\Http\Controllers\BancaController;
-use App\Http\Controllers\UserController;
-use App\Http\Controllers\FvrReportController;
-use App\Http\Controllers\PatchController;
-use App\Models\MtopAnnualTax;
-use App\Models\TricycleAssociation;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\FvrApplicationChargeController;
+use \App\Http\Controllers\MtopApplicationChargeController;
+use App\Http\Controllers\FvrApplicationAuxiliaryEngineController;
 
 
 
@@ -312,8 +314,6 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('tax_report/export/{filter}/{data}', [\App\Http\Controllers\MtopAnnualTaxReportController::class, 'export']);
 
 
-
-
         Route::get('patch/fix', [PatchController::class, 'change_old_status_to_transact_type']);
         Route::get('patch/update', [PatchController::class, 'update_old_application']);
         Route::get('patch/update_mobile', [PatchController::class, 'update_mobile_number']);
@@ -323,6 +323,10 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('test/{from}/{to}', [ReportController::class, 'monthly_accomplishment_report']);
 
 
+        // SIGNATORIES
+        Route::get('signatories', [SignatoriesController::class, 'index']);
+        Route::get('add-signatories', [SignatoriesController::class, 'addSignatoriesForm']);
+        Route::post('save-signatories/{id}', [SignatoriesController::class, 'saveFormData']);
 
 
     });

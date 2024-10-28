@@ -159,10 +159,10 @@ class ReportController extends Controller
                 ->where('transact_type', 'LIKE' , '%'. $transact[0] .'%')
                 ->where('colhdr.cancel', null)
                 ->whereBetween('transact_date', [$from, $to])
-                ->where(function($query) {
-                    $query->where('colhdr.trans_type', 'MTOP')
-                        ->orWhere('colhdr.trans_type', null);
-                })
+                // ->where(function($query) {
+                //     $query->where('colhdr.trans_type', 'MTOP')
+                //         ->orWhere('colhdr.trans_type', null);
+                // })
                 ->select(
                     'mtop_applications.transact_date',
                     'mtop_applications.body_number',
@@ -374,10 +374,10 @@ class ReportController extends Controller
                     $query->where('mtop_applications.barangay_id', $barangay_id);
                 }
             })
-            ->where(function($query) {
-                $query->where('colhdr.trans_type', 'MTOP')
-                    ->orWhere('colhdr.trans_type', null);
-            })
+            // ->where(function($query) {
+            //     $query->where('colhdr.trans_type', 'MTOP')
+            //         ->orWhere('colhdr.trans_type', null);
+            // })
             ->select(
                 DB::raw("date_trunc('month', colhdr.trnx_date) as month"),
                 DB::raw("count(*) as total")
@@ -497,10 +497,10 @@ class ReportController extends Controller
             ->whereDate('mtop_applications.transact_date', '<=' , $to)
             ->whereBetween('mtop_applications.body_number', [$new_franchise->body_number_from, $new_franchise->body_number_to])
             ->where('colhdr.cancel', null)
-            ->where(function($query) {
-                $query->where('colhdr.trans_type', 'MTOP')
-                    ->orWhere('colhdr.trans_type', null);
-            })
+            // ->where(function($query) {
+            //     $query->where('colhdr.trans_type', 'MTOP')
+            //         ->orWhere('colhdr.trans_type', null);
+            // })
             ->select(
                 'mtop_applications.id',
                 DB::raw("mtop_applications.body_number::INTEGER"),
