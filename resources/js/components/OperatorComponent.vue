@@ -184,10 +184,16 @@
                                 <label for="email">Email</label>
                                 <input type="email" id="email" class="form-control" v-model="emailValue">
 
+                                <label for="city">City</label>
+                                <input type="text" id="city" class="form-control" v-model="cityValue">
+
                                 <label for="brgy_code">Barangay Code</label>
                                 <select id="brgy_code" class="form-control" v-model="barangayCodeValue">
                                     <option v-for="barangay in barangayCodeTableData" v-bind:value="barangay.brgy_code">{{ barangay.brgy_code + '-' + barangay.brgy_desc }}</option>
                                 </select>
+
+                                <label for="purok">Purok</label>
+                                <input type="text" id="purok" class="form-control" v-model="purokValue">
 
                                 <label for="address">Address</label>
                                 <input type="text" class="form-control" id="address" v-model="addressValue">
@@ -299,7 +305,9 @@ export default {
             civilStatusValue: null,
             mobileValue: null,
             emailValue: null,
+            cityValue: null,
             barangayCodeValue: null,
+            purokValue: null,
             addressValue: null,
             totalNumberofRecord: null,
             pageNumber: 1,
@@ -391,6 +399,8 @@ export default {
             this.mobileValue = null;
             this.emailValue = null;
             this.barangayCodeValue = null;
+            this.cityValue = null;
+            this.purokValue = null;
         },
 
         initialData() {
@@ -463,7 +473,9 @@ export default {
                 civ_stat: this.civilStatusValue,
                 mobile: this.mobileValue,
                 email: this.emailValue,
+                city_mun: this.cityValue,
                 brgy_code: this.barangayCodeValue,
+                purok: this.purokValue,
                 address: this.addressValue,
             })
             .then(response => {
@@ -492,6 +504,8 @@ export default {
                 this.mobileValue = response.data.operator.mobile;
                 this.emailValue = response.data.operator.email;
                 this.barangayCodeValue = response.data.operator.brgy_code;
+                this.cityValue = response.data.operator.city_mun;
+                this.purokValue = response.data.operator.purok;
                 this.addressValue = response.data.operator.address1;
                 $('#create-modal').modal('show');
             });
@@ -510,6 +524,8 @@ export default {
                 mobile: this.mobileValue,
                 email: this.emailValue,
                 brgy_code: this.barangayCodeValue,
+                city_mun: this.cityValue,
+                purok: this.purokValue,
                 address: this.addressValue,
             })
             .then(response => {

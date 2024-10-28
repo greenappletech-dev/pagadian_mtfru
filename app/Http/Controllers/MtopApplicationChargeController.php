@@ -17,6 +17,7 @@ class MtopApplicationChargeController extends Controller
         $mtop_charges->mtop_application_id = $request->mtop_application_id;
         $mtop_charges->otherinc_id = $request->id;
         $mtop_charges->price = $request->price;
+        $mtop_charges->or_group = $request->or_group;
         $mtop_charges->save();
         return $this->update_charges($request->mtop_application_id);
     }

@@ -202,7 +202,7 @@
                             height: 100%;
                             margin: 0">
                                 <input type="checkbox" v-model="newTransaction" v-on:click="checkNew" style="display: none" id="chk_new">
-                                <span style="position: relative; width: 20px; height: 20px;" class="border rounded mr-2"><i id="new_check_icon" class="fas fa-check" style="display: none;
+                                <span style="position: relative; width: 20px; height: 20px;" class="border rounded mr-2"><i id="new_check_icon" class="fas fa-check" v-if="new_check_icon" style="
                                         position: absolute;
                                         top: 50%;
                                         left: 55%;
@@ -223,7 +223,7 @@
                                 height: 100%;
                                 margin: 0">
                                 <input type="checkbox" v-model="renewal" v-on:click="checkRenewal" style="display: none" id="chk_renewal">
-                                <span style="position: relative; width: 20px; height: 20px;" class="border rounded mr-2"><i id="renew_check_icon" class="fas fa-check" style="display: none;
+                                <span style="position: relative; width: 20px; height: 20px;" class="border rounded mr-2"><i id="renew_check_icon" class="fas fa-check" v-if="renew_check_icon" style="
                                             position: absolute;
                                             top: 50%;
                                             left: 55%;
@@ -246,19 +246,19 @@
                                 <span style="position: relative;
                             width: 20px;
                             height: 20px;" class="border rounded mr-2">
-                                    <i id="drop_check_icon" class="fas fa-check" style="display: none;
+                                    <i id="drop_check_icon" class="fas fa-check" style="
                                     position: absolute;
                                     top: 50%;
                                     left: 55%;
                                     transform: translate(-50%, -50%);
                                     font-size: 15px;
-                                    color: #3ae374;"></i>
+                                    color: #3ae374;" v-if="drop_check_icon"></i>
                                 </span>
                                 <h2 style="font-size: 17px; margin: 0;">Dropping</h2>
                             </label>
                         </div>
 
-                        <div class="card-body" id="dropping_details" style="position: relative; display: none">
+                        <div class="card-body" id="dropping_details" style="position: relative;" v-if="dropping_details">
                             <label>Please Select New Operator</label>
                             <div class="form-group">
                                 <label for="new_operator">Operator Name</label>
@@ -323,13 +323,13 @@
                             <i
                                 id="change_unit_icon"
                                 class="fas fa-check"
-                                style="display: none;
+                                style="
                                 position: absolute;
                                 top: 50%;
                                 left: 55%;
                                 transform: translate(-50%, -50%);
                                 font-size: 15px;
-                                color: #3ae374;">
+                                color: #3ae374;" v-if="change_unit_icon">
                             </i>
                         </span>
 
@@ -338,7 +338,7 @@
                             </label>
                         </div>
 
-                        <div class="card-body" id="change_unit_details" style="display: none;">
+                        <div class="card-body" id="change_unit_details" v-if="change_unit_details">
                             <label>New Tricycle Details</label>
                             <div class="row">
 
@@ -400,8 +400,15 @@
                 </div>
 
                 <div class="card-body">
+                    <label for="or_group">Select Charge Group:</label>
+                    <select id="or_group" class="form-control mb-2" v-model="or_group" v-on:change="filterORGroup(or_group)">
+                        <option value="A">Charge A</option>
+                        <option value="B">Charge B</option>
+                        <option value="C">Charge C</option>
+                    </select>
+
                     <v-client-table
-                        :data="selectedChargesTableData"
+                        :data="filteredChargesTableData"
                         :columns="selected_charge_column"
                         :options="selected_charge_option">
                         <span slot="price" slot-scope="{row}">
@@ -433,7 +440,8 @@
                                     :columns="charges_column"
                                     :options="charges_option">
                                     <span slot="price" slot-scope="{row}">
-                                        {{ formatPrice(row.price) }}
+                                        <input v-if="row.price == 0" type="number" class="form-control" v-model="other_price">
+                                        <span v-else>{{ formatPrice(row.price) }}</span>
                                     </span>
                                     <span slot="action" slot-scope="{row}">
                                         <button v-on:click="selectCharges(row.id)" class="btn btn-primary mb-2" style="font-size: 12px">Select</button>
@@ -507,9 +515,9 @@ export default {
                     filter: 'Search:',
                 },
             },
-
             selected_charge_column: ['name','price', 'action'],
             selectedChargesTableData: [],
+            filteredChargesTableData: [],
             selected_charge_option: {
                 headings: {
                     name: 'Charge Name',
@@ -521,7 +529,6 @@ export default {
                     filter: 'Search:',
                 },
             },
-
             columns_search: ['taxpayer_id', 'operator', 'action'],
             operatorTableData: [],
             options_search: {
@@ -536,7 +543,16 @@ export default {
                     filter: 'Search:',
                 },
             },
-
+            other_price: 0,
+            // Charge Group
+            or_group:'A',
+            // show/hide
+            new_check_icon:false,
+            renew_check_icon:false,
+            drop_check_icon:false,
+            dropping_details:false,
+            change_unit_icon:false,
+            change_unit_details:false,
             //dropdowns
             errors: [],
             barangayCodeTableData: [],
@@ -605,7 +621,9 @@ export default {
         }
     },
     methods: {
-
+        filterORGroup(or_group){
+            this.filteredChargesTableData = this.selectedChargesTableData.filter(function(item) { return item.or_group === or_group; });
+        },
         formatPrice(value) {
             let val = (value/1).toFixed(2).replace(',', '.')
             return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
@@ -773,24 +791,48 @@ export default {
         selectCharges(id) {
             let arr = [];
             let total;
+            let compute_qty;
+            let qty = this.qty;
+            let price = this.other_price;
+            let or_group = this.or_group;
+
 
             this.chargesTableData.forEach(function(item, index) {
 
                 if(parseInt(item['id']) === parseInt(id)) {
-                    arr.push(item);
-                    total = parseFloat(item['price']);
-                }
 
+                    if(item['price'] != 0) {
+                        price = item['price'];
+                    }
+
+                    arr.push({
+                        id: id,
+                        name: item['name'],
+                        price: price,
+                        or_group: or_group,
+                    });
+
+                    total = parseFloat(price);
+                }
             });
 
             this.transactionTotals += total;
             this.selectedChargesTableData.push(arr[0]);
             $('#search-modal').modal('hide');
+            this.other_price = 0;
+
+
+            /* filter the data to display */
+           this.filterORGroup(this.or_group);
         },
 
         removeCharges(id, price) {
+            let fill_index = id-1;
+            let remove_row = this.filteredChargesTableData[fill_index];
+            let remove_index = this.selectedChargesTableData.indexOf(remove_row);
+            this.selectedChargesTableData.splice(remove_index,1);
             this.transactionTotals -= parseFloat(price);
-            this.selectedChargesTableData.splice(id - 1,1);
+            this.filterORGroup(this.or_group);
         },
 
         storeRecord() {
@@ -879,12 +921,19 @@ export default {
         {
             if(e.target.checked)
             {
-                $('#new_check_icon').show();
-                $('#renew_check_icon').hide();
-                $('#drop_check_icon').hide();
-                $('#dropping_details').hide();
-                $('#change_unit_icon').hide();
-                $('#change_unit_details').hide();
+                // $('#new_check_icon').show();
+                // $('#renew_check_icon').hide();
+                // $('#drop_check_icon').hide();
+                // $('#dropping_details').hide();
+                // $('#change_unit_icon').hide();
+                // $('#change_unit_details').hide();
+
+                this.new_check_icon = e.target.checked;
+                this.renew_check_icon = false;
+                this.drop_check_icon = false;
+                this.dropping_details =false;
+                this.change_unit_icon =false;
+                this.change_unit_details =false;
 
 
                 this.newTransaction = true;
@@ -909,10 +958,15 @@ export default {
                 this.newTransaction = false;
                 this.newOperator = false;
 
-                $('#new_check_icon').hide();
-                $('#renew_check_icon').show();
-                $('#drop_check_icon').hide();
-                $('#dropping_details').hide();
+                // $('#new_check_icon').hide();
+                // $('#renew_check_icon').show();
+                // $('#drop_check_icon').hide();
+                // $('#dropping_details').hide();
+
+                this.new_check_icon = false;
+                this.renew_check_icon = e.target.checked;
+                this.drop_check_icon = false;
+                this.dropping_details = false;
 
                 this.newOperatorValue = '';
                 this.newOperatorIdValue = '';
@@ -936,13 +990,16 @@ export default {
 
 
         checkDropping(e) {
-
             if (e.target.checked) {
 
-                $('#new_check_icon').hide();
-                $('#renew_check_icon').hide();
-                $('#dropping_details').show();
-                $('#drop_check_icon').show();
+                // $('#new_check_icon').hide();
+                this.new_check_icon = false;
+                // $('#renew_check_icon').hide();
+                this.renew_check_icon = false;
+                // $('#dropping_details').show();
+                this.dropping_details = e.target.checked;
+                // $('#drop_check_icon').show();
+                this.drop_check_icon =e.target.checked;
 
                 this.newTransaction = false;
                 this.newOperator = true;
@@ -956,8 +1013,10 @@ export default {
             this.newOperatorBarangayValue = '';
             this.newOperatorBarangayIdValue = '';
 
-            $('#drop_check_icon').hide();
-            $('#dropping_details').hide();
+            // $('#drop_check_icon').hide();
+            // $('#dropping_details').hide();
+            this.dropping_details = e.target.checked;
+            this.drop_check_icon =e.target.checked;
             this.newOperator = false;
 
         },
@@ -967,17 +1026,23 @@ export default {
 
         checkChangeUnit(e) {
             if (e.target.checked) {
-                $('#change_unit_details').show();
-                $('#change_unit_icon').show();
-                $('#new_check_icon').hide();
+                // $('#change_unit_details').show();
+                // $('#change_unit_icon').show();
+                // $('#new_check_icon').hide();
+                this.change_unit_details = e.target.checked;
+                this.change_unit_icon = e.target.checked;
+                this.new_check_icon = false;
 
                 this.newTransaction = false;
                 this.changeUnit = true;
                 return;
             }
 
-            $('#change_unit_details').hide();
-            $('#change_unit_icon').hide();
+            // $('#change_unit_details').hide();
+            // $('#change_unit_icon').hide();
+            this.change_unit_details = false;
+            this.change_unit_icon = false;
+
             this.changeUnit = false;
             this.newMakeTypeValue = '';
             this.newEngineMotorNo = '';

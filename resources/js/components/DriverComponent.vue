@@ -155,6 +155,15 @@
                             <label for="middle_name">Middle Name</label>
                             <input type="text" style="text-transform: uppercase" v-model="middleNameValue" id="middle_name" class="form-control">
 
+                            <label for="middle_name">City</label>
+                            <input type="text" style="text-transform: uppercase" v-model="cityValue" id="cityValue" class="form-control">
+
+                            <label for="middle_name">Barangay</label>
+                            <input type="text" style="text-transform: uppercase" v-model="barangayValue" id="barangayValue" class="form-control">
+
+                            <label for="middle_name">Purok</label>
+                            <input type="text" style="text-transform: uppercase" v-model="purokValue" id="purokValue" class="form-control">
+
                             <label for="address">Address</label>
                             <input type="text" style="text-transform: uppercase" v-model="addressValue" id="address" class="form-control">
 
@@ -253,6 +262,9 @@ export default {
             mobileValue: null,
             gcashValue: null,
             associationValue: null,
+            cityValue:null,
+            barangayValue:null,
+            purokValue:null,
 
             err_msg: '',
             err: false,
@@ -283,6 +295,9 @@ export default {
             this.lastNameValue = '';
             this.firstNameValue = '';
             this.middleNameValue = '';
+            this.cityValue = '';
+            this.barangayValue = '';
+            this.purokValue = '';
             this.licenseNumberValue = '';
             this.tricycleIdValue = '';
             this.bodyNumberValue = '';
@@ -360,6 +375,9 @@ export default {
                 this.lastNameValue = response.data.driver.last_name;
                 this.firstNameValue = response.data.driver.first_name;
                 this.middleNameValue = response.data.driver.middle_name;
+                this.cityValue = response.data.driver.city;
+                this.barangayValue = response.data.driver.barangay;
+                this.purokValue = response.data.driver.purok;
                 this.licenseNumberValue = response.data.driver.driver_license_no;
                 this.tricycleIdValue = response.data.driver.tricycle_id;
                 this.bodyNumberValue = response.data.driver.body_number;
@@ -384,6 +402,9 @@ export default {
                 last_name: this.lastNameValue,
                 first_name: this.firstNameValue,
                 middle_name: this.middleNameValue,
+                city: this.cityValue,
+                barangay: this.barangayValue,
+                purok: this.purokValue,
                 driver_license_no: this.licenseNumberValue,
                 tricycle_id: this.tricycleIdValue,
                 address: this.addressValue,
@@ -411,6 +432,9 @@ export default {
                 last_name: this.lastNameValue,
                 first_name: this.firstNameValue,
                 middle_name: this.middleNameValue,
+                city: this.cityValye,
+                barangay: this.barangayValue,
+                purok: this.purokValue,
                 driver_license_no: this.licenseNumberValue,
                 tricycle_id: this.tricycleIdValue,
                 address: this.addressValue,

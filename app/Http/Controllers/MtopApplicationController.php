@@ -269,6 +269,7 @@ class MtopApplicationController extends Controller
                 $charges->mtop_application_id = $data->id;
                 $charges->otherinc_id = $charge['id'];
                 $charges->price = $charge['price'];
+                $charges->or_group = $charge['or_group'];
                 $charges->save();
             }
 
@@ -596,23 +597,33 @@ class MtopApplicationController extends Controller
     }
 
     public function pdfApplication($id, $form_to_print) {
+        $data=[];
         $mtop_application = $this->mtop_applications->fetchDataForPrinting($id);
-        $charges = DB::table('collne2')->where('or_code', $mtop_application->or_code)->get();
+        foreach($mtop_application as $mtop){
+            
+            $charges = DB::table('collne2')->where('or_code', $mtop->or_code)->get();
 
-        $operator_img = $this->operator_img->fetchDataById($mtop_application->taxpayer_id);
+            $operator_img = $this->operator_img->fetchDataById($mtop->taxpayer_id);
 
+            $transaction_type = explode(',',$mtop->transact_type);
+            $application_type = $this->mtop_applications->getApplicationType($transaction_type);
+            $system_parameter = DB::table('m99')->where('par_code', '001')->first();
+            
+            $data[] = [$mtop, $charges, $operator_img];
+        }
+        
+        // dd($data);
+        
 
         /* must check if the application is new, renewal, dropping or change unit */
 
-        $transaction_type = explode(',',$mtop_application->transact_type);
-        $application_type = $this->mtop_applications->getApplicationType($transaction_type);
-        $system_parameter = DB::table('m99')->where('par_code', '001')->first();
+        // $data = [$mtop_application[0], $charges, $operator_img];
 
-
-        $data = [$mtop_application, $charges, $operator_img];
+        // dd($data);
 
         if((int)$form_to_print === 1) {
             $blade = 'pdf_mtfrb_application';
+            $data=$mtop_application;
         }
 
         if((int)$form_to_print === 3) {
@@ -621,22 +632,19 @@ class MtopApplicationController extends Controller
 
         if((int)$form_to_print === 4) {
             $blade = 'pdf_mtfrb_permit';
-
             $association = '';
             $getAssociation = TricycleAssociationMember::select('tricycle_associations.name as association')
-                ->where('taxpayer_id', $mtop_application->taxpayer_id)
+                ->where('taxpayer_id', $mtop_application[0]->taxpayer_id)
                 ->leftJoin('tricycle_associations', 'tricycle_associations.id', 'tricycle_association_members.tricycle_association_id')
                 ->first();
-
             if($getAssociation) {
                 $association = $getAssociation->association;
             }
 
-
             /* get the previous application */
-            array_push($data, $application_type, $system_parameter, $association);
+            array_push($data[0], $application_type, $system_parameter, $association);
+            $data = $data[0];
         }
-
 
         $pdf = \App::make('dompdf.wrapper');
         $pdf->getDomPDF()->set_option("enable_php", true);
@@ -669,7 +677,8 @@ class MtopApplicationController extends Controller
             ->where('mtop_application_id', '<=', 0)
             ->where(function($query) {
                 $query->where('colhdr.trans_type', 'MTOP')
-                    ->orWhere('colhdr.trans_type', null);
+                    ->orWhere('colhdr.trans_type', null)
+                    ->orWhere('colhdr.trans_type', "");
             })
             ->get();
 
@@ -678,13 +687,17 @@ class MtopApplicationController extends Controller
 
     public function tagOR(Request $request)
     {
-        DB::table('colhdr')
-            ->where('id', $request->or_no)
+        $or_list = $request->or_list;
+        foreach($or_list as $list){
+            DB::table('colhdr')
+            ->where('id', $list['id'])
             ->where(function($query) {
                 $query->where('colhdr.trans_type', 'MTOP')
-                    ->orWhere('colhdr.trans_type', null);
+                    ->orWhere('colhdr.trans_type', null)
+                    ->orWhere('colhdr.trans_type', "");
             })
             ->update(['mtop_application_id' => $request->application_id, 'trans_type' => 'MTOP']);
+        }
 
         return response()->json(['message' => 'OR Tagged Successfully!']);
     }
