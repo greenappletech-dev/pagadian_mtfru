@@ -531,9 +531,9 @@ class MtopApplicationController extends Controller
 
         /* OR IS CANCELLED */
 
-        if($checkOR)
+        if(!empty($checkOR))
         {
-            return $checkOR->cancel !== 'Y' ? date('m/d/Y', strtotime('+2 years', strtotime($checkOR->trnx_date))) : 'cancelled';
+            return $checkOR->cancel != 'Y' ? date('m/d/Y', strtotime('+2 years', strtotime($checkOR->trnx_date))) : 'cancelled';
         }
     }
 
@@ -712,6 +712,7 @@ class MtopApplicationController extends Controller
             if($application['status'] != 4 && $application['status'] != 1)
             {
                 $storeValidityDateIfNotCancel = $this->ORDetails($application);
+                
 
                 if($storeValidityDateIfNotCancel)
                 {
