@@ -31,6 +31,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //dev url
 window.axios.defaults.baseURL = 'http://localhost/pagadian_mtfru/';
 
+
 //staging url
 // window.axios.defaults.baseURL = 'http://staging-mtfru.ideasoftcloud.com';
 
