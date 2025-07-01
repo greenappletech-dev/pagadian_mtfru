@@ -18,13 +18,27 @@
         border: none;
     }
 }
+
+.charge-item {
+    transition: all 0.2s;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}
+.charge-item:hover {
+    background-color: #e9ecef;
+}
+
+.charge-list{
+    max-height: 300px;
+    overflow-y: auto;
+    }
 </style>
 <template>
     <div class="main-container p-4">
 
         <div style="position: absolute; top: 0; left: 0; z-index: 1000; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2);" v-if="loader">
             <div style="position: fixed; top: 450px; left: 55%; transform:translate(-50%, -70%)">
-                <img src="public/loader/loader.gif" alt="loader">
+                <img src="/loader/loader.gif" alt="loader">
             </div>
         </div>
         <div style="position: absolute; top: 0; left: 0; z-index: 1000; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2);" v-if="err || suc">
@@ -401,21 +415,42 @@
 
                 <div class="card-body">
                     <label for="or_group">Select Charge Group:</label>
-                    <select id="or_group" class="form-control mb-2" v-model="or_group" v-on:change="filterORGroup(or_group)">
+                    <select id="or_group" class="form-control mb-2" v-model="or_group">
                         <option value="A">Charge A</option>
                         <option value="B">Charge B</option>
                         <option value="C">Charge C</option>
                     </select>
+                    
+                    <div v-if="transactionType && !err">
+                        <div v-if="selectedChargesTableData.length > 0" class="charge-list">
+                            <div v-for="charge in selectedChargesTableData" :key="charge.id" class="charge-item mb-2 p-2 border rounded">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong> {{ charge.name }}</strong>
+                                        <div class="text-muted small">{{ formatPrice(charge.price) }}</div>
+                                    </div>
+                                    <button @click="removeCharges(charge.id, charge.price)" class="btn btn-primary btn-sm">
+                                        Remove
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else class="text-center py-3">
+                            No charges availble for this transaction type.
+                        </div>
+                    </div>
 
+                    <!-- Selected Charges Table-->
                     <v-client-table
-                        :data="filteredChargesTableData"
+                        v-if="selectedCharges.length > 0"
+                        :data="selectedCharges"
                         :columns="selected_charge_column"
                         :options="selected_charge_option">
                         <span slot="price" slot-scope="{row}">
                             {{ formatPrice(row.price) }}
                         </span>
-                        <span slot="action" slot-scope="props">
-                            <button v-on:click="removeCharges(props.index, props.row.price)" class="btn btn-danger mb-2" style="font-size: 12px">Remove</button>
+                        <span slot="action" slot-scope="{row}">
+                            <button @click="removeCharges(row.id)" class="btn btn-danger sm">Remove</button>
                         </span>
                     </v-client-table>
                 </div>
@@ -436,11 +471,19 @@
                     <div class="modal-body" style="max-height: 500px; overflow: auto;">
                         <div v-if="addCharges">
                             <v-client-table style="font-size: 15px"
-                                    :data="chargesTableData"
+                                    :data="availableChargesToAdd"
                                     :columns="charges_column"
                                     :options="charges_option">
                                     <span slot="price" slot-scope="{row}">
-                                        <input v-if="row.price == 0" type="number" class="form-control" v-model="other_price">
+                                         <template v-if="row.name === 'Surcharge 25% (MTFRU)' || row.name === 'Interest 2% (MTFRU)'">
+                                            <input type="number" class="form-control" 
+                                                v-model.number="other_prices[row.name]" 
+                                                @input="updateSpecialCharge(row.name, $event)"
+                                                min="0" step="0.01"/>
+                                        </template>
+                                        <template v-else-if="row.price == 0">
+                                            <input type="number" class="form-control" v-model.number="other_prices[row.id]" >
+                                    </template>
                                         <span v-else>{{ formatPrice(row.price) }}</span>
                                     </span>
                                     <span slot="action" slot-scope="{row}">
@@ -499,11 +542,23 @@
 <script>
 
 export default {
-
+    props: ['charges'],
+    
     data() {
+        
         return {
             charges_column: ['name','price', 'action'],
+            // chargesTableData: this.charges,
+            transactionType: null,
+            selectedCharges: [],
             chargesTableData: [],
+            other_prices: {},
+            selectedChargesTableData: [],
+            filteredChargesTableData: [],
+            transactionType: null,
+            selectedCharges: [],
+            or_group:  'A',
+            transactionTotals: 0,
             charges_option: {
                 headings: {
                     name: 'Charge Name',
@@ -620,9 +675,69 @@ export default {
             paperOrientation: 'Portrait',
         }
     },
+    computed: {
+        filteredCharges(){
+            if(!this.transactionType) {
+                return [];
+            }
+            return this.chargesTableData.filter(charge => {
+                return this.chargesTableData;
+            });
+        },
+        availableChargesToAdd(){
+            const assignedIds = this.selectedChargesTableData.map(c => c.id);
+            return this.chargesTableData.filter(c => !assignedIds.includes(c.id));
+        },
+    },
     methods: {
-        filterORGroup(or_group){
-            this.filteredChargesTableData = this.selectedChargesTableData.filter(function(item) { return item.or_group === or_group; });
+            selectCharges(id) {
+                let selectedCharge = null;
+                let price = 0;
+
+                this.chargesTableData.forEach(charge => {
+                    if(parseInt(charge.id) === parseInt(id)){
+                if (charge.name === 'Surcharge 25% (MTFRU)' || charge.name === 'Interest 2% (MTFRU)') {
+                    price = parseFloat(this.other_prices[charge.name] || 0); // Use charge name as key
+                } else {
+                    price = charge.price === 0 ? parseFloat(this.other_prices[charge.id] || 0) : charge.price;
+                }
+
+                selectedCharge = {
+                    id: charge.id,
+                    name: charge.name,
+                    price: price,
+                    or_group: this.or_group
+                };
+            }
+        });
+
+            if (selectedCharge){
+                this.selectedChargesTableData.push(selectedCharge);
+
+                this.transactionTotals += parseFloat(price);
+
+                this.filterORGroup(this.or_group);
+
+                $('#search-modal').modal('hide');
+                this.$set(this.other_prices, id, '');
+            }
+        },
+        updateSpecialCharge(chargeName, event) {
+            
+            const value = parseFloat(event.target.value)!=''?parseFloat(event.target.value) : 0;
+
+            this.$set(this.other_prices, chargeName, value);    
+    
+            this.selectedChargesTableData = this.selectedChargesTableData.map(charge => {
+                if (charge.name === chargeName) {
+                    return { ...charge, price: value };
+                }
+                return charge;
+            });
+        },
+        filterORGroup(group) {
+            this.filteredChargesTableData = this.selectedChargesTableData.filter(charge => charge.or_group === group
+            );
         },
         formatPrice(value) {
             let val = (value/1).toFixed(2).replace(',', '.')
@@ -705,14 +820,24 @@ export default {
         },
 
         initialData() {
-            this.tableData = [];
-            const date = new Date();
-
-            axios.get('mtop/getdata')
+            this.loader = true;
+            axios.get('/mtop/getdata')
             .then(response => {
-                this.chargesTableData = response.data.charges;
+                this.chargesTableData = response.data.charges || this.charges;
+                this.barangayCodeTableData = response.data.barangays || [];
+                const date = new Date();
                 this.MTFRBCaseValue = 'PAG-' + date.getFullYear() + '-';
-                this.barangayCodeTableData = response.data.barangays;
+                this.loader = false;
+            }).catch(error => {
+                console.error('Error loading initial data:', error);
+                this.chargesTableData = this.charges || [];
+                this.barangayCodeTableData = [];
+                this.loader = false;
+                
+                if(this.charges) {
+                    this.err = true;
+                    this.err_msg = 'Failed to load initial data. Please try again.';
+                }
             });
         },
 
@@ -788,51 +913,17 @@ export default {
             $('#search-modal').modal('show');
         },
 
-        selectCharges(id) {
-            let arr = [];
-            let total;
-            let compute_qty;
-            let qty = this.qty;
-            let price = this.other_price;
-            let or_group = this.or_group;
+        removeCharges(id, price){
+            const removeIndex = this.selectedChargesTableData.findIndex(
+                charge => charge.id === id
+            );
 
-
-            this.chargesTableData.forEach(function(item, index) {
-
-                if(parseInt(item['id']) === parseInt(id)) {
-
-                    if(item['price'] != 0) {
-                        price = item['price'];
-                    }
-
-                    arr.push({
-                        id: id,
-                        name: item['name'],
-                        price: price,
-                        or_group: or_group,
-                    });
-
-                    total = parseFloat(price);
-                }
-            });
-
-            this.transactionTotals += total;
-            this.selectedChargesTableData.push(arr[0]);
-            $('#search-modal').modal('hide');
-            this.other_price = 0;
-
-
-            /* filter the data to display */
-           this.filterORGroup(this.or_group);
-        },
-
-        removeCharges(id, price) {
-            let fill_index = id-1;
-            let remove_row = this.filteredChargesTableData[fill_index];
-            let remove_index = this.selectedChargesTableData.indexOf(remove_row);
-            this.selectedChargesTableData.splice(remove_index,1);
-            this.transactionTotals -= parseFloat(price);
-            this.filterORGroup(this.or_group);
+            if(removeIndex !== -1){
+                this.$set(this.other_prices, id, '');
+                this.selectedChargesTableData.splice(removeIndex, 1);
+                this.transactionTotals -= parseFloat(price);
+                this.filterORGroup(this.or_group);
+            }
         },
 
         storeRecord() {
@@ -854,6 +945,7 @@ export default {
             /* pass dropping object if the user trigger dropping */
 
             let dropping_details;
+            
 
             if (this.newOperator) {
 
@@ -869,7 +961,7 @@ export default {
 
             let change_unit;
 
-            if (this.changeUnit) {
+            if (this.changeUnit) {  
 
                 change_unit = {
                     new_make_type: this.newMakeTypeValue,
@@ -919,66 +1011,111 @@ export default {
 
         checkNew(e)
         {
+            this.resetTransactionTypes();
             if(e.target.checked)
             {
-                // $('#new_check_icon').show();
-                // $('#renew_check_icon').hide();
-                // $('#drop_check_icon').hide();
-                // $('#dropping_details').hide();
-                // $('#change_unit_icon').hide();
-                // $('#change_unit_details').hide();
-
-                this.new_check_icon = e.target.checked;
-                this.renew_check_icon = false;
-                this.drop_check_icon = false;
-                this.dropping_details =false;
-                this.change_unit_icon =false;
-                this.change_unit_details =false;
-
-
+                this.new_check_icon = true;
                 this.newTransaction = true;
-                this.renewal = false;
-                this.newOperator = false;
-                this.changeUnit = false;
-                return;
-            }
+                this.transactionType = 'new';
+                this.selectedChargesTableData = [];
+                this.transactionTotals = 0;
 
-            this.newTransaction = false;
-            $('#new_check_icon').hide();
+                axios.get(`/setting/assigned_charges/${this.transactionType}`)
+                .then(response => {
+                    this.selectedChargesTableData = response.data.filter(charge => charge.price > 0).map(charge => ({
+                        id: charge.id,
+                        name: charge.name,
+                        price: charge.price,
+                        or_group: this.or_group
+                    }));
+                    this.transactionTotals = this.selectedChargesTableData.reduce((sum, c) => sum + parseFloat(c.price), 0);
+                    this.filterORGroup(this.or_group);
+                });
+            }
         },
+
+        loadChargesForTransaction(callback) {
+            if(!this.transactionType) return;
+            
+            axios.get(`/mtop/charges/${this.transactionType}`)
+                .then(response => {
+                    this.chargesTableData = response.data;
+                    if(typeof callback === 'function') callback();
+                }).catch(error => {
+                    console.error('Error loading charges:', error);
+                });
+    
+        },
+
+        toggleChargeSelection(charge){
+            const index = this.selectedCharges.findIndex(c => c.id === charge.id);
+
+            if(index === -1) {
+                this.selectedCharges.push({
+                    id: charge.id,
+                    name: charge.name,
+                    price: charge.price,
+                    or_group: this.or_group
+                });
+                this.transactionTotals += parseFloat(charge.price);
+            }else{
+                this.transactionTotals -= parseFloat(this.selectedCharges[index].price);
+                this.selectedCharges.splice(index, 1);
+            }
+        },
+        isChargeSelected(chargeId){
+            return this.selectedCharges.some(c => c.id === chargeId);
+        },
+        removeCharge(chargeId){
+            const index = this.selectedCharges.findIndex(c => c.id ===chargeId);
+            if(index !== -1){
+                this.transactionTotals -= parseFloat(this.selectedCharges[index].price);
+                this.selectedCharges.splice(index, 1);
+            }
+        },
+
 
 
         /* RENEWAL */
 
-
         checkRenewal(e) {
-
+            this.resetTransactionTypes();
             if(e.target.checked) {
+               
+                this.renew_check_icon = true;
                 this.renewal = true;
-                this.newTransaction = false;
-                this.newOperator = false;
-
-                // $('#new_check_icon').hide();
-                // $('#renew_check_icon').show();
-                // $('#drop_check_icon').hide();
-                // $('#dropping_details').hide();
-
-                this.new_check_icon = false;
-                this.renew_check_icon = e.target.checked;
-                this.drop_check_icon = false;
-                this.dropping_details = false;
-
-                this.newOperatorValue = '';
-                this.newOperatorIdValue = '';
-                this.newOperatorAddressValue = '';
-                this.newOperatorBarangayValue = '';
-                this.newOperatorBarangayIdValue = '';
-
-                return;
+                this.transactionType = 'renewal';
+                this.selectedChargesTableData = [];
+                this.transactionTotals = 0;
+                
+                axios.get(`/setting/assigned_charges/${this.transactionType}`)
+                .then(response => {
+                    this.selectedChargesTableData = response.data.filter(charge => charge.price > 0)
+                    .map(charge => ({
+                        id: charge.id,
+                        name: charge.name,
+                        price: charge.price,
+                        or_group: this.or_group
+                    }));
+                    this.transactionTotals = this.selectedChargesTableData.reduce((sum, c) =>sum + parseFloat(c.price), 0);
+                    this.filterORGroup(this.or_group);
+                });
             }
+        },
 
+        resetTransactionTypes(){
+            this.new_check_icon = false;
+            this.renew_check_icon = false;
+            this.drop_check_icon = false;
+            this.change_unit_icon = false;
+
+            this.newTransaction = false;
             this.renewal = false;
-            $('#new_check_icon').hide();
+            this.droppingValue = false;
+            this.changeUnitValue = false;
+
+            this.dropping_details = false;
+            this.change_unit_details = false;
 
         },
 
@@ -990,67 +1127,54 @@ export default {
 
 
         checkDropping(e) {
-            if (e.target.checked) {
+        this.resetTransactionTypes();
+        if (e.target.checked) {
+            this.drop_check_icon = true;
+            this.dropping_details = true;
+            this.droppingValue = true;
+            this.transactionType = 'dropping';
+            this.selectedChargesTableData = [];
+            this.transactionTotals = 0;
 
-                // $('#new_check_icon').hide();
-                this.new_check_icon = false;
-                // $('#renew_check_icon').hide();
-                this.renew_check_icon = false;
-                // $('#dropping_details').show();
-                this.dropping_details = e.target.checked;
-                // $('#drop_check_icon').show();
-                this.drop_check_icon =e.target.checked;
+            axios.get(`/setting/assigned_charges/${this.transactionType}`)
+                .then(response => {
+                    this.selectedChargesTableData = response.data.filter(charge => charge.price > 0)
+                    .map(charge => ({
+                        id: charge.id,
+                        name: charge.name,
+                        price: charge.price,
+                        or_group: this.or_group
+                    }));
+                    this.transactionTotals = this.selectedChargesTableData.reduce((sum, c) => sum + parseFloat(c.price), 0);
+                    this.filterORGroup(this.or_group);
+                });
+        }
+    },
 
-                this.newTransaction = false;
-                this.newOperator = true;
-                this.renewal = false;
-                return;
-            }
+    checkChangeUnit(e) {
+        this.resetTransactionTypes();
+        if (e.target.checked) {
+            this.change_unit_icon = true;
+            this.change_unit_details = true;
+            this.changeUnitValue = true;
+            this.transactionType = 'change_unit';
+            this.selectedChargesTableData = [];
+            this.transactionTotals = 0;
 
-            this.newOperatorValue = '';
-            this.newOperatorIdValue = '';
-            this.newOperatorAddressValue = '';
-            this.newOperatorBarangayValue = '';
-            this.newOperatorBarangayIdValue = '';
-
-            // $('#drop_check_icon').hide();
-            // $('#dropping_details').hide();
-            this.dropping_details = e.target.checked;
-            this.drop_check_icon =e.target.checked;
-            this.newOperator = false;
-
-        },
-
-        /* CHANGE UNIT */
-
-
-        checkChangeUnit(e) {
-            if (e.target.checked) {
-                // $('#change_unit_details').show();
-                // $('#change_unit_icon').show();
-                // $('#new_check_icon').hide();
-                this.change_unit_details = e.target.checked;
-                this.change_unit_icon = e.target.checked;
-                this.new_check_icon = false;
-
-                this.newTransaction = false;
-                this.changeUnit = true;
-                return;
-            }
-
-            // $('#change_unit_details').hide();
-            // $('#change_unit_icon').hide();
-            this.change_unit_details = false;
-            this.change_unit_icon = false;
-
-            this.changeUnit = false;
-            this.newMakeTypeValue = '';
-            this.newEngineMotorNo = '';
-            this.newPlateNoValue = '';
-            this.newChassisNoValue = '';
-        },
-
-
+            axios.get(`/setting/assigned_charges/${this.transactionType}`)
+                .then(response => {
+                    this.selectedChargesTableData = response.data.filter(charge => charge.price > 0)
+                    .map(charge => ({
+                        id: charge.id,
+                        name: charge.name,
+                        price: charge.price,
+                        or_group: this.or_group
+                    }));
+                    this.transactionTotals = this.selectedChargesTableData.reduce((sum, c) => sum + parseFloat(c.price), 0);
+                    this.filterORGroup(this.or_group);
+                });
+        }
+    },
 
         openModalToSearchNewOperator() {
             this.searchNewOperator = true;
@@ -1109,6 +1233,8 @@ export default {
 
     mounted() {
         this.initialData();
+        this.chargesTableData = this.charges;
+        this.filterORGroup(this.or_group);
     }
 }
 </script>

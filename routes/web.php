@@ -20,6 +20,7 @@ use App\Http\Controllers\BoatCaptainController;
 use App\Http\Controllers\SignatoriesController;
 use \App\Http\Controllers\MTFRUReportController;
 use App\Http\Controllers\MtopAnnualTaxController;
+use App\Http\Controllers\SystemSettingController;
 use App\Http\Controllers\FvrApplicationController;
 use App\Http\Controllers\FvrViewRenewalController;
 use App\Http\Controllers\MTOPChargeListController;
@@ -86,7 +87,6 @@ Route::group(['middleware'=> 'auth'], function() {
 
 
 
-
         /* Operator */
         Route::get('operator', [OperatorController::class, 'index']);
         Route::get('operator/getdata',[OperatorController::class, 'getdata']);
@@ -98,7 +98,9 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::post('operator/upload/{id}', [OperatorController::class, 'upload']);
         Route::get('operator/viewImage/{id}', [OperatorController::class, 'viewImage']);
 
+     
         /* MTOP */
+        Route::get('mtop/charges/{type}', [MtopApplicationController::class, 'getChargesByTransactionType']);
         Route::get('mtop', [MtopApplicationController::class, 'index']);
         Route::get('mtop/getdata', [MtopApplicationController::class, 'getdata']);
         Route::get('mtop/getdata_filtered/{from}/{to}/{barangay_id}', [MtopApplicationController::class, 'getdata_filtered']);
@@ -148,6 +150,27 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('parameter',[SystemParameterController::class, 'index']);
         Route::get('parameter/getrecord',[SystemParameterController::class, 'getrecord']);
         Route::patch('parameter/update',[SystemParameterController::class, 'update']);
+
+        /* System Setting */
+        Route::get('setting', [SystemSettingController::class, 'index']);
+        Route::get('/setting/show', [SystemSettingController::class, 'show']);
+        Route::post('/setting/store', [SystemSettingController::class, 'store']);
+        Route::get('/setting/edit/{id}', [SystemSettingController::class, 'edit']);
+        Route::put('/setting/update/{id}', [SystemSettingController::class, 'update']);
+        Route::delete('/setting/destroy/{id}', [SystemSettingController::class, 'destroy']);
+
+        //Charge-related route
+        Route::get('/setting/charges/{systemSettingId}/selected', [SystemSettingController::class, 'getSelectedCharges']);
+        Route::get('/setting/assigned_charges/{type}', [SystemSettingController::class, 'getChargesForTransactionType']);
+        Route::post('/setting/assign_charges', [SystemSettingController::class, 'assignCharges']);
+        Route::get('/setting/all_charges', [SystemSettingController::class, 'getAllCharges']); 
+        Route::get('/setting/transaction_types', [SystemSettingController::class, 'getTransactionTypes']);
+        Route::get('/setting/charges_transaction/{type}', [SystemSettingController::class, 'getChargesByTransactionType']);
+        Route::get('/setting/getrecords', [SystemSettingController::class, 'getRecords']);
+        Route::delete('/setting/remove_available_charges/{id}',[SystemSettingController::class, 'deleteAvailableCharge']);
+        // Route::get('/setting/charges/{type}/selectedfor', [SystemSettingController::class, 'getSelectedChargesForType']);
+        // Route::post('/setting/assign-charges', [SystemSettingController::class, 'assignCharges']);
+                
 
         /* User Account Route */
         Route::get('users',[UserController::class, 'index']);

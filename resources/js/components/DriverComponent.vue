@@ -146,8 +146,6 @@
                                 </div>
                             </div>
 
-                            <label for="last_name">Last Name</label>
-                            <input type="text" style="text-transform: uppercase" v-model="lastNameValue" id="last_name" class="form-control">
 
                             <label for="first_name">First Name</label>
                             <input type="text" style="text-transform: uppercase" v-model="firstNameValue" id="first_name" class="form-control">

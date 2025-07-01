@@ -46,7 +46,9 @@ class MtopApplicationController extends Controller
     public function getdata() {
         $barangays = $this->barangays->fetchData();
         $tricycles = $this->tricycles->fetchData();
-        $charges = $this->charges->fetchData();
+        $charges = Charge::where('tricycle', 'Y')
+            ->select('id', 'inc_desc as name', 'price')
+            ->get();
 
         return response()->json(['barangays' => $barangays, 'tricycles' => $tricycles, 'charges' => $charges]);
     }
@@ -55,7 +57,8 @@ class MtopApplicationController extends Controller
 
     public function create() {
         $renewal = 'n';
-        return view('mtfru.mtop_entry', compact('renewal'));
+        $charges = $this->charges->fetchData();
+        return view('mtfru.mtop_entry', compact('renewal', 'charges'));
     }
 
     public function renew($id) {
@@ -108,6 +111,25 @@ class MtopApplicationController extends Controller
         return response()->json(['operator' => $operator, 'mtfrb_case_no' => $mtfrb_case_no], 200);
     }
 
+    public function getChargesByTransactionType($type){
+        if(empty($type)){
+            return response()->json([]);
+        }
+        $chargeIds = [
+            'new' => '',
+            'renewal' => '',
+            'dropping' => '',
+            'change_unit' => '',
+        ];
+
+        $ids = $chargeIds[$type] ?? [];
+
+            $charges = Charge::where('id', $ids)
+                        ->select('id', 'inc_desc as name', 'price', )
+                        ->get();
+                return response()->json($charges);
+    }
+
     public function search_new_operator($string) {
         $operator = $this->operators->fetchSearchedDataByName($string);
         return response()->json(['operator' => $operator], 200);
@@ -136,9 +158,6 @@ class MtopApplicationController extends Controller
         $taxpayer->brgy_desc = $barangay->brgy_desc;
         $taxpayer->save();
     }
-
-
-
 
 
     public function getTransaction(Request $request)
@@ -331,7 +350,6 @@ class MtopApplicationController extends Controller
         DB::beginTransaction();
 
         try {
-
             $data->mtfrb_case_no = $request->mtfrb_case_no;
             $data->tricycle_id = $request->tricycle_id;
             $data->body_number = $request->body_number;
@@ -366,8 +384,6 @@ class MtopApplicationController extends Controller
 
             $data->transact_type = implode(',', $transaction_type); // implode array to save the transaction type separated by comma
             $data->save();
-
-
 
 //            $data->transact_date = date("M/d/y");
 //            $data->taxpayer_id = $request->taxpayer_id;
@@ -791,4 +807,3 @@ class MtopApplicationController extends Controller
     }
 
 }
-
