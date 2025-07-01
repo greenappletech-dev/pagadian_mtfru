@@ -10,9 +10,7 @@
 @section('content')
 
     <div id="app">
-
-            <mtop_entry-component :charges = "{{ json_encode($charges) }}"
-            ></mtop_entry-component>
+        <system-setting-component :charges="{{ json_encode($charges) }}"></system-setting-component>
     </div>
 
 @stop

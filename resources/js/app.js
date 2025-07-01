@@ -13,6 +13,10 @@ window.moment = moment;
 import moment from "moment";
 import { ClientTable } from 'vue-tables-2';
 import Vue from 'vue'
+import VueSweetalert2 from 'vue-sweetalert2';
+import 'sweetalert2/dist/sweetalert2.min.css';
+
+Vue.use(VueSweetalert2);
 
 import {
     Chart,
@@ -95,6 +99,7 @@ Vue.component('mtop_edit-component', require('./components/MTOPEditComponent.vue
 Vue.component('charges-component', require('./components/ChargesComponent.vue').default);
 Vue.component('user-component', require('./components/UserComponent.vue').default);
 Vue.component('system-parameter-component', require('./components/SystemParameterComponent.vue').default);
+Vue.component('system-setting-component', require('./components/SystemSettingComponent.vue').default);
 Vue.component('old_new-component', require('./components/OldNewFranchiseComponent.vue').default);
 Vue.component('view_renewal-component', require('./components/MTOPViewRenewalComponent.vue').default);
 Vue.component('renewal-component', require('./components/MTOPRenewalComponent.vue').default);

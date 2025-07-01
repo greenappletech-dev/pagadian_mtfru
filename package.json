@@ -27,9 +27,11 @@
     "dependencies": {
         "chart.js": "^3.5.1",
         "moment": "^2.29.1",
+        "sweetalert2": "^11.22.1",
         "toastr": "^2.1.4",
         "v-autocomplete": "^1.8.2",
         "vue-chartkick": "^0.6.1",
+        "vue-sweetalert2": "^5.0.11",
         "vue-tables-2": "^2.3.1",
         "vuetify": "^2.5.6"
     }

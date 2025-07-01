@@ -369,9 +369,14 @@ return [
         [
             'text' => 'System Parameters',
             'url'  => 'parameter',
-            'icon' => 'fas fa-cogs',
+            'icon' => 'fas fa-cogs',                      
         ],
         [
+            'text' => 'System Setting',
+            'url' => 'setting',
+            'icon' => 'fas fa-users-cog',
+        ],
+        [            
             'text' => 'Log out',
             'url'  => 'logout',
             'icon' => 'fas fa-power-off',
