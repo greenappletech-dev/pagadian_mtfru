@@ -139,7 +139,7 @@
     </style>
 </header>
 <body>
-
+        
     <img style="width: 815px; position: absolute; top: -45px; left: -45px;" src="{{ asset('image/forms/MTFRB_FORM_1.jpg') }}" alt="">
 
     <span class="operator_name">{{ $data[0]['full_name'] }}</span>
