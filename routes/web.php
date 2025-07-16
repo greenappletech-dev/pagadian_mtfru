@@ -21,6 +21,7 @@ use App\Http\Controllers\SignatoriesController;
 use \App\Http\Controllers\MTFRUReportController;
 use App\Http\Controllers\MtopAnnualTaxController;
 use App\Http\Controllers\SystemSettingController;
+use App\Http\Controllers\TransactionBodyNumberController;
 use App\Http\Controllers\FvrApplicationController;
 use App\Http\Controllers\FvrViewRenewalController;
 use App\Http\Controllers\MTOPChargeListController;
@@ -132,7 +133,7 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::post('mtop_update/add_charges', [MtopApplicationChargeController::class, 'store']);
         Route::patch('mtop_update/update/{id}', [MtopApplicationController::class, 'update']);
 
-        /* MTOP List of Renewals */
+        /* MTOP List of Renewals */   
         Route::get('mtop_renewal', [MtopViewRenewalController::class, 'index']);
         Route::get('mtop_renewal/getdata', [MtopViewRenewalController::class, 'getdata']);
         Route::get('mtop_renewal/getdata_filtered/{from}/{to}/{barangay_id}', [MtopViewRenewalController::class, 'filter']);
@@ -158,6 +159,9 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('/setting/edit/{id}', [SystemSettingController::class, 'edit']);
         Route::put('/setting/update/{id}', [SystemSettingController::class, 'update']);
         Route::delete('/setting/destroy/{id}', [SystemSettingController::class, 'destroy']);
+
+        //Transaction Body Number
+        Route::get('transaction_body_number', [TransactionBodyNumberController::class, 'index']);
 
         //Charge-related route
         Route::get('/setting/charges/{systemSettingId}/selected', [SystemSettingController::class, 'getSelectedCharges']);
