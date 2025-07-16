@@ -211,7 +211,7 @@
                 <td>{{ $value[2] }}</td>
                 <td>{{ $value[3] }}</td>
                 <td style="text-align: center;">{{ $value[4] }}</td>
-                <td style="text-align: center;">{{ $value[12] == null ? '' : date('m/d/Y', strtotime($value[12])); }}</td>
+                <td style="text-align: center;">{{ $value[12] == null ? '' : date('m/d/Y', strtotime($value[12])) }}</td>
                 <td style="text-align: right">{{ number_format($value[5], 2) }}</td>
             </tr>
 
