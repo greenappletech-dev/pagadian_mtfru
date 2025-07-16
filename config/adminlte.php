@@ -376,6 +376,11 @@ return [
             'url' => 'setting',
             'icon' => 'fas fa-users-cog',
         ],
+        [
+            'text' => 'Transaction Body Number',
+            'url' => 'transaction_body_number',
+            'icon'=> 'fas fa-search',
+        ],
         [            
             'text' => 'Log out',
             'url'  => 'logout',

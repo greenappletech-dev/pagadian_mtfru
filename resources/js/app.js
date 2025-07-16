@@ -100,6 +100,7 @@ Vue.component('charges-component', require('./components/ChargesComponent.vue').
 Vue.component('user-component', require('./components/UserComponent.vue').default);
 Vue.component('system-parameter-component', require('./components/SystemParameterComponent.vue').default);
 Vue.component('system-setting-component', require('./components/SystemSettingComponent.vue').default);
+Vue.component('transaction-body-number-component', require('./components/TransactionBodyNumberComponent.vue').default);
 Vue.component('old_new-component', require('./components/OldNewFranchiseComponent.vue').default);
 Vue.component('view_renewal-component', require('./components/MTOPViewRenewalComponent.vue').default);
 Vue.component('renewal-component', require('./components/MTOPRenewalComponent.vue').default);
