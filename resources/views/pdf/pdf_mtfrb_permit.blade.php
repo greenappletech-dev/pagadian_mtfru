@@ -183,7 +183,7 @@
         .chairman {
             position: absolute;
             bottom: 130px;
-            right: 90px;
+            right: 60px;
         }
 
         /*.page:last-child {*/

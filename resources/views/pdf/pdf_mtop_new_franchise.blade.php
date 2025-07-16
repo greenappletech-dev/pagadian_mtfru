@@ -151,7 +151,7 @@
                     <td>{{ $value['full_name'] }}</td>
                     <td>{{ $value['address'] }}</td>
                     <td>{{ $value['mobile'] }}</td>
-                    <td>{{ $value['date_registered'] == null ? '' : date('m/d/Y', strtotime($value['date_registered'])); }}</td>
+                    <td>{{ $value['date_registered'] == null ? '' : date('m/d/Y', strtotime($value['date_registered'])) }}</td>
                     <td>{{ $value['transact_date'] == null ? '' : date('m/d/Y', strtotime($value['transact_date'])) }}</td>
                     <td>{{ $value['payment_date'] == null ? '' : date('m/d/Y', strtotime($value['payment_date'])) }}</td>
                     <td>{{ $value['approve_date'] == null ? '' : date('m/d/Y', strtotime($value['approve_date'])) }}</td>
