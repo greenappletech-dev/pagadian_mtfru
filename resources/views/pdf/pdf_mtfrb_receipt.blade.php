@@ -104,6 +104,7 @@
 </header>
 
 <body>
+    
     {{$data_count = count($data)}}
 @for ($i=0; $i<$data_count; $i++)
 {{--@dd($data[1][0]['name'])--}}
