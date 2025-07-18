@@ -3,7 +3,7 @@
         <!-- Loader -->
         <div style="position: absolute; top: 0; left: 0; z-index: 1000; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2);" v-if="loader">
             <div style="position: fixed; top: 450px; left: 55%; transform:translate(-50%, -70%)">
-                <img src="public/loader/loader.gif" alt="loader">
+                <img src="/loader/loader.gif" alt="loader">
             </div>
         </div>
 
@@ -95,7 +95,7 @@
         <div class="modal" id="modal-operator">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
-                    <div class="modal-header bg-primary text-white">
+                    <div class="modal-header text-white" style="background-color: #fd7e14;">
                         <div class="w-100 d-flex justify-content-between align-items-center">
                             <h4 style="font-size: 18px; margin: 0;">Operator Result</h4>
                             <button class="border-0 text-white" data-dismiss="modal" style="background: none; font-size: 1.5rem;">&times;</button>

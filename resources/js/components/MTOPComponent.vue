@@ -1,20 +1,8 @@
-<style>
-    .table td, .table th {
-        vertical-align: middle;
-        font-size: 14px;
-    }
-
-    .table td button {
-        font-size: 14px;
-    }
-
-</style>
-
 <template>
     <div class="main-container p-4">
         <div style="position: absolute; top: 0; left: 0; z-index: 1000; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2);" v-if="loader">
             <div style="position: fixed; top: 450px; left: 55%; transform:translate(-50%, -70%)">
-                <img src="public/loader/loader.gif" alt="loader">
+                <img src="/loader/loader.gif" alt="loader">
             </div>
         </div>
         <div style="position: absolute; top: 0; left: 0; z-index: 1000; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2);" v-if="err || suc">
@@ -82,36 +70,38 @@
                 </div>
             </div>
 
-            <div class="row mt-2 mb-2">
-                <div class="col-6">
-                    <div class="input-group" style="width: 500px">
-                        <div class="input-group-prepend">
-                            <select name="" id="" class="form-control" v-model="searchOption">
-                                <option value="body_number">Body Number</option>
-                                <option value="mtfrb_case_no">MTFRB #</option>
-<!--                                <option value="body_number">Body Number</option>-->
-                            </select>
-                        </div>
-                        <input type="text" class="form-control" v-model="searchValue">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" style="font-size: 13px" v-on:click="getDataSearched()">Search</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-6 ">
-                    <div class="input-group d-flex align-items-center" style="width: 200px; float:right">
-                        <div class="input-group-prepend">
-                            <div class="mr-3">Page: {{ currentPage }} of {{ totalPageNumber }}</div>
-                        </div>
-                        <input type="text" class="form-control" v-model="pageNumber">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary" style="font-size: 13px" v-on:click="getDataFiltered()">Go</button>
-                        </div>
-                    </div>
-                </div>
+           <div class="row mb-3 align-items-center">
+    <div class="col-6">
+        <div class="input-group" style="width: 100%">
+            <div class="input-group-prepend">
+                <select name="" id="" class="form-control" v-model="searchOption">
+                    <option value="body_number">Body Number</option>
+                    <option value="mtfrb_case_no">MTFRB #</option>
+                </select>
             </div>
+            <input type="text" class="form-control" v-model="searchValue">
+            <div class="input-group-append">
+                <button class="btn btn-primary" style="font-size: 13px" v-on:click="getDataSearched()">Search</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 text-right">
+        <div class="input-group justify-content-end" style="max-width: 220px; margin-left: auto;">
+            <div class="input-group-prepend">
+                <span class="input-group-text">Page</span>
+            </div>
+            <input type="text" class="form-control" style="width: 50px; text-align:center;" v-model="pageNumber">
+            <div class="input-group-append">
+                <span class="input-group-text">of {{ totalPageNumber }}</span>
+            </div>
+            <div class="input-group-append">
+                <button class="btn btn-primary" @click="getDataFiltered">Go</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-            <!--   Table     -->
+            <!-- Table -->
             <div class="main-content-table">
                 <div class="row">
                     <div class="col-md-12">
@@ -130,24 +120,40 @@
                                     <button v-if="!row.cancelled && row.status !== 4" v-on:click="destroyRecord(row.application_id)" class="btn btn-danger d-inline-block"><i class="fas fa-trash mr-1"></i>Delete</button>
                                     <button v-if="!row.cancelled && row.status === 4 && row.transact_type === '3'" v-on:click="openModalToEditValidity(row.application_id)" class="btn btn-info d-inline-block"><i class="fas fa-edit mr-1"></i> Change Validity Date</button>
                                     <button v-if="row.cancelled" v-on:click="cancelTransaction(row.application_id)" class="btn btn-danger d-inline-block"><i class="fas fa-times mr-1"></i>Cancel Transaction. OR Cancelled</button>
-                                    <!-- <button v-if="!row.cancelled && row.status === 2" v-on:click="tagOrNumber(row.application_id)" class="btn btn-info d-inline-block"><i class="fas fa-check mr-1"></i>Tag OR Number</button> -->
                                     <button v-if="!row.cancelled && row.status === 2" v-on:click="orModalList(row.application_id)" class="btn btn-info d-inline-block"><i class="fas fa-check mr-1"></i>Tag OR Number</button>
                                 </span>
                         </v-client-table>
+                        
                     </div>
                 </div>
-        </div>
+            </div>
+            <!-- Pagination Controls -->
+            <div class="row justify-content-center mb-4">
+                <div class="col-auto">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <button class="btn btn-outline-secondary" @click="goToFirstPage" :disabled="currentPage <= 1">&lt;&lt;</button>
+                            <button class="btn btn-outline-secondary" @click="goToPreviousPage" :disabled="currentPage <= 1">&lt;</button>
+                            <span class="input-group-text">Page</span>
+                        </div>
+                        <input type="text" class="form-control text-center" style="width: 50px; " v-model="pageNumber">
+                        <div class="input-group-append">
+                            <span class="input-group-text">of {{ totalPageNumber }}</span>
+                               <button class="btn btn-outline-secondary" @click="goToNextPage" :disabled="currentPage >= totalPageNumber">&gt;</button>
+                               <button class="btn btn-outline-secondary" @click="goToLastPage" :disabled="currentPage >= totalPageNumber">&gt;&gt;</button>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <!--        modal window    -->
-
+        <!-- Modal windows -->
         <div class="modal fade" id="print-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-
                         <h5 class="modal-title" id="exampleModalLabel">Print Forms</h5>
-
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -165,7 +171,6 @@
                         </div>
 
                         <div v-else>
-
                             <div class="form-group" v-if="print">
                                 <label for="forms">Select Form:</label>
                                 <select id="forms" class="form-control" v-model="formToPrint">
@@ -189,12 +194,9 @@
                                     <option>Landscape</option>
                                 </select>
                             </div>
-
                         </div>
-
                     </div>
                     <div class="modal-footer">
-
                         <button v-if="tagOR" class="btn btn-primary">Tag OR Number</button>
 
                         <button v-if="validity_update" @click="updateValidity" type="button" class="rounded pl-3 pr-3 pt-2 pb-2 border-0" style="width: 100px; font-size: 14px; background: #1abc9c; color: #fff;">Update</button>
@@ -278,14 +280,11 @@
                 </div>
             </div>
         </div>
-
     </div>
 </template>
 
 <script>
-
 export default {
-
     data() {
         return {
             columns: [ 'mtfrb_case_no', 'transact_date', 'full_name', 'body_number', 'status', 'created_at', 'updated_at','action'],
@@ -302,7 +301,6 @@ export default {
                     action: 'Action',
                 },
                 sortable: ['mtfrb_case_no', 'body_number', 'transact_date'],
-                // filterable: ['mtfrb_case_no', 'body_number', 'transact_date'],
                 filterable: false,
                 templates: {
                     hol_date: function(h, row) {
@@ -321,7 +319,6 @@ export default {
                 texts : {
                     filter: 'Search:',
                 },
-
             },
 
             //dropdowns
@@ -330,7 +327,6 @@ export default {
             barangayCodeTableData: [],
             tricycleTableData: [],
             orDetailsTableData: [],
-
 
             //values
             newRenewalValue: false,
@@ -378,6 +374,30 @@ export default {
         }
     },
     methods: {
+        goToFirstPage(){
+            if(this.currentPage > 1){
+                this.pageNumber = 1;
+                this.getDataFiltered();
+            }
+        },
+        goToLastPage(){
+            if(this.currentPage < this.totalPageNumber){
+                this.pageNumber = this.totalPageNumber;
+                this.getDataFiltered();
+            }
+        },
+        goToPreviousPage(){
+            if(this.currentPage > 1) {
+                this.pageNumber = this.currentPage - 1;
+                this.getDataFiltered();
+            }
+        },
+        goToNextPage(){
+            if(this.currentPage < this.totalPageNumber){
+                this.pageNumber = this.currentPage + 1;
+                this.getDataFiltered();
+            }
+        },
         listRemove(key){
             this.orList.splice(this.orList[key], 1);
         },
@@ -421,10 +441,8 @@ export default {
             }
         },
 
-         convertDateFormat($date) {
-
+        convertDateFormat($date) {
             let d = new Date($date);
-
             let month = d.getMonth() + 1;
             let day = d.getDate();
             let year = d.getFullYear();
@@ -468,7 +486,7 @@ export default {
             this.tagOR = false;
             this.validity_update = false;
             this.errors = [];
-             console.log('test');
+            console.log('test');
             $('#print-modal').modal('show');
         },
 
@@ -520,7 +538,6 @@ export default {
                 this.print = false;
                 this.formToPrint = '';
                 $('#print-modal').modal('hide');
-                // setTimeout(function(){ $('#filter').click(); }  , 1000);
             }
             else
             {
@@ -535,7 +552,6 @@ export default {
         },
 
         approveForPayment(id) {
-
             let confirmBox = confirm("Proceed to Payment?");
             if(confirmBox === true)
             {
@@ -601,9 +617,7 @@ export default {
             let confirmBox = confirm("Do you really want to delete this application?");
 
             if(confirmBox === true){
-
                 this.loader = true;
-
                 axios.get('mtop/destroy/' + id)
                 .then(response => {
                     this.suc = true;
@@ -671,7 +685,6 @@ export default {
             }).then(response => {
                 this.suc = true;
                 this.suc_msg = response.data.message;
-
                 $('#or_modal_list').modal('hide');
             })
             .catch(error => {
@@ -690,15 +703,12 @@ export default {
                 .then(response => {
                     this.tableData = response.data.mtop_applications.data;
                     this.totalPageNumber = response.data.mtop_applications.last_page;
-
                     console.log(response.data.mtop_applications.last_page);
                 })
                 .finally(()=> this.loader = false);
 
             this.currentPage = this.pageNumber;
         },
-
-
     },
 
     mounted() {
@@ -717,7 +727,6 @@ export default {
 </script>
 
 <style scoped>
-
     #or_details {
         width: 100%;
     }
@@ -727,5 +736,25 @@ export default {
     #or_details  tr th, tr td{
         padding: 10px;
         font-size: 13px;
+    }
+     .table td, .table th {
+        vertical-align: middle;
+        font-size: 14px;
+    }
+
+    .table td button {
+        font-size: 14px;
+    }
+
+    .pagination-controls .btn {
+        margin: 0 2px;
+        font-size: 13px;
+        padding: 5px 10px;
+    }
+
+    .page-info {
+        font-size: 14px;
+        margin: 0 10px;
+        line-height: 30px;
     }
 </style>
