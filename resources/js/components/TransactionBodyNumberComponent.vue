@@ -3,7 +3,7 @@
         <!-- Loader -->
         <div style="position: absolute; top: 0; left: 0; z-index: 1000; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2);" v-if="loader">
             <div style="position: fixed; top: 450px; left: 55%; transform:translate(-50%, -70%)">
-                <img src="/loader/loader.gif" alt="loader">
+                <img src="public/loader/loader.gif" alt="loader">
             </div>
         </div>
 
