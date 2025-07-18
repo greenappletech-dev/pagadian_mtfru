@@ -11135,7 +11135,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -12219,7 +12219,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -13155,7 +13155,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -13798,7 +13798,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -14323,7 +14323,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -14802,7 +14802,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -15575,7 +15575,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -16356,7 +16356,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -18098,7 +18098,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -19897,7 +19897,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -21678,7 +21678,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -22273,7 +22273,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -22650,7 +22650,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -23063,7 +23063,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -23554,7 +23554,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -24152,7 +24152,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -25088,7 +25088,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -26321,7 +26321,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -27701,7 +27701,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -28886,7 +28886,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -29546,7 +29546,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -29923,7 +29923,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -30324,7 +30324,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -30554,7 +30554,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -31421,7 +31421,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -31691,7 +31691,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -31977,7 +31977,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -32366,7 +32366,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -32741,7 +32741,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -33231,7 +33231,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -33889,7 +33889,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -34389,7 +34389,7 @@ var staticRenderFns = [function () {
     }
   }, [_c("img", {
     attrs: {
-      src: "/loader/loader.gif",
+      src: "public/loader/loader.gif",
       alt: "loader"
     }
   })]);
@@ -34582,7 +34582,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //dev url   
 // window.axios.defaults.baseURL = 'http://localhost/pagadian_mtfru/';
 
-window.axios.defaults.baseURL = 'http://192.168.137.1/pagadian_mtfru/';
+// window.axios.defaults.baseURL = 'http://192.168.137.1/pagadian_mtfru/';
 
 //staging url
 // window.axios.defaults.baseURL = 'http://staging-mtfru.ideasoftcloud.com';
