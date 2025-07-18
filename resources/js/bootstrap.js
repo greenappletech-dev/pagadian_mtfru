@@ -31,7 +31,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //dev url   
 // window.axios.defaults.baseURL = 'http://localhost/pagadian_mtfru/';
 
-// window.axios.defaults.baseURL = 'http://192.168.137.1/pagadian_mtfru/';
+window.axios.defaults.baseURL = 'http://192.168.137.1/pagadian_mtfru/';
 
 
 //staging url
