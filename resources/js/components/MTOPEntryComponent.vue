@@ -215,8 +215,8 @@
                             <label class="d-flex justify-content-start" for="chk_new" style="width: 100%;
                             height: 100%;
                             margin: 0">
-                                <input type="checkbox" v-model="newTransaction" v-on:click="checkNew" style="display: none" id="chk_new">
-                                <span style="position: relative; width: 20px; height: 20px;" class="border rounded mr-2"><i id="new_check_icon" class="fas fa-check" v-if="new_check_icon" style="
+                                <input type="checkbox" value="new" v-model="selectedTransactionTypes" v-on:click="checkNew" style="display: none" id="chk_new">
+                                <span style="position: relative; width: 20px; height: 20px;" class="border rounded mr-2"><i id="new_check_icon" class="fas fa-check"  v-if="selectedTransactionTypes.includes('new') && new_check_icon" style="
                                         position: absolute;
                                         top: 50%;
                                         left: 55%;
@@ -236,8 +236,8 @@
                             <label class="d-flex justify-content-start" for="chk_renewal" style="width: 100%;
                                 height: 100%;
                                 margin: 0">
-                                <input type="checkbox" v-model="renewal" v-on:click="checkRenewal" style="display: none" id="chk_renewal">
-                                <span style="position: relative; width: 20px; height: 20px;" class="border rounded mr-2"><i id="renew_check_icon" class="fas fa-check" v-if="renew_check_icon" style="
+                                <input type="checkbox" value="renewal" v-model="selectedTransactionTypes" v-on:click="checkRenewal" style="display: none" id="chk_renewal">
+                                <span style="position: relative; width: 20px; height: 20px;" class="border rounded mr-2"><i id="renew_check_icon" class="fas fa-check"  v-if="selectedTransactionTypes.includes('renewal') && renew_check_icon" style="
                                             position: absolute;
                                             top: 50%;
                                             left: 55%;
@@ -256,17 +256,17 @@
                             <label class="d-flex justify-content-start" for="chk_dropping" style="width: 100%;
                         height: 100%;
                         margin: 0">
-                                <input type="checkbox" v-model="droppingValue" v-on:click="checkDropping" style="display: none" id="chk_dropping">
+                                <input type="checkbox" value="dropping" v-model="selectedTransactionTypes" v-on:click="checkDropping" style="display: none" id="chk_dropping">
                                 <span style="position: relative;
                             width: 20px;
                             height: 20px;" class="border rounded mr-2">
-                                    <i id="drop_check_icon" class="fas fa-check" style="
+                                    <i id="drop_check_icon" class="fas fa-check"  v-if="selectedTransactionTypes.includes('dropping') && drop_check_icon" style="
                                     position: absolute;
                                     top: 50%;
                                     left: 55%;
                                     transform: translate(-50%, -50%);
                                     font-size: 15px;
-                                    color: #3ae374;" v-if="drop_check_icon"></i>
+                                    color: #3ae374;" ></i>
                                 </span>
                                 <h2 style="font-size: 17px; margin: 0;">Dropping</h2>
                             </label>
@@ -327,7 +327,8 @@
                         margin: 0">
 
                                 <input type="checkbox"
-                                       v-model="changeUnitValue"
+                                       value="change_unit"
+                                       v-model="selectedTransactionTypes"
                                        v-on:click="checkChangeUnit"
                                        style="display: none"
                                        id="chk_change_unit">
@@ -337,13 +338,14 @@
                             <i
                                 id="change_unit_icon"
                                 class="fas fa-check"
+                                 v-if="selectedTransactionTypes.includes('change_unit') && change_unit_icon"
                                 style="
                                 position: absolute;
                                 top: 50%;
                                 left: 55%;
                                 transform: translate(-50%, -50%);
                                 font-size: 15px;
-                                color: #3ae374;" v-if="change_unit_icon">
+                                color: #3ae374;">
                             </i>
                         </span>
 
@@ -550,6 +552,7 @@ export default {
             charges_column: ['name','price', 'action'],
             // chargesTableData: this.charges,
             transactionType: null,
+            selectedTransactionTypes: [],
             selectedCharges: [],
             chargesTableData: [],
             other_prices: {},
@@ -986,6 +989,7 @@ export default {
                 chassis_no              : this.chassisNoValue,
                 plate_no                : this.plateNoValue,
                 charges                 : this.selectedChargesTableData,
+                transaction_types       : this.selectedTransactionTypes,
                 new                     : this.newTransaction,
                 renewal                 : this.renewal,
                 dropping                : this.newOperator,
@@ -1011,7 +1015,8 @@ export default {
 
         checkNew(e)
         {
-            this.resetTransactionTypes();
+            this.new_check_icon = e.target.checked;
+            this.newTransaction = e.target.checked;
             if(e.target.checked)
             {
                 this.new_check_icon = true;
@@ -1079,7 +1084,8 @@ export default {
         /* RENEWAL */
 
         checkRenewal(e) {
-            this.resetTransactionTypes();
+           this.renew_check_icon = e.target.checked;
+           this.renewal = e.target.checked;
             if(e.target.checked) {
                
                 this.renew_check_icon = true;
@@ -1103,21 +1109,21 @@ export default {
             }
         },
 
-        resetTransactionTypes(){
-            this.new_check_icon = false;
-            this.renew_check_icon = false;
-            this.drop_check_icon = false;
-            this.change_unit_icon = false;
+        // resetTransactionTypes(){
+        //     this.new_check_icon = false;
+        //     this.renew_check_icon = false;
+        //     this.drop_check_icon = false;
+        //     this.change_unit_icon = false;
 
-            this.newTransaction = false;
-            this.renewal = false;
-            this.droppingValue = false;
-            this.changeUnitValue = false;
+        //     this.newTransaction = false;
+        //     this.renewal = false;
+        //     this.droppingValue = false;
+        //     this.changeUnitValue = false;
 
-            this.dropping_details = false;
-            this.change_unit_details = false;
+        //     this.dropping_details = false;
+        //     this.change_unit_details = false;
 
-        },
+        // },
 
 
         /* END NEW/RENEWAL */
@@ -1127,7 +1133,9 @@ export default {
 
 
         checkDropping(e) {
-        this.resetTransactionTypes();
+        this.drop_check_icon = e.target.checked;
+        this.dropping_details = e.target.checked;
+        this.droppingValue = e.target.checked;
         if (e.target.checked) {
             this.drop_check_icon = true;
             this.dropping_details = true;
@@ -1152,7 +1160,9 @@ export default {
     },
 
     checkChangeUnit(e) {
-        this.resetTransactionTypes();
+        this.change_unit_icon = e.target.checked;
+        this.change_unit_details = e.target.checked;
+        this.changeUnitValue =  e.target.checked;
         if (e.target.checked) {
             this.change_unit_icon = true;
             this.change_unit_details = true;
@@ -1230,6 +1240,42 @@ export default {
             window.open('tricycle/export');
         },
     },
+
+    watch: {
+    selectedTransactionTypes(newTypes) {
+        // Reset charges and total
+        this.selectedChargesTableData = [];
+        this.transactionTotals = 0;
+
+        // Fetch charges for each selected type and merge
+        Promise.all(
+            newTypes.map(type =>
+                axios.get(`/setting/assigned_charges/${type}`).then(res => res.data)
+            )
+        ).then(results => {
+            // Flatten and deduplicate charges by id
+            const charges = [].concat(...results);
+            const uniqueCharges = [];
+            const chargeIds = new Set();
+
+            charges.forEach(charge => {
+                if (!chargeIds.has(charge.id)) {
+                    uniqueCharges.push({
+                        id: charge.id,
+                        name: charge.name,
+                        price: charge.price,
+                        or_group: this.or_group
+                    });
+                    chargeIds.add(charge.id);
+                }
+            });
+
+            this.selectedChargesTableData = uniqueCharges;
+            this.transactionTotals = uniqueCharges.reduce((sum, c) => sum + parseFloat(c.price), 0);
+            this.filterORGroup(this.or_group);
+        });
+    }
+},
 
     mounted() {
         this.initialData();
