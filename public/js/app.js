@@ -7187,6 +7187,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _toConsumableArray(r) { return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(r, a) { if (r) { if ("string" == typeof r) return _arrayLikeToArray(r, a); var t = {}.toString.call(r).slice(8, -1); return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? _arrayLikeToArray(r, a) : void 0; } }
+function _iterableToArray(r) { if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r); }
+function _arrayWithoutHoles(r) { if (Array.isArray(r)) return _arrayLikeToArray(r); }
+function _arrayLikeToArray(r, a) { (null == a || a > r.length) && (a = r.length); for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e]; return n; }
 function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
 function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
 function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
@@ -7200,6 +7206,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       charges_column: ['name', 'price', 'action'],
       // chargesTableData: this.charges,
       transactionType: null,
+      selectedTransactionTypes: [],
       selectedCharges: [],
       chargesTableData: [],
       other_prices: {},
@@ -7518,6 +7525,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         chassis_no: this.chassisNoValue,
         plate_no: this.plateNoValue,
         charges: this.selectedChargesTableData,
+        transaction_types: this.selectedTransactionTypes,
         "new": this.newTransaction,
         renewal: this.renewal,
         dropping: this.newOperator,
@@ -7534,7 +7542,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     },
     /* NEW */checkNew: function checkNew(e) {
       var _this6 = this;
-      this.resetTransactionTypes();
+      this.new_check_icon = e.target.checked;
+      this.newTransaction = e.target.checked;
       if (e.target.checked) {
         this.new_check_icon = true;
         this.newTransaction = true;
@@ -7602,7 +7611,8 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     },
     /* RENEWAL */checkRenewal: function checkRenewal(e) {
       var _this8 = this;
-      this.resetTransactionTypes();
+      this.renew_check_icon = e.target.checked;
+      this.renewal = e.target.checked;
       if (e.target.checked) {
         this.renew_check_icon = true;
         this.renewal = true;
@@ -7627,23 +7637,25 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         });
       }
     },
-    resetTransactionTypes: function resetTransactionTypes() {
-      this.new_check_icon = false;
-      this.renew_check_icon = false;
-      this.drop_check_icon = false;
-      this.change_unit_icon = false;
-      this.newTransaction = false;
-      this.renewal = false;
-      this.droppingValue = false;
-      this.changeUnitValue = false;
-      this.dropping_details = false;
-      this.change_unit_details = false;
-    },
+    // resetTransactionTypes(){
+    //     this.new_check_icon = false;
+    //     this.renew_check_icon = false;
+    //     this.drop_check_icon = false;
+    //     this.change_unit_icon = false;
+    //     this.newTransaction = false;
+    //     this.renewal = false;
+    //     this.droppingValue = false;
+    //     this.changeUnitValue = false;
+    //     this.dropping_details = false;
+    //     this.change_unit_details = false;
+    // },
     /* END NEW/RENEWAL */
     /* DROPPING */
     checkDropping: function checkDropping(e) {
       var _this9 = this;
-      this.resetTransactionTypes();
+      this.drop_check_icon = e.target.checked;
+      this.dropping_details = e.target.checked;
+      this.droppingValue = e.target.checked;
       if (e.target.checked) {
         this.drop_check_icon = true;
         this.dropping_details = true;
@@ -7671,7 +7683,9 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     },
     checkChangeUnit: function checkChangeUnit(e) {
       var _this10 = this;
-      this.resetTransactionTypes();
+      this.change_unit_icon = e.target.checked;
+      this.change_unit_details = e.target.checked;
+      this.changeUnitValue = e.target.checked;
       if (e.target.checked) {
         this.change_unit_icon = true;
         this.change_unit_details = true;
@@ -7743,6 +7757,43 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     },
     exportExcel: function exportExcel() {
       window.open('tricycle/export');
+    }
+  },
+  watch: {
+    selectedTransactionTypes: function selectedTransactionTypes(newTypes) {
+      var _this12 = this;
+      // Reset charges and total
+      this.selectedChargesTableData = [];
+      this.transactionTotals = 0;
+
+      // Fetch charges for each selected type and merge
+      Promise.all(newTypes.map(function (type) {
+        return axios.get("/setting/assigned_charges/".concat(type)).then(function (res) {
+          return res.data;
+        });
+      })).then(function (results) {
+        var _ref2;
+        // Flatten and deduplicate charges by id
+        var charges = (_ref2 = []).concat.apply(_ref2, _toConsumableArray(results));
+        var uniqueCharges = [];
+        var chargeIds = new Set();
+        charges.forEach(function (charge) {
+          if (!chargeIds.has(charge.id)) {
+            uniqueCharges.push({
+              id: charge.id,
+              name: charge.name,
+              price: charge.price,
+              or_group: _this12.or_group
+            });
+            chargeIds.add(charge.id);
+          }
+        });
+        _this12.selectedChargesTableData = uniqueCharges;
+        _this12.transactionTotals = uniqueCharges.reduce(function (sum, c) {
+          return sum + parseFloat(c.price);
+        }, 0);
+        _this12.filterORGroup(_this12.or_group);
+      });
     }
   },
   mounted: function mounted() {
@@ -26839,35 +26890,36 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.newTransaction,
-      expression: "newTransaction"
+      value: _vm.selectedTransactionTypes,
+      expression: "selectedTransactionTypes"
     }],
     staticStyle: {
       display: "none"
     },
     attrs: {
       type: "checkbox",
+      value: "new",
       id: "chk_new"
     },
     domProps: {
-      checked: Array.isArray(_vm.newTransaction) ? _vm._i(_vm.newTransaction, null) > -1 : _vm.newTransaction
+      checked: Array.isArray(_vm.selectedTransactionTypes) ? _vm._i(_vm.selectedTransactionTypes, "new") > -1 : _vm.selectedTransactionTypes
     },
     on: {
       click: _vm.checkNew,
       change: function change($event) {
-        var $$a = _vm.newTransaction,
+        var $$a = _vm.selectedTransactionTypes,
           $$el = $event.target,
           $$c = $$el.checked ? true : false;
         if (Array.isArray($$a)) {
-          var $$v = null,
+          var $$v = "new",
             $$i = _vm._i($$a, $$v);
           if ($$el.checked) {
-            $$i < 0 && (_vm.newTransaction = $$a.concat([$$v]));
+            $$i < 0 && (_vm.selectedTransactionTypes = $$a.concat([$$v]));
           } else {
-            $$i > -1 && (_vm.newTransaction = $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
+            $$i > -1 && (_vm.selectedTransactionTypes = $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
           }
         } else {
-          _vm.newTransaction = $$c;
+          _vm.selectedTransactionTypes = $$c;
         }
       }
     }
@@ -26878,7 +26930,7 @@ var render = function render() {
       width: "20px",
       height: "20px"
     }
-  }, [_vm.new_check_icon ? _c("i", {
+  }, [_vm.selectedTransactionTypes.includes("new") && _vm.new_check_icon ? _c("i", {
     staticClass: "fas fa-check",
     staticStyle: {
       position: "absolute",
@@ -26914,35 +26966,36 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.renewal,
-      expression: "renewal"
+      value: _vm.selectedTransactionTypes,
+      expression: "selectedTransactionTypes"
     }],
     staticStyle: {
       display: "none"
     },
     attrs: {
       type: "checkbox",
+      value: "renewal",
       id: "chk_renewal"
     },
     domProps: {
-      checked: Array.isArray(_vm.renewal) ? _vm._i(_vm.renewal, null) > -1 : _vm.renewal
+      checked: Array.isArray(_vm.selectedTransactionTypes) ? _vm._i(_vm.selectedTransactionTypes, "renewal") > -1 : _vm.selectedTransactionTypes
     },
     on: {
       click: _vm.checkRenewal,
       change: function change($event) {
-        var $$a = _vm.renewal,
+        var $$a = _vm.selectedTransactionTypes,
           $$el = $event.target,
           $$c = $$el.checked ? true : false;
         if (Array.isArray($$a)) {
-          var $$v = null,
+          var $$v = "renewal",
             $$i = _vm._i($$a, $$v);
           if ($$el.checked) {
-            $$i < 0 && (_vm.renewal = $$a.concat([$$v]));
+            $$i < 0 && (_vm.selectedTransactionTypes = $$a.concat([$$v]));
           } else {
-            $$i > -1 && (_vm.renewal = $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
+            $$i > -1 && (_vm.selectedTransactionTypes = $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
           }
         } else {
-          _vm.renewal = $$c;
+          _vm.selectedTransactionTypes = $$c;
         }
       }
     }
@@ -26953,7 +27006,7 @@ var render = function render() {
       width: "20px",
       height: "20px"
     }
-  }, [_vm.renew_check_icon ? _c("i", {
+  }, [_vm.selectedTransactionTypes.includes("renewal") && _vm.renew_check_icon ? _c("i", {
     staticClass: "fas fa-check",
     staticStyle: {
       position: "absolute",
@@ -26989,35 +27042,36 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.droppingValue,
-      expression: "droppingValue"
+      value: _vm.selectedTransactionTypes,
+      expression: "selectedTransactionTypes"
     }],
     staticStyle: {
       display: "none"
     },
     attrs: {
       type: "checkbox",
+      value: "dropping",
       id: "chk_dropping"
     },
     domProps: {
-      checked: Array.isArray(_vm.droppingValue) ? _vm._i(_vm.droppingValue, null) > -1 : _vm.droppingValue
+      checked: Array.isArray(_vm.selectedTransactionTypes) ? _vm._i(_vm.selectedTransactionTypes, "dropping") > -1 : _vm.selectedTransactionTypes
     },
     on: {
       click: _vm.checkDropping,
       change: function change($event) {
-        var $$a = _vm.droppingValue,
+        var $$a = _vm.selectedTransactionTypes,
           $$el = $event.target,
           $$c = $$el.checked ? true : false;
         if (Array.isArray($$a)) {
-          var $$v = null,
+          var $$v = "dropping",
             $$i = _vm._i($$a, $$v);
           if ($$el.checked) {
-            $$i < 0 && (_vm.droppingValue = $$a.concat([$$v]));
+            $$i < 0 && (_vm.selectedTransactionTypes = $$a.concat([$$v]));
           } else {
-            $$i > -1 && (_vm.droppingValue = $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
+            $$i > -1 && (_vm.selectedTransactionTypes = $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
           }
         } else {
-          _vm.droppingValue = $$c;
+          _vm.selectedTransactionTypes = $$c;
         }
       }
     }
@@ -27028,7 +27082,7 @@ var render = function render() {
       width: "20px",
       height: "20px"
     }
-  }, [_vm.drop_check_icon ? _c("i", {
+  }, [_vm.selectedTransactionTypes.includes("dropping") && _vm.drop_check_icon ? _c("i", {
     staticClass: "fas fa-check",
     staticStyle: {
       position: "absolute",
@@ -27168,35 +27222,36 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: _vm.changeUnitValue,
-      expression: "changeUnitValue"
+      value: _vm.selectedTransactionTypes,
+      expression: "selectedTransactionTypes"
     }],
     staticStyle: {
       display: "none"
     },
     attrs: {
       type: "checkbox",
+      value: "change_unit",
       id: "chk_change_unit"
     },
     domProps: {
-      checked: Array.isArray(_vm.changeUnitValue) ? _vm._i(_vm.changeUnitValue, null) > -1 : _vm.changeUnitValue
+      checked: Array.isArray(_vm.selectedTransactionTypes) ? _vm._i(_vm.selectedTransactionTypes, "change_unit") > -1 : _vm.selectedTransactionTypes
     },
     on: {
       click: _vm.checkChangeUnit,
       change: function change($event) {
-        var $$a = _vm.changeUnitValue,
+        var $$a = _vm.selectedTransactionTypes,
           $$el = $event.target,
           $$c = $$el.checked ? true : false;
         if (Array.isArray($$a)) {
-          var $$v = null,
+          var $$v = "change_unit",
             $$i = _vm._i($$a, $$v);
           if ($$el.checked) {
-            $$i < 0 && (_vm.changeUnitValue = $$a.concat([$$v]));
+            $$i < 0 && (_vm.selectedTransactionTypes = $$a.concat([$$v]));
           } else {
-            $$i > -1 && (_vm.changeUnitValue = $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
+            $$i > -1 && (_vm.selectedTransactionTypes = $$a.slice(0, $$i).concat($$a.slice($$i + 1)));
           }
         } else {
-          _vm.changeUnitValue = $$c;
+          _vm.selectedTransactionTypes = $$c;
         }
       }
     }
@@ -27207,7 +27262,7 @@ var render = function render() {
       width: "20px",
       height: "20px"
     }
-  }, [_vm.change_unit_icon ? _c("i", {
+  }, [_vm.selectedTransactionTypes.includes("change_unit") && _vm.change_unit_icon ? _c("i", {
     staticClass: "fas fa-check",
     staticStyle: {
       position: "absolute",
