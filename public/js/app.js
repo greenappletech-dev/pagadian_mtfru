@@ -7686,6 +7686,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       this.change_unit_icon = e.target.checked;
       this.change_unit_details = e.target.checked;
       this.changeUnitValue = e.target.checked;
+      this.changeUnit = e.target.checked;
       if (e.target.checked) {
         this.change_unit_icon = true;
         this.change_unit_details = true;
