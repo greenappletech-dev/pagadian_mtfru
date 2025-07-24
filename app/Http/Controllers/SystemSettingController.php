@@ -28,7 +28,8 @@ class SystemSettingController extends Controller
         ['id' => 'new', 'name' => 'New'],
         ['id' => 'renewal', 'name' => 'Renewal'], 
         ['id' => 'dropping', 'name' => 'Dropping'],
-        ['id' => 'change_unit', 'name' => 'Change Unit']
+        ['id' => 'change_unit', 'name' => 'Change Unit'],
+        ['id' => 'filling_fee', 'name' => 'Filling Fee']
     ]);
 }
 public function getRecords() {

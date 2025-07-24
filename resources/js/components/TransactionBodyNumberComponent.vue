@@ -78,12 +78,20 @@
                     
                     <!-- Transaction List Section -->
                     <div class="mt-4">
-                        <h5 class="font-weight-bold border-bottom pb-2 mb-3" style="color: #6c757d; border-bottom: 1px solid #dee2e6;">Transaction List</h5>
+                        <h5 class="font-weight-bold border-bottom pb-2 mb-3" style="color: #6c757d; border-bottom: 1px solid #dee 2e6;">Transaction List</h5>
                         <div class="table-responsive">
                             <v-client-table
                                 :data="tableData"
                                 :options="options"
                                 :columns="columns">
+
+                                <template slot="action" slot-scope="props">
+                                    <div class="text-center">
+                                        <button class="btn btn-primary btn-sm" @click="viewOR(props.row)">
+                                        <i class="fas fa-eye mr-1"></i>View OR No.
+                                    </button>
+                                    </div>
+                                </template>
                             </v-client-table>
                         </div>
                     </div>
@@ -131,7 +139,7 @@
 export default {
     data() {
         return {
-            columns: ['body_number', 'trnx_date', 'or_number', 'ln_amnt','trans_type', 'full_name', 'inc_desc'],
+            columns: ['body_number', 'trnx_date', 'or_number', 'ln_amnt','trans_type', 'full_name', 'action'],
             tableData: [],
             options: {
                 headings: {
@@ -141,7 +149,16 @@ export default {
                     ln_amnt: 'Amount',
                     trans_type: 'Transaction Type',
                     full_name: 'Name of Operator',
-                    inc_desc: 'Charge',
+                    action: 'Action',
+                },
+                columnsClasses: {
+                    body_number: 'text-center',
+                    trnx_date: 'text-center',
+                    or_number: 'text-center',
+                    ln_amnt: 'text-center',
+                    trans_type: 'text-center',
+                    full_name: 'text-center',
+                    action: 'text-center',
                 },
                 sortable: ['body_number', 'trnx_date', 'or_number', 'inc_desc', 'operator', 'mtfrb_case_no'],
                 filterable: false,
@@ -193,6 +210,9 @@ export default {
         }
     },
     methods: {
+        viewOR(row){
+            console.log('Viewing OR for:', row.or_number);
+        },
         formatPrice(value) {
             let val = (value/1).toFixed(2).replace(',', '.')
             return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")
@@ -279,6 +299,20 @@ export default {
 </script>
 
 <style scoped>
+.btn-sm{
+    padding: 0.25rem 0.5rem;
+    font-size: 0.75rem;
+}
+
+.btn-primary{
+    background-color: #007bff;
+    border-color: #007bff;
+}
+
+.btn-primary:hover{
+    background-color: #0069d9;
+    border-color: #0062cc;
+}
 .main-container {
     margin-top: 80px;
     display: flex;

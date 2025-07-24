@@ -928,11 +928,11 @@ export default {
 
         storeRecord() {
 
-            if(!this.renewal && !this.newOperator && !this.changeUnit && !this.newTransaction) {
-                this.err = true;
-                this.err_msg = 'You Must Select Transaction';
-                return;
-            }
+            // if(!this.renewal && !this.newOperator && !this.changeUnit && !this.newTransaction) {
+            //     this.err = true;
+            //     this.err_msg = 'You Must Select Transaction';
+            //     return;
+            // }
 
             if(this.selectedChargesTableData.length === 0) {
                 this.err = true;

@@ -7467,11 +7467,12 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
     },
     storeRecord: function storeRecord() {
       var _this5 = this;
-      if (!this.renewal && !this.newOperator && !this.changeUnit && !this.newTransaction) {
-        this.err = true;
-        this.err_msg = 'You Must Select Transaction';
-        return;
-      }
+      // if(!this.renewal && !this.newOperator && !this.changeUnit && !this.newTransaction) {
+      //     this.err = true;
+      //     this.err_msg = 'You Must Select Transaction';
+      //     return;
+      // }
+
       if (this.selectedChargesTableData.length === 0) {
         this.err = true;
         this.err_msg = 'Must Select Charges';
@@ -9530,7 +9531,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      columns: ['body_number', 'trnx_date', 'or_number', 'ln_amnt', 'trans_type', 'full_name', 'inc_desc'],
+      columns: ['body_number', 'trnx_date', 'or_number', 'ln_amnt', 'trans_type', 'full_name', 'action'],
       tableData: [],
       options: {
         headings: {
@@ -9540,7 +9541,16 @@ __webpack_require__.r(__webpack_exports__);
           ln_amnt: 'Amount',
           trans_type: 'Transaction Type',
           full_name: 'Name of Operator',
-          inc_desc: 'Charge'
+          action: 'Action'
+        },
+        columnsClasses: {
+          body_number: 'text-center',
+          trnx_date: 'text-center',
+          or_number: 'text-center',
+          ln_amnt: 'text-center',
+          trans_type: 'text-center',
+          full_name: 'text-center',
+          action: 'text-center'
         },
         sortable: ['body_number', 'trnx_date', 'or_number', 'inc_desc', 'operator', 'mtfrb_case_no'],
         filterable: false,
@@ -9588,6 +9598,9 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    viewOR: function viewOR(row) {
+      console.log('Viewing OR for:', row.or_number);
+    },
     formatPrice: function formatPrice(value) {
       var val = (value / 1).toFixed(2).replace(',', '.');
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -32670,7 +32683,7 @@ var render = function render() {
     staticClass: "font-weight-bold border-bottom pb-2 mb-3",
     staticStyle: {
       color: "#6c757d",
-      "border-bottom": "1px solid #dee2e6"
+      "border-bottom": "1px solid #dee 2e6"
     }
   }, [_vm._v("Transaction List")]), _vm._v(" "), _c("div", {
     staticClass: "table-responsive"
@@ -32679,7 +32692,24 @@ var render = function render() {
       data: _vm.tableData,
       options: _vm.options,
       columns: _vm.columns
-    }
+    },
+    scopedSlots: _vm._u([{
+      key: "action",
+      fn: function fn(props) {
+        return [_c("div", {
+          staticClass: "text-center"
+        }, [_c("button", {
+          staticClass: "btn btn-primary btn-sm",
+          on: {
+            click: function click($event) {
+              return _vm.viewOR(props.row);
+            }
+          }
+        }, [_c("i", {
+          staticClass: "fas fa-eye mr-1"
+        }), _vm._v("View OR No.\n                                    ")])])];
+      }
+    }])
   })], 1)])])])]), _vm._v(" "), _c("div", {
     staticClass: "modal",
     attrs: {
@@ -34577,7 +34607,7 @@ window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js")
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 //production url
-window.axios.defaults.baseURL = 'http://192.168.100.100/mtfru';
+// window.axios.defaults.baseURL = 'http://192.168.100.100/mtfru';    
 
 //dev url   
 // window.axios.defaults.baseURL = 'http://localhost/pagadian_mtfru/';
@@ -41930,7 +41960,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.main-container[data-v-7716311f] {\r\n    margin-top: 80px;\r\n    display: flex;\r\n    justify-content: center;\n}\n.card[data-v-7716311f] {\r\n    width: 100%;\r\n    max-width: 1400px;\r\n    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);\r\n    border: none;\n}\n.card-header[data-v-7716311f] {\r\n    padding: 1rem 1.5rem;\r\n    border-bottom: 1px solid rgba(0, 0, 0, 0.1);\r\n    background-color: #fd7e14 !important;\n}\n.search-btn[data-v-7716311f]{\r\n    background-color: #28a745;\r\n    border-color: #28a745;\n}\n.search-btn[data-v-7716311f]:hover{\r\n    background-color: #218838;\r\n    border-color: #1e7e34;\r\n    transform: translateY(-1px);\r\n    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);\n}\n.form-control[data-v-7716311f], .input-group-text[data-v-7716311f] {\r\n    font-size: 0.875rem;\n}\n.btn[data-v-7716311f] {\r\n    font-size: 0.875rem;\r\n    padding: 0.375rem 0.75rem;\n}\n.table-responsive[data-v-7716311f] {\r\n    min-height: 300px;\n}\n.VueTables__table[data-v-7716311f] {\r\n    width: 100% !important;\n}\n.VueTables__heading[data-v-7716311f] {\r\n    font-weight: 600 !important;\r\n    background-color: #f8f9fa !important;\r\n    color: #495057 !important;\n}\n.VueTables__table tr[data-v-7716311f]:nth-child(even){\r\n    background-color: #f8f9fa;\n}\n.VueTables__no-results[data-v-7716311f]{\r\n    text-align: center !important;\r\n    padding: 2rem !important;\r\n    color: #6c757d !important;\r\n    font-size: 1.1 rem !important;\n}\n[data-v-7716311f]:empty-results{\r\n    min-height: 200px;\r\n    display: flex; \r\n    flex-direction: column;\r\n    justify-content: center;\r\n    align-items: center;\n}\n.btn[data-v-7716311f], .form-control[data-v-7716311f]{\r\n    transition: all 0.2s ease;\n}\n.VueTables__table th[data-v-7716311f] {\r\n    border-top: none !important;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.btn-sm[data-v-7716311f]{\r\n    padding: 0.25rem 0.5rem;\r\n    font-size: 0.75rem;\n}\n.btn-primary[data-v-7716311f]{\r\n    background-color: #007bff;\r\n    border-color: #007bff;\n}\n.btn-primary[data-v-7716311f]:hover{\r\n    background-color: #0069d9;\r\n    border-color: #0062cc;\n}\n.main-container[data-v-7716311f] {\r\n    margin-top: 80px;\r\n    display: flex;\r\n    justify-content: center;\n}\n.card[data-v-7716311f] {\r\n    width: 100%;\r\n    max-width: 1400px;\r\n    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);\r\n    border: none;\n}\n.card-header[data-v-7716311f] {\r\n    padding: 1rem 1.5rem;\r\n    border-bottom: 1px solid rgba(0, 0, 0, 0.1);\r\n    background-color: #fd7e14 !important;\n}\n.search-btn[data-v-7716311f]{\r\n    background-color: #28a745;\r\n    border-color: #28a745;\n}\n.search-btn[data-v-7716311f]:hover{\r\n    background-color: #218838;\r\n    border-color: #1e7e34;\r\n    transform: translateY(-1px);\r\n    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);\n}\n.form-control[data-v-7716311f], .input-group-text[data-v-7716311f] {\r\n    font-size: 0.875rem;\n}\n.btn[data-v-7716311f] {\r\n    font-size: 0.875rem;\r\n    padding: 0.375rem 0.75rem;\n}\n.table-responsive[data-v-7716311f] {\r\n    min-height: 300px;\n}\n.VueTables__table[data-v-7716311f] {\r\n    width: 100% !important;\n}\n.VueTables__heading[data-v-7716311f] {\r\n    font-weight: 600 !important;\r\n    background-color: #f8f9fa !important;\r\n    color: #495057 !important;\n}\n.VueTables__table tr[data-v-7716311f]:nth-child(even){\r\n    background-color: #f8f9fa;\n}\n.VueTables__no-results[data-v-7716311f]{\r\n    text-align: center !important;\r\n    padding: 2rem !important;\r\n    color: #6c757d !important;\r\n    font-size: 1.1 rem !important;\n}\n[data-v-7716311f]:empty-results{\r\n    min-height: 200px;\r\n    display: flex; \r\n    flex-direction: column;\r\n    justify-content: center;\r\n    align-items: center;\n}\n.btn[data-v-7716311f], .form-control[data-v-7716311f]{\r\n    transition: all 0.2s ease;\n}\n.VueTables__table th[data-v-7716311f] {\r\n    border-top: none !important;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
