@@ -1218,6 +1218,7 @@ export default {
             this.newOperatorAddressValue = address;
             this.newOperatorBarangayValue = barangay;
             this.newOperatorBarangayIdValue = barangay_id;
+            this.newOperator = true;
             $('#search-modal').modal('hide');
         },
 

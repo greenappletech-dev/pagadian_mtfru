@@ -7744,6 +7744,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       this.newOperatorAddressValue = address;
       this.newOperatorBarangayValue = barangay;
       this.newOperatorBarangayIdValue = barangay_id;
+      this.newOperator = true;
       $('#search-modal').modal('hide');
     },
     /* END OF CHANGE UNIT */pdfModal: function pdfModal() {
@@ -9580,11 +9581,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       columns: ['body_number', 'trnx_date', 'or_number', 'ln_amnt', 'trans_type', 'full_name', 'action'],
       tableData: [],
+      receiptData: {},
       options: {
         headings: {
           body_number: 'Body Number',
@@ -9651,7 +9656,38 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     viewOR: function viewOR(row) {
-      console.log('Viewing OR for:', row.or_number);
+      this.receiptData = {
+        date: moment().format('MMMM D, YYYY'),
+        operator_name: row.full_name,
+        body_number: row.body_number,
+        items: [{
+          description: 'Sticker',
+          amount: 100.00
+        }, {
+          description: 'Supervision Fee',
+          amount: 100.00
+        }, {
+          description: 'Permit Fee',
+          amount: 150.00
+        }, {
+          description: 'Renewal Fee',
+          amount: 500.00
+        }, {
+          description: 'Annual Fixed Tax CY-2025',
+          amount: 500.00
+        }, {
+          description: 'Change Unit Fee',
+          amount: 350.00
+        }],
+        total: 1700.00,
+        amount_in_words: 'ONE THOUSAND SEVEN HUNDRED PESOS ONLY',
+        or_number: row.or_number,
+        timestap: moment().format('M/D/YYYY H:mm')
+      };
+      this.receiptData.total = this.receiptData.items.reduce(function (sum, item) {
+        return sum + item.amount;
+      }, 0);
+      $('#receipt-modal').modal('show');
     },
     formatPrice: function formatPrice(value) {
       var val = (value / 1).toFixed(2).replace(',', '.');
@@ -32813,7 +32849,98 @@ var render = function render() {
     staticClass: "h5"
   }, [_vm._v("No Transaction Found")]), _vm._v(" "), _c("p", {
     staticClass: "text-muted"
-  }, [_vm._v("Try adjusting your search criteria")])])])], 1), _vm._v(" "), _vm._m(4)])])])]);
+  }, [_vm._v("Try adjusting your search criteria")])])])], 1), _vm._v(" "), _vm._m(4)])])]), _vm._v(" "), _vm.receiptData && _vm.receiptData.date ? _c("div", {
+    staticClass: "modal fade",
+    attrs: {
+      id: "receipt-modal",
+      tabindex: "-1",
+      role: "dialog",
+      "aria-hidden": "true"
+    }
+  }, [_c("div", {
+    staticClass: "modal-dialog modal-sm",
+    attrs: {
+      role: "document"
+    }
+  }, [_c("div", {
+    staticClass: "modal-content p3",
+    staticStyle: {
+      "font-family": "Arial, sans-serif",
+      "max-width": "400px",
+      margin: "0 auto"
+    }
+  }, [_vm._m(5), _vm._v(" "), _c("div", {
+    staticClass: "receipt-container"
+  }, [_c("div", {
+    staticClass: "text-center mb-2",
+    staticStyle: {
+      "font-size": "1rem",
+      "font-weight": "bold"
+    }
+  }, [_vm._v(_vm._s(_vm.receiptData.date))]), _vm._v(" "), _vm._m(6), _vm._v(" "), _c("div", {
+    staticClass: "mb-3"
+  }, [_c("div", {
+    staticStyle: {
+      "font-weight": "bold"
+    }
+  }, [_vm._v("Operator: ")]), _vm._v(" "), _c("div", [_vm._v(_vm._s(_vm.receiptData.operator_name))]), _vm._v(" "), _c("div", {
+    staticStyle: {
+      "font-weight": "bold"
+    }
+  }, [_vm._v("Body Number: ")]), _vm._v(" "), _c("div", {
+    attrs: {
+      STYLE: ""
+    }
+  }, [_vm._v(_vm._s(_vm.receiptData.body_number))])]), _vm._v(" "), _c("div", {
+    staticClass: "mb-2"
+  }, [_c("div", {
+    staticStyle: {
+      "font-weight": "bold",
+      "margin-bottom": "5px"
+    }
+  }, [_vm._v("Chagres")]), _vm._v(" "), _c("table", {
+    staticStyle: {
+      width: "100%",
+      "border-collapse": "collapse"
+    }
+  }, [_vm._m(7), _vm._v(" "), _c("tbody", _vm._l(_vm.receiptData.items, function (item, index) {
+    return _c("tr", {
+      key: index
+    }, [_c("td", [_vm._v(_vm._s(item.description))]), _vm._v(" "), _c("td", {
+      staticStyle: {
+        "text-align": "right"
+      }
+    }, [_vm._v(_vm._s(_vm.formatPrice(item.amount)))])]);
+  }), 0)])]), _vm._v(" "), _c("div", {
+    staticClass: "text-right mb-2",
+    staticStyle: {
+      "border-top": "2px solid #333",
+      "padding-top": "8px",
+      "font-size": "1.2rem"
+    }
+  }, [_c("div", {
+    staticStyle: {
+      "font-weight": "bold"
+    }
+  }, [_vm._v("Total: " + _vm._s(_vm.formatPrice(_vm.receiptData.total)))])]), _vm._v(" "), _c("div", {
+    staticClass: "text-center mb-3",
+    staticStyle: {
+      "font-style": "italic",
+      "font-size": "0.95rem",
+      color: "#555"
+    }
+  }, [_vm._v("\n                            " + _vm._s(_vm.receiptData.amount_in_words) + "\n                        ")]), _vm._v(" "), _c("div", {
+    staticClass: "text-center mb-2",
+    staticStyle: {
+      "margin-top": "15px",
+      "font-size": "1.1rem"
+    }
+  }, [_vm._v("✓")]), _vm._v(" "), _c("div", {
+    staticClass: "text-center",
+    staticStyle: {
+      "font-size": "0.9rem"
+    }
+  }, [_vm._v("\n                            OR #" + _vm._s(_vm.receiptData.or_number) + " " + _vm._s(_vm.receiptData.timestap) + "\n                        ")])])])])]) : _vm._e()]);
 };
 var staticRenderFns = [function () {
   var _vm = this,
@@ -32886,6 +33013,61 @@ var staticRenderFns = [function () {
       "data-dismiss": "modal"
     }
   }, [_vm._v("Close")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("button", {
+    staticClass: "close position-absolute",
+    staticStyle: {
+      right: "15px",
+      top: "10px"
+    },
+    attrs: {
+      type: "button",
+      "data-dismiss": "modal",
+      "aria-label": "Close"
+    }
+  }, [_c("span", {
+    attrs: {
+      "aria-hidden": "true",
+      stye: "font-size: 1.5rem;"
+    }
+  }, [_vm._v("×")])]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("div", {
+    staticClass: "tex-center mb-3"
+  }, [_c("h4", {
+    staticClass: "text-center",
+    staticStyle: {
+      "margin-bottom": "5px",
+      "font-weight": "bold",
+      "letter-spacing": "2px"
+    }
+  }, [_vm._v("CTO PAGADIAN CITY")]), _vm._v(" "), _c("div", {
+    staticStyle: {
+      "border-top": "2px solid #333",
+      margin: "0 auto",
+      width: "90%"
+    }
+  })]);
+}, function () {
+  var _vm = this,
+    _c = _vm._self._c;
+  return _c("thead", [_c("tr", [_c("th", {
+    staticStyle: {
+      "text-align": "left",
+      "border-bottom": "1px solid #ccc",
+      "padding-bottom": "4px"
+    }
+  }, [_vm._v("Description")]), _vm._v(" "), _c("th", {
+    staticStyle: {
+      "text-align": "right",
+      "border-bottom": "1px solid #ccc",
+      "padding-bottom": "4px"
+    }
+  }, [_vm._v("Amount")])])]);
 }];
 render._withStripped = true;
 
@@ -34663,12 +34845,12 @@ window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js")
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 //production url
-window.axios.defaults.baseURL = 'http://192.168.100.100/mtfru';
+// window.axios.defaults.baseURL = 'http://192.168.100.100/mtfru';    
 
 //dev url   
 // window.axios.defaults.baseURL = 'http://localhost/pagadian_mtfru/';
 
-// window.axios.defaults.baseURL = 'http://192.168.1.17/pagadian_mtfru/';
+window.axios.defaults.baseURL = 'http://192.168.1.17/pagadian_mtfru/';
 
 //staging url
 // window.axios.defaults.baseURL = 'http://staging-mtfru.ideasoftcloud.com';
@@ -42016,7 +42198,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.btn-sm[data-v-7716311f]{\r\n    padding: 0.25rem 0.5rem;\r\n    font-size: 0.75rem;\n}\n.btn-primary[data-v-7716311f]{\r\n    background-color: #007bff;\r\n    border-color: #007bff;\n}\n.btn-primary[data-v-7716311f]:hover{\r\n    background-color: #0069d9;\r\n    border-color: #0062cc;\n}\n.main-container[data-v-7716311f] {\r\n    margin-top: 80px;\r\n    display: flex;\r\n    justify-content: center;\n}\n.card[data-v-7716311f] {\r\n    width: 100%;\r\n    max-width: 1400px;\r\n    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);\r\n    border: none;\n}\n.card-header[data-v-7716311f] {\r\n    padding: 1rem 1.5rem;\r\n    border-bottom: 1px solid rgba(0, 0, 0, 0.1);\r\n    background-color: #fd7e14 !important;\n}\n.search-btn[data-v-7716311f]{\r\n    background-color: #28a745;\r\n    border-color: #28a745;\n}\n.search-btn[data-v-7716311f]:hover{\r\n    background-color: #218838;\r\n    border-color: #1e7e34;\r\n    transform: translateY(-1px);\r\n    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);\n}\n.form-control[data-v-7716311f], .input-group-text[data-v-7716311f] {\r\n    font-size: 0.875rem;\n}\n.btn[data-v-7716311f] {\r\n    font-size: 0.875rem;\r\n    padding: 0.375rem 0.75rem;\n}\n.table-responsive[data-v-7716311f] {\r\n    min-height: 300px;\n}\n.VueTables__table[data-v-7716311f] {\r\n    width: 100% !important;\n}\n.VueTables__heading[data-v-7716311f] {\r\n    font-weight: 600 !important;\r\n    background-color: #f8f9fa !important;\r\n    color: #495057 !important;\n}\n.VueTables__table tr[data-v-7716311f]:nth-child(even){\r\n    background-color: #f8f9fa;\n}\n.VueTables__no-results[data-v-7716311f]{\r\n    text-align: center !important;\r\n    padding: 2rem !important;\r\n    color: #6c757d !important;\r\n    font-size: 1.1 rem !important;\n}\n[data-v-7716311f]:empty-results{\r\n    min-height: 200px;\r\n    display: flex; \r\n    flex-direction: column;\r\n    justify-content: center;\r\n    align-items: center;\n}\n.btn[data-v-7716311f], .form-control[data-v-7716311f]{\r\n    transition: all 0.2s ease;\n}\n.VueTables__table th[data-v-7716311f] {\r\n    border-top: none !important;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n#receipt-modal .modal-content[data-v-7716311f]{\r\n    border-radius: 0;\r\n    border: none;\n}\n#receipt-modal .modal-sm[data-v-7716311f]{\r\n    max-width: 400px;\n}\n.receipt-container[data-v-7716311f]{\r\n    font-family: 'Sege UI', Arial, sans-serif;\r\n    background-color: #ffff;\r\n    padding: 18px 12px;\r\n    border-radius: 8px;\r\n    box-shadow: 0 2px 8px rgba(0,0,0,0.08);\n}\n.receipt-container h4.text-center[data-v-7716311f]{\r\n    text-align: center;\n}\n.receipt-container table th[data-v-7716311f]:last-child,\r\n.receipt-container table td[data-v-7716311f]:last-child{\r\n    text-align: right !important;\r\n    padding-right: 10px;\n}\n.receipt-container table th[data-v-7716311f]{\r\n    font-weight: 600;\r\n    color: #333;\n}\n.receipt-container table td[data-v-7716311f]{\r\n    color: #222;\n}\n.close[data-v-7716311f]{\r\n    color: #000;\r\n    opacity: 1;\n}\n.close[data-v-7716311f]:hover{\r\n    color: #000;\r\n    opacity: 0.75;\n}\n.btn-sm[data-v-7716311f]{\r\n    padding: 0.25rem 0.5rem;\r\n    font-size: 0.75rem;\n}\n.btn-primary[data-v-7716311f]{\r\n    background-color: #007bff;\r\n    border-color: #007bff;\n}\n.btn-primary[data-v-7716311f]:hover{\r\n    background-color: #0069d9;\r\n    border-color: #0062cc;\n}\n.main-container[data-v-7716311f] {\r\n    margin-top: 80px;\r\n    display: flex;\r\n    justify-content: center;\n}\n.card[data-v-7716311f] {\r\n    width: 100%;\r\n    max-width: 1400px;\r\n    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);\r\n    border: none;\n}\n.card-header[data-v-7716311f] {\r\n    padding: 1rem 1.5rem;\r\n    border-bottom: 1px solid rgba(0, 0, 0, 0.1);\r\n    background-color: #fd7e14 !important;\n}\n.search-btn[data-v-7716311f]{\r\n    background-color: #28a745;\r\n    border-color: #28a745;\n}\n.search-btn[data-v-7716311f]:hover{\r\n    background-color: #218838;\r\n    border-color: #1e7e34;\r\n    transform: translateY(-1px);\r\n    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);\n}\n.form-control[data-v-7716311f], .input-group-text[data-v-7716311f] {\r\n    font-size: 0.875rem;\n}\n.btn[data-v-7716311f] {\r\n    font-size: 0.875rem;\r\n    padding: 0.375rem 0.75rem;\n}\n.table-responsive[data-v-7716311f] {\r\n    min-height: 300px;\n}\n.VueTables__table[data-v-7716311f] {\r\n    width: 100% !important;\n}\n.VueTables__heading[data-v-7716311f] {\r\n    font-weight: 600 !important;\r\n    background-color: #f8f9fa !important;\r\n    color: #495057 !important;\n}\n.VueTables__table tr[data-v-7716311f]:nth-child(even){\r\n    background-color: #f8f9fa;\n}\n.VueTables__no-results[data-v-7716311f]{\r\n    text-align: center !important;\r\n    padding: 2rem !important;\r\n    color: #6c757d !important;\r\n    font-size: 1.1 rem !important;\n}\n[data-v-7716311f]:empty-results{\r\n    min-height: 200px;\r\n    display: flex; \r\n    flex-direction: column;\r\n    justify-content: center;\r\n    align-items: center;\n}\n.btn[data-v-7716311f], .form-control[data-v-7716311f]{\r\n    transition: all 0.2s ease;\n}\n.VueTables__table th[data-v-7716311f] {\r\n    border-top: none !important;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
