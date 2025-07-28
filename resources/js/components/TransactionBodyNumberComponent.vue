@@ -132,15 +132,77 @@
                 </div>
             </div>
         </div>
+
+        <div class="modal fade" id="receipt-modal" tabindex="-1" role="dialog" aria-hidden="true" v-if="receiptData && receiptData.date">
+            <div class="modal-dialog modal-sm" role="document">
+                <div class="modal-content p3" style="font-family: Arial, sans-serif; max-width: 400px; margin: 0 auto;">
+                    <button type="button" class="close position-absolute" style="right: 15px; top: 10px;" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true" stye="font-size: 1.5rem;">&times;</span>
+                    </button>
+
+                    <div class="receipt-container">
+                        <div class="text-center mb-2" style="font-size: 1rem; font-weight: bold;">{{ receiptData.date }}</div>
+
+                        <div class="tex-center mb-3">
+                            <h4 class="text-center" style="margin-bottom: 5px; font-weight: bold; letter-spacing: 2px;">CTO PAGADIAN CITY</h4>
+                            <div style="border-top: 2px solid #333; margin: 0 auto; width: 90%;"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <div style="font-weight: bold;">Operator: </div>
+                            <div>{{ receiptData.operator_name }}</div>
+                            <div style="font-weight:  bold;">Body Number: </div>
+                            <div STYLE>{{receiptData.body_number}}</div>
+                        </div>
+
+                        <div class="mb-2">
+                            <div style="font-weight: bold; margin-bottom: 5px;">Chagres</div>
+                            <table style="width: 100%; border-collapse: collapse;">
+                                <thead>
+                                    <tr>
+                                        <th style="text-align: left; border-bottom:1px solid #ccc; padding-bottom: 4px;">Description</th>
+                                        <th style="text-align: right; border-bottom:1px solid #ccc; padding-bottom: 4px;">Amount</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="(item, index) in receiptData.items" :key="index">
+                                        <td>{{ item.description }}</td>
+                                        <td style="text-align: right;">{{ formatPrice(item.amount) }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div class="text-right mb-2" style="border-top: 2px solid #333; padding-top: 8px; font-size: 1.2rem;">
+                            <div style="font-weight: bold;">Total: {{ formatPrice(receiptData.total) }}</div>
+                        </div>
+
+                        <div class="text-center mb-3" style="font-style: italic; font-size: 0.95rem; color: #555;">
+                            {{ receiptData.amount_in_words }}
+                        </div>
+
+                        <div class="text-center mb-2" style="margin-top: 15px; font-size: 1.1rem;">&#10003;</div>
+                        <div class="text-center" style="font-size: 0.9rem;">
+                            OR #{{ receiptData.or_number }} {{ receiptData.timestap }}
+                        </div>
+
+                        
+                    </div>
+                </div> 
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
+import { timers } from 'jquery';
+
 export default {
     data() {
         return {
             columns: ['body_number', 'trnx_date', 'or_number', 'ln_amnt','trans_type', 'full_name', 'action'],
             tableData: [],
+            receiptData: {},
             options: {
                 headings: {
                     body_number: 'Body Number',
@@ -211,7 +273,27 @@ export default {
     },
     methods: {
         viewOR(row){
-            console.log('Viewing OR for:', row.or_number);
+           this.receiptData = {
+            date: moment().format('MMMM D, YYYY'),
+            operator_name: row.full_name,
+            body_number: row.body_number,
+            items: [
+                {description:  'Sticker', amount: 100.00},
+                {description: 'Supervision Fee', amount: 100.00},
+                {description: 'Permit Fee', amount: 150.00},
+                {description: 'Renewal Fee', amount: 500.00},
+                {description: 'Annual Fixed Tax CY-2025', amount: 500.00},
+                {description: 'Change Unit Fee', amount: 350.00}
+            ],
+            total: 1700.00,
+            amount_in_words: 'ONE THOUSAND SEVEN HUNDRED PESOS ONLY',
+            or_number: row.or_number,
+            timestap: moment().format('M/D/YYYY H:mm'),
+           };
+
+           this.receiptData.total =  this.receiptData.items.reduce((sum, item) => sum + item.amount, 0);
+
+           $('#receipt-modal').modal('show');
         },
         formatPrice(value) {
             let val = (value/1).toFixed(2).replace(',', '.')
@@ -299,6 +381,51 @@ export default {
 </script>
 
 <style scoped>
+#receipt-modal .modal-content{
+    border-radius: 0;
+    border: none;
+}
+
+#receipt-modal .modal-sm{
+    max-width: 400px;
+}
+
+.receipt-container{
+    font-family: 'Sege UI', Arial, sans-serif;
+    background-color: #ffff;
+    padding: 18px 12px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.receipt-container h4.text-center{
+    text-align: center;
+}
+
+.receipt-container table th:last-child,
+.receipt-container table td:last-child{
+    text-align: right !important;
+    padding-right: 10px;
+}
+
+.receipt-container table th{
+    font-weight: 600;
+    color: #333;
+}
+
+.receipt-container table td{
+    color: #222;
+}
+
+.close{
+    color: #000;
+    opacity: 1;
+}
+
+.close:hover{
+    color: #000;
+    opacity: 0.75;
+}
 .btn-sm{
     padding: 0.25rem 0.5rem;
     font-size: 0.75rem;
