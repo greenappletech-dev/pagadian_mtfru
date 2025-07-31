@@ -176,12 +176,6 @@
                         <div class="text-right mb-2" style="border-top: 2px solid #333; padding-top: 8px; font-size: 1.2rem;">
                             <div style="font-weight: bold;">Total: {{ formatPrice(receiptData.total) }}</div>
                         </div>
-
-                        <div class="text-center mb-3" style="font-style: italic; font-size: 0.95rem; color: #555;">
-                            {{ receiptData.amount_in_words }}
-                        </div>
-
-                        <div class="text-center mb-2" style="margin-top: 15px; font-size: 1.1rem;">&#10003;</div>
                         <div class="text-center" style="font-size: 0.9rem;">
                             OR #{{ receiptData.or_number }} {{ receiptData.timestap }}
                         </div>
@@ -195,12 +189,13 @@
 </template>
 
 <script>
+import axios from 'axios';
 import { timers } from 'jquery';
 
 export default {
     data() {
         return {
-            columns: ['body_number', 'trnx_date', 'or_number', 'ln_amnt','trans_type', 'full_name', 'action'],
+            columns: ['body_number', 'trnx_date', 'or_number', 'ln_amnt', 'trans_type', 'full_name', 'action'],
             tableData: [],
             receiptData: {},
             options: {
@@ -228,6 +223,8 @@ export default {
                     trnx_date: function(h, row) {
                         return row.trnx_date !== null ? moment(row.trnx_date).format('YYYY-MM-DD') : null;
                     },
+                    trans_type: (h, row) => row.trans_type ? row.trans_type.toUpperCase() : 'N/A'
+
                 },
                 texts: {
                     filter: 'Search:',
@@ -273,27 +270,36 @@ export default {
     },
     methods: {
         viewOR(row){
-           this.receiptData = {
-            date: moment().format('MMMM D, YYYY'),
-            operator_name: row.full_name,
-            body_number: row.body_number,
-            items: [
-                {description:  'Sticker', amount: 100.00},
-                {description: 'Supervision Fee', amount: 100.00},
-                {description: 'Permit Fee', amount: 150.00},
-                {description: 'Renewal Fee', amount: 500.00},
-                {description: 'Annual Fixed Tax CY-2025', amount: 500.00},
-                {description: 'Change Unit Fee', amount: 350.00}
-            ],
-            total: 1700.00,
-            amount_in_words: 'ONE THOUSAND SEVEN HUNDRED PESOS ONLY',
-            or_number: row.or_number,
-            timestap: moment().format('M/D/YYYY H:mm'),
-           };
+            axios.get('tax_report/or_details/' + row.or_number)
+            .then(response => {
+                const charges = response.data.charges.map(charge => ({
+                    description: charge.inc_desc,
+                    amount: parseFloat(charge.ln_amnt)
+                }));
 
-           this.receiptData.total =  this.receiptData.items.reduce((sum, item) => sum + item.amount, 0);
+                const total = charges.reduce((sum, item) => sum + item.amount, 0);
 
-           $('#receipt-modal').modal('show');
+                this.tableData = this.tableData.map(item => {
+                    if(item.or_number === row.or_number){
+                        return {
+                            ...item,
+                            ln_amnt: total
+                        }
+                    }
+                    return item;
+                })
+
+                this.receiptData = {
+                    date: moment(row.trnx_date).format('MMMM D, YYYY'),
+                    operator_name: row.full_name,
+                    body_number: row.body_number,
+                    items: charges,
+                    total: total,
+                    or_number: row.or_number,
+                    timestap: moment(row.trnx_date).format('M/D/YYYY'),
+                };
+                $('#receipt-modal').modal('show');
+            });
         },
         formatPrice(value) {
             let val = (value/1).toFixed(2).replace(',', '.')
@@ -312,7 +318,7 @@ export default {
             this.err = false;
             this.suc = false;
             this.adding = false;
-            this.print = false;
+            this.print = false; 
             this.err_msg = '';
             this.suc_msg = '';
         },
@@ -336,15 +342,33 @@ export default {
                 this.err_msg = 'Please enter a search term';
                 return;
             }
-
+            
             if (this.filter_value === 'body_number') {
                 axios.get('tax_report/get_data/' + this.filter_value + '/' + this.search_value)
                     .then(response => {
+
+                        console.log('Response data:', response.data.data);
+
                         let operatorArr = {
                             full_name: response.data.data[0].full_name
                         };
                         this.operator_data = operatorArr;
-                        this.tableData = response.data.data;
+                        
+                        const promises = response.data.data.map(row => 
+                            axios.get('tax_report/or_details/' + row.or_number)
+                                .then(orResponse => {
+                                    const total = orResponse.data.charges.reduce((sum, charge) => 
+                                        sum + parseFloat(charge.ln_amnt), 0);
+                                    return {
+                                        ...row,
+                                        ln_amnt: total 
+                                    };
+                                })
+                        );
+                        
+                        Promise.all(promises).then(updatedData => {
+                            this.tableData = updatedData;
+                        });
                     });
             } else if (this.filter_value === 'operator') {
                 axios.get('tax_report/search_operator/' + this.search_value)
@@ -366,7 +390,23 @@ export default {
 
             axios.get('tax_report/get_data/' + this.filter_value + '/' + search_data)
                 .then(response => {
-                    this.tableData = response.data.data;
+                
+                    const promises = response.data.data.map(row => 
+                        axios.get('tax_report/or_details/' + row.or_number)
+                            .then(orResponse => {
+                                const total = orResponse.data.charges.reduce((sum, charge) => 
+                                    sum + parseFloat(charge.ln_amnt), 0);
+                                return {
+                                    ...row,
+                                    ln_amnt: total,
+                                    trans_type: row.trans_type || 'N/A'
+                                };
+                            })
+                    );
+                    
+                    Promise.all(promises).then(updatedData => {
+                        this.tableData = updatedData;
+                    });
                 });
 
             $('#modal-operator').modal('hide');
@@ -442,13 +482,13 @@ export default {
 }
 .main-container {
     margin-top: 80px;
-    display: flex;
-    justify-content: center;
+    display: block;
+    width: 100%;
 }
 
 .card {
     width: 100%;
-    max-width: 1400px;
+    max-width: none;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
     border: none;
 }
@@ -480,10 +520,7 @@ export default {
     padding: 0.375rem 0.75rem;
 }
 
-.table-responsive {
-    min-height: 300px;
-}
-
+.table-responsive
 .VueTables__table {
     width: 100% !important;
 }
@@ -521,3 +558,4 @@ export default {
     border-top: none !important;
 }
 </style>
+

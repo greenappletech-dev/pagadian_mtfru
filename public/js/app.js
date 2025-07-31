@@ -9581,8 +9581,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
-/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! jquery */ "./node_modules/jquery/dist/jquery.js");
+/* harmony import */ var jquery__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(jquery__WEBPACK_IMPORTED_MODULE_1__);
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function ownKeys(e, r) { var t = Object.keys(e); if (Object.getOwnPropertySymbols) { var o = Object.getOwnPropertySymbols(e); r && (o = o.filter(function (r) { return Object.getOwnPropertyDescriptor(e, r).enumerable; })), t.push.apply(t, o); } return t; }
+function _objectSpread(e) { for (var r = 1; r < arguments.length; r++) { var t = null != arguments[r] ? arguments[r] : {}; r % 2 ? ownKeys(Object(t), !0).forEach(function (r) { _defineProperty(e, r, t[r]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function (r) { Object.defineProperty(e, r, Object.getOwnPropertyDescriptor(t, r)); }); } return e; }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
@@ -9614,6 +9623,9 @@ __webpack_require__.r(__webpack_exports__);
         templates: {
           trnx_date: function trnx_date(h, row) {
             return row.trnx_date !== null ? moment(row.trnx_date).format('YYYY-MM-DD') : null;
+          },
+          trans_type: function trans_type(h, row) {
+            return row.trans_type ? row.trans_type.toUpperCase() : 'N/A';
           }
         },
         texts: {
@@ -9656,38 +9668,36 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     viewOR: function viewOR(row) {
-      this.receiptData = {
-        date: moment().format('MMMM D, YYYY'),
-        operator_name: row.full_name,
-        body_number: row.body_number,
-        items: [{
-          description: 'Sticker',
-          amount: 100.00
-        }, {
-          description: 'Supervision Fee',
-          amount: 100.00
-        }, {
-          description: 'Permit Fee',
-          amount: 150.00
-        }, {
-          description: 'Renewal Fee',
-          amount: 500.00
-        }, {
-          description: 'Annual Fixed Tax CY-2025',
-          amount: 500.00
-        }, {
-          description: 'Change Unit Fee',
-          amount: 350.00
-        }],
-        total: 1700.00,
-        amount_in_words: 'ONE THOUSAND SEVEN HUNDRED PESOS ONLY',
-        or_number: row.or_number,
-        timestap: moment().format('M/D/YYYY H:mm')
-      };
-      this.receiptData.total = this.receiptData.items.reduce(function (sum, item) {
-        return sum + item.amount;
-      }, 0);
-      $('#receipt-modal').modal('show');
+      var _this = this;
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get('tax_report/or_details/' + row.or_number).then(function (response) {
+        var charges = response.data.charges.map(function (charge) {
+          return {
+            description: charge.inc_desc,
+            amount: parseFloat(charge.ln_amnt)
+          };
+        });
+        var total = charges.reduce(function (sum, item) {
+          return sum + item.amount;
+        }, 0);
+        _this.tableData = _this.tableData.map(function (item) {
+          if (item.or_number === row.or_number) {
+            return _objectSpread(_objectSpread({}, item), {}, {
+              ln_amnt: total
+            });
+          }
+          return item;
+        });
+        _this.receiptData = {
+          date: moment(row.trnx_date).format('MMMM D, YYYY'),
+          operator_name: row.full_name,
+          body_number: row.body_number,
+          items: charges,
+          total: total,
+          or_number: row.or_number,
+          timestap: moment(row.trnx_date).format('M/D/YYYY')
+        };
+        $('#receipt-modal').modal('show');
+      });
     },
     formatPrice: function formatPrice(value) {
       var val = (value / 1).toFixed(2).replace(',', '.');
@@ -9721,38 +9731,64 @@ __webpack_require__.r(__webpack_exports__);
       $('#search_value').attr('placeholder', placeholder);
     },
     searchOperator: function searchOperator() {
-      var _this = this;
+      var _this2 = this;
       if (!this.search_value) {
         this.err = true;
         this.err_msg = 'Please enter a search term';
         return;
       }
       if (this.filter_value === 'body_number') {
-        axios.get('tax_report/get_data/' + this.filter_value + '/' + this.search_value).then(function (response) {
+        axios__WEBPACK_IMPORTED_MODULE_0___default().get('tax_report/get_data/' + this.filter_value + '/' + this.search_value).then(function (response) {
+          console.log('Response data:', response.data.data);
           var operatorArr = {
             full_name: response.data.data[0].full_name
           };
-          _this.operator_data = operatorArr;
-          _this.tableData = response.data.data;
+          _this2.operator_data = operatorArr;
+          var promises = response.data.data.map(function (row) {
+            return axios__WEBPACK_IMPORTED_MODULE_0___default().get('tax_report/or_details/' + row.or_number).then(function (orResponse) {
+              var total = orResponse.data.charges.reduce(function (sum, charge) {
+                return sum + parseFloat(charge.ln_amnt);
+              }, 0);
+              return _objectSpread(_objectSpread({}, row), {}, {
+                ln_amnt: total
+              });
+            });
+          });
+          Promise.all(promises).then(function (updatedData) {
+            _this2.tableData = updatedData;
+          });
         });
       } else if (this.filter_value === 'operator') {
-        axios.get('tax_report/search_operator/' + this.search_value).then(function (response) {
-          _this.tableData_operator = response.data.data;
-          if (_this.tableData_operator.length > 0) {
+        axios__WEBPACK_IMPORTED_MODULE_0___default().get('tax_report/search_operator/' + this.search_value).then(function (response) {
+          _this2.tableData_operator = response.data.data;
+          if (_this2.tableData_operator.length > 0) {
             $('#modal-operator').modal('show');
           } else {
-            _this.err = true;
-            _this.err_msg = 'No operators found with that name';
+            _this2.err = true;
+            _this2.err_msg = 'No operators found with that name';
           }
         });
       }
     },
     selectOperator: function selectOperator(rowindex) {
-      var _this2 = this;
+      var _this3 = this;
       this.operator_data = this.tableData_operator[rowindex];
       var search_data = this.filter_value === 'body_number' ? this.search_value : this.operator_data.id;
-      axios.get('tax_report/get_data/' + this.filter_value + '/' + search_data).then(function (response) {
-        _this2.tableData = response.data.data;
+      axios__WEBPACK_IMPORTED_MODULE_0___default().get('tax_report/get_data/' + this.filter_value + '/' + search_data).then(function (response) {
+        var promises = response.data.data.map(function (row) {
+          return axios__WEBPACK_IMPORTED_MODULE_0___default().get('tax_report/or_details/' + row.or_number).then(function (orResponse) {
+            var total = orResponse.data.charges.reduce(function (sum, charge) {
+              return sum + parseFloat(charge.ln_amnt);
+            }, 0);
+            return _objectSpread(_objectSpread({}, row), {}, {
+              ln_amnt: total,
+              trans_type: row.trans_type || 'N/A'
+            });
+          });
+        });
+        Promise.all(promises).then(function (updatedData) {
+          _this3.tableData = updatedData;
+        });
       });
       $('#modal-operator').modal('hide');
     }
@@ -32923,19 +32959,6 @@ var render = function render() {
       "font-weight": "bold"
     }
   }, [_vm._v("Total: " + _vm._s(_vm.formatPrice(_vm.receiptData.total)))])]), _vm._v(" "), _c("div", {
-    staticClass: "text-center mb-3",
-    staticStyle: {
-      "font-style": "italic",
-      "font-size": "0.95rem",
-      color: "#555"
-    }
-  }, [_vm._v("\n                            " + _vm._s(_vm.receiptData.amount_in_words) + "\n                        ")]), _vm._v(" "), _c("div", {
-    staticClass: "text-center mb-2",
-    staticStyle: {
-      "margin-top": "15px",
-      "font-size": "1.1rem"
-    }
-  }, [_vm._v("✓")]), _vm._v(" "), _c("div", {
     staticClass: "text-center",
     staticStyle: {
       "font-size": "0.9rem"
@@ -34845,7 +34868,7 @@ window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js")
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 //production url
-window.axios.defaults.baseURL = 'http://192.168.100.100/mtfru';
+// window.axios.defaults.baseURL = 'http://192.168.100.100/mtfru';    
 
 //dev url   
 // window.axios.defaults.baseURL = 'http://localhost/pagadian_mtfru/';
@@ -42198,7 +42221,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n#receipt-modal .modal-content[data-v-7716311f]{\r\n    border-radius: 0;\r\n    border: none;\n}\n#receipt-modal .modal-sm[data-v-7716311f]{\r\n    max-width: 400px;\n}\n.receipt-container[data-v-7716311f]{\r\n    font-family: 'Sege UI', Arial, sans-serif;\r\n    background-color: #ffff;\r\n    padding: 18px 12px;\r\n    border-radius: 8px;\r\n    box-shadow: 0 2px 8px rgba(0,0,0,0.08);\n}\n.receipt-container h4.text-center[data-v-7716311f]{\r\n    text-align: center;\n}\n.receipt-container table th[data-v-7716311f]:last-child,\r\n.receipt-container table td[data-v-7716311f]:last-child{\r\n    text-align: right !important;\r\n    padding-right: 10px;\n}\n.receipt-container table th[data-v-7716311f]{\r\n    font-weight: 600;\r\n    color: #333;\n}\n.receipt-container table td[data-v-7716311f]{\r\n    color: #222;\n}\n.close[data-v-7716311f]{\r\n    color: #000;\r\n    opacity: 1;\n}\n.close[data-v-7716311f]:hover{\r\n    color: #000;\r\n    opacity: 0.75;\n}\n.btn-sm[data-v-7716311f]{\r\n    padding: 0.25rem 0.5rem;\r\n    font-size: 0.75rem;\n}\n.btn-primary[data-v-7716311f]{\r\n    background-color: #007bff;\r\n    border-color: #007bff;\n}\n.btn-primary[data-v-7716311f]:hover{\r\n    background-color: #0069d9;\r\n    border-color: #0062cc;\n}\n.main-container[data-v-7716311f] {\r\n    margin-top: 80px;\r\n    display: flex;\r\n    justify-content: center;\n}\n.card[data-v-7716311f] {\r\n    width: 100%;\r\n    max-width: 1400px;\r\n    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);\r\n    border: none;\n}\n.card-header[data-v-7716311f] {\r\n    padding: 1rem 1.5rem;\r\n    border-bottom: 1px solid rgba(0, 0, 0, 0.1);\r\n    background-color: #fd7e14 !important;\n}\n.search-btn[data-v-7716311f]{\r\n    background-color: #28a745;\r\n    border-color: #28a745;\n}\n.search-btn[data-v-7716311f]:hover{\r\n    background-color: #218838;\r\n    border-color: #1e7e34;\r\n    transform: translateY(-1px);\r\n    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);\n}\n.form-control[data-v-7716311f], .input-group-text[data-v-7716311f] {\r\n    font-size: 0.875rem;\n}\n.btn[data-v-7716311f] {\r\n    font-size: 0.875rem;\r\n    padding: 0.375rem 0.75rem;\n}\n.table-responsive[data-v-7716311f] {\r\n    min-height: 300px;\n}\n.VueTables__table[data-v-7716311f] {\r\n    width: 100% !important;\n}\n.VueTables__heading[data-v-7716311f] {\r\n    font-weight: 600 !important;\r\n    background-color: #f8f9fa !important;\r\n    color: #495057 !important;\n}\n.VueTables__table tr[data-v-7716311f]:nth-child(even){\r\n    background-color: #f8f9fa;\n}\n.VueTables__no-results[data-v-7716311f]{\r\n    text-align: center !important;\r\n    padding: 2rem !important;\r\n    color: #6c757d !important;\r\n    font-size: 1.1 rem !important;\n}\n[data-v-7716311f]:empty-results{\r\n    min-height: 200px;\r\n    display: flex; \r\n    flex-direction: column;\r\n    justify-content: center;\r\n    align-items: center;\n}\n.btn[data-v-7716311f], .form-control[data-v-7716311f]{\r\n    transition: all 0.2s ease;\n}\n.VueTables__table th[data-v-7716311f] {\r\n    border-top: none !important;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n#receipt-modal .modal-content[data-v-7716311f]{\r\n    border-radius: 0;\r\n    border: none;\n}\n#receipt-modal .modal-sm[data-v-7716311f]{\r\n    max-width: 400px;\n}\n.receipt-container[data-v-7716311f]{\r\n    font-family: 'Sege UI', Arial, sans-serif;\r\n    background-color: #ffff;\r\n    padding: 18px 12px;\r\n    border-radius: 8px;\r\n    box-shadow: 0 2px 8px rgba(0,0,0,0.08);\n}\n.receipt-container h4.text-center[data-v-7716311f]{\r\n    text-align: center;\n}\n.receipt-container table th[data-v-7716311f]:last-child,\r\n.receipt-container table td[data-v-7716311f]:last-child{\r\n    text-align: right !important;\r\n    padding-right: 10px;\n}\n.receipt-container table th[data-v-7716311f]{\r\n    font-weight: 600;\r\n    color: #333;\n}\n.receipt-container table td[data-v-7716311f]{\r\n    color: #222;\n}\n.close[data-v-7716311f]{\r\n    color: #000;\r\n    opacity: 1;\n}\n.close[data-v-7716311f]:hover{\r\n    color: #000;\r\n    opacity: 0.75;\n}\n.btn-sm[data-v-7716311f]{\r\n    padding: 0.25rem 0.5rem;\r\n    font-size: 0.75rem;\n}\n.btn-primary[data-v-7716311f]{\r\n    background-color: #007bff;\r\n    border-color: #007bff;\n}\n.btn-primary[data-v-7716311f]:hover{\r\n    background-color: #0069d9;\r\n    border-color: #0062cc;\n}\n.main-container[data-v-7716311f] {\r\n    margin-top: 80px;\r\n    display: block;\r\n    width: 100%;\n}\n.card[data-v-7716311f] {\r\n    width: 100%;\r\n    max-width: none;\r\n    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);\r\n    border: none;\n}\n.card-header[data-v-7716311f] {\r\n    padding: 1rem 1.5rem;\r\n    border-bottom: 1px solid rgba(0, 0, 0, 0.1);\r\n    background-color: #fd7e14 !important;\n}\n.search-btn[data-v-7716311f]{\r\n    background-color: #28a745;\r\n    border-color: #28a745;\n}\n.search-btn[data-v-7716311f]:hover{\r\n    background-color: #218838;\r\n    border-color: #1e7e34;\r\n    transform: translateY(-1px);\r\n    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);\n}\n.form-control[data-v-7716311f], .input-group-text[data-v-7716311f] {\r\n    font-size: 0.875rem;\n}\n.btn[data-v-7716311f] {\r\n    font-size: 0.875rem;\r\n    padding: 0.375rem 0.75rem;\n}\n.table-responsive\r\n.VueTables__table[data-v-7716311f] {\r\n    width: 100% !important;\n}\n.VueTables__heading[data-v-7716311f] {\r\n    font-weight: 600 !important;\r\n    background-color: #f8f9fa !important;\r\n    color: #495057 !important;\n}\n.VueTables__table tr[data-v-7716311f]:nth-child(even){\r\n    background-color: #f8f9fa;\n}\n.VueTables__no-results[data-v-7716311f]{\r\n    text-align: center !important;\r\n    padding: 2rem !important;\r\n    color: #6c757d !important;\r\n    font-size: 1.1 rem !important;\n}\n[data-v-7716311f]:empty-results{\r\n    min-height: 200px;\r\n    display: flex; \r\n    flex-direction: column;\r\n    justify-content: center;\r\n    align-items: center;\n}\n.btn[data-v-7716311f], .form-control[data-v-7716311f]{\r\n    transition: all 0.2s ease;\n}\n.VueTables__table th[data-v-7716311f] {\r\n    border-top: none !important;\n}\r\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
