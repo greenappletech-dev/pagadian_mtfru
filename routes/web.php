@@ -159,9 +159,10 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('/setting/edit/{id}', [SystemSettingController::class, 'edit']);
         Route::put('/setting/update/{id}', [SystemSettingController::class, 'update']);
         Route::delete('/setting/destroy/{id}', [SystemSettingController::class, 'destroy']);
-
+        
         //Transaction Body Number
         Route::get('transaction_body_number', [TransactionBodyNumberController::class, 'index']);
+        Route::get('tax_report/or_details/{or_number}', [TransactionBodyNumberController::class, 'get_or_details']);
 
         //Charge-related route
         Route::get('/setting/charges/{systemSettingId}/selected', [SystemSettingController::class, 'getSelectedCharges']);
@@ -348,7 +349,7 @@ Route::group(['middleware'=> 'auth'], function() {
 
 
         Route::get('test/{from}/{to}', [ReportController::class, 'monthly_accomplishment_report']);
-
+        
 
         // SIGNATORIES
         Route::get('signatories', [SignatoriesController::class, 'index']);
