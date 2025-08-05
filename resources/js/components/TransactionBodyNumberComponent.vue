@@ -151,8 +151,8 @@
                         <div class="mb-3">
                             <div style="font-weight: bold;">Operator: </div>
                             <div>{{ receiptData.operator_name }}</div>
-                            <div style="font-weight:  bold;">Body Number: </div>
-                            <div STYLE>{{receiptData.body_number}}</div>
+                            <div style="font-weight: bold;">MTFRB Case No.: </div>
+                            <div STYLE>{{receiptData.mtfrb_case_no}}</div>
                         </div>
 
                         <div class="mb-2">
@@ -180,7 +180,6 @@
                             OR #{{ receiptData.or_number }} {{ receiptData.timestap }}
                         </div>
 
-                        
                     </div>
                 </div> 
             </div>
@@ -223,8 +222,8 @@ export default {
                     trnx_date: function(h, row) {
                         return row.trnx_date !== null ? moment(row.trnx_date).format('YYYY-MM-DD') : null;
                     },
-                    trans_type: (h, row) => row.trans_type ? row.trans_type.toUpperCase() : 'N/A'
-
+                    trans_type: (h, row) => row.trans_type ? row.trans_type : 'N/A'
+                    
                 },
                 texts: {
                     filter: 'Search:',
@@ -252,7 +251,6 @@ export default {
                 },
             },
 
-            //dropdowns
             errors: [],
             filters: [],
             operator_data: [],
@@ -292,7 +290,7 @@ export default {
                 this.receiptData = {
                     date: moment(row.trnx_date).format('MMMM D, YYYY'),
                     operator_name: row.full_name,
-                    body_number: row.body_number,
+                    mtfrb_case_no: response.data.header ? response.data.header.mtfrb_case_no : '',
                     items: charges,
                     total: total,
                     or_number: row.or_number,
@@ -346,28 +344,30 @@ export default {
             if (this.filter_value === 'body_number') {
                 axios.get('tax_report/get_data/' + this.filter_value + '/' + this.search_value)
                     .then(response => {
-
-                        console.log('Response data:', response.data.data);
-
+                        let tableData = response.data.data;
                         let operatorArr = {
-                            full_name: response.data.data[0].full_name
+                            full_name: tableData[0]?.full_name || ''
                         };
                         this.operator_data = operatorArr;
-                        
-                        const promises = response.data.data.map(row => 
+
+                        const promises = tableData.map(row =>
                             axios.get('tax_report/or_details/' + row.or_number)
                                 .then(orResponse => {
-                                    const total = orResponse.data.charges.reduce((sum, charge) => 
-                                        sum + parseFloat(charge.ln_amnt), 0);
+                                    const charges = orResponse.data.charges;
+                                    const total = charges.reduce((sum, charge) => sum + parseFloat(charge.ln_amnt), 0);
+                                    const allDescriptions = charges.map(charge => charge.inc_desc).join(', ');
                                     return {
                                         ...row,
-                                        ln_amnt: total 
+                                        ln_amnt: total,
+                                        inc_desc: allDescriptions, 
+                                        trans_type: row.trans_type || 'N/A'  
                                     };
                                 })
                         );
-                        
+
                         Promise.all(promises).then(updatedData => {
                             this.tableData = updatedData;
+                            console.log('Updated table data:', this.tableData);
                         });
                     });
             } else if (this.filter_value === 'operator') {
@@ -406,6 +406,7 @@ export default {
                     
                     Promise.all(promises).then(updatedData => {
                         this.tableData = updatedData;
+                        console.log(this.tableData);
                     });
                 });
 

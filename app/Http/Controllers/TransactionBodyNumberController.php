@@ -7,6 +7,7 @@ use App\Models\Taxpayer;
 use App\Models\Tricycle;
 use App\Models\TransactionBodyNumber;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TransactionBodyNumberController extends Controller
 {
@@ -58,7 +59,9 @@ class TransactionBodyNumberController extends Controller
         //     'header' => $header
         // ], 200);
         $header = \DB::table('colhdr')
-            ->where('or_number', $or_number)
+            ->leftJoin('mtop_applications', 'colhdr.mtop_application_id', '=', 'mtop_applications.id')
+            ->select('colhdr.*', 'mtop_applications.mtfrb_case_no')
+            ->where('colhdr.or_number', $or_number)
             ->where(function($q){
                 $q->where('colhdr.trans_type', 'MTOP')
                   ->orWhereNull('colhdr.trans_type')
@@ -93,61 +96,75 @@ class TransactionBodyNumberController extends Controller
         ->where(function($query) use ($filter, $data_id){
             if($filter === 'body_number'){
                 $query->where('tricycles.body_number', $data_id);
-            }else{
-               $query->where('tricycles.operator_id', $data_id); 
+            } else {
+                $query->where('tricycles.operator_id', $data_id); 
             }
         })
         ->get();
 
-    $dataArr = array();
+    $dataArr = [];
 
     foreach($getTricycle as $tricycle){
-        $colhdr_details = \DB::table('mtop_applications')
-            ->select(
+        // First, let's try a different approach - get transactions directly from colhdr
+        // and then try to match with mtop_applications
+        $transactions = \DB::table('colhdr')
+            ->leftJoin('mtop_applications', function($join) {
+                $join->on('colhdr.mtop_application_id', '=', 'mtop_applications.id');
+            })
+            ->leftJoin('tricycles', 'mtop_applications.tricycle_id', '=', 'tricycles.id')
+            ->leftJoin('taxpayer', 'mtop_applications.taxpayer_id', '=', 'taxpayer.id')
+            ->where(function($query) use ($tricycle) {
+                $query->where('mtop_applications.tricycle_id', $tricycle->id)
+                      ->orWhere(function($subQuery) use ($tricycle) {
+                          // Fallback: try to match by body number in case mtop_application_id is not set
+                          $subQuery->whereNull('colhdr.mtop_application_id')
+                                   ->where('colhdr.inc_desc', 'LIKE', '%' . $tricycle->body_number . '%');
+                      });
+            })
+            ->whereNull('colhdr.cancel')
+            ->select([
+                'tricycles.body_number',
                 'colhdr.trnx_date',
                 'colhdr.or_number',
-                'collne2.ln_amnt',
-                'otherinc.inc_desc',
-                'mtop_applications.transact_type as transact_type'
-            )
-            ->leftJoin('colhdr', 'colhdr.mtop_application_id', 'mtop_applications.id')
-            ->leftJoin('collne2', 'colhdr.or_code', 'collne2.or_code')
-            ->leftJoin('otherinc', 'otherinc.inc_code', 'collne2.inc_code')
-            ->where('otherinc.annual_tax', 'Y')
-            ->whereNull('colhdr.cancel')
-            ->where('mtop_applications.tricycle_id', $tricycle->id)
-            ->orderBy('colhdr.trnx_date', 'desc')
+                'colhdr.amount AS ln_amnt',
+                'taxpayer.full_name',
+                'colhdr.inc_desc',
+                'mtop_applications.transact_type',
+                'colhdr.mtop_application_id',
+                'mtop_applications.id as mtop_app_id'
+            ])
+            ->orderByDesc('colhdr.trnx_date')
             ->get();
 
-        foreach($colhdr_details as $tricycle_collection){
+        foreach($transactions as $transaction){
             $dataArr[] = [
-                'full_name' => $tricycle->full_name,
-                'body_number' => $tricycle->body_number,
-                'trnx_date' => $tricycle_collection->trnx_date,
-                'or_number' => $tricycle_collection->or_number,
-                'ln_amnt' => $tricycle_collection->ln_amnt,
-                'inc_desc' => $tricycle_collection->inc_desc,
-                'trans_type' => $tricycle_collection->transact_type ? $this->mapTransactionType($tricycle_collection->transact_type) : 'N/A',
+                'body_number' => $transaction->body_number ?: $tricycle->body_number,
+                'trnx_date' => $transaction->trnx_date,
+                'or_number' => $transaction->or_number,
+                'ln_amnt' => $transaction->ln_amnt,
+                'full_name' => $transaction->full_name ?: $tricycle->full_name,
+                'inc_desc' => $transaction->inc_desc,
+                'trans_type' => $transaction->transact_type ? $this->mapTransactionType($transaction->transact_type) : 'N/A',
             ];
         }
     }
+
     return $dataArr;
 }
-      private function mapTransactionType($types){
-        $map = [
-            '1' => 'New',
-            '2' => 'Renewal',
-            '3' => 'Dropping',
-            '4' => 'Change Unit',
-        ];
 
-        $parts = explode(',', $types);
-        $labels = array_map(function ($type) use ($map){
-            return $map[trim($type)] ?? $type;
-        }, $parts);
+private function mapTransactionType($type){
+    $map = [
+        '1' => 'New',
+        '2' => 'Renewal',
+        '3' => 'Dropping',
+        '4' => 'Change Unit',
+    ];
 
-        return implode(', ', $labels);
-    }
+    $typeArray = explode(',', $type);
+    $mapped = array_map(fn($id) => $map[trim($id)] ?? 'Unknown', $typeArray);
+
+    return implode(', ', $mapped);
+}
 
    
 }
