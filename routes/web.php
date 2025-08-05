@@ -163,6 +163,8 @@ Route::group(['middleware'=> 'auth'], function() {
         //Transaction Body Number
         Route::get('transaction_body_number', [TransactionBodyNumberController::class, 'index']);
         Route::get('tax_report/or_details/{or_number}', [TransactionBodyNumberController::class, 'get_or_details']);
+        Route::get('tax_report/search_operator/{string}', [TransactionBodyNumberController::class, 'search_operator']);
+        Route::get('tax_report/get_data/{filter}/{data}', [TransactionBodyNumberController::class, 'process_data']);
 
         //Charge-related route
         Route::get('/setting/charges/{systemSettingId}/selected', [SystemSettingController::class, 'getSelectedCharges']);
@@ -336,8 +338,6 @@ Route::group(['middleware'=> 'auth'], function() {
 
         /* Annual Tax Report */
         Route::get('tax_report', [\App\Http\Controllers\MtopAnnualTaxReportController::class, 'index']);
-        Route::get('tax_report/search_operator/{string}', [\App\Http\Controllers\MtopAnnualTaxReportController::class, 'search_operator']);
-        Route::get('tax_report/get_data/{filter}/{data}', [\App\Http\Controllers\MtopAnnualTaxReportController::class, 'process_data']);
         Route::get('tax_report/pdf/{filter}/{data}/{size}/{orientation}', [\App\Http\Controllers\MtopAnnualTaxReportController::class, 'pdf']);
         Route::get('tax_report/export/{filter}/{data}', [\App\Http\Controllers\MtopAnnualTaxReportController::class, 'export']);
 

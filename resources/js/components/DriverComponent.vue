@@ -153,13 +153,16 @@
                             <label for="middle_name">Middle Name</label>
                             <input type="text" style="text-transform: uppercase" v-model="middleNameValue" id="middle_name" class="form-control">
 
-                            <label for="middle_name">City</label>
+                            <label for="last_name">Last Name</label>
+                            <input type="text" style="text-transform: uppercase" v-model="lastNameValue" id="last_name" class="form-control">
+
+                            <label for="city">City</label>
                             <input type="text" style="text-transform: uppercase" v-model="cityValue" id="cityValue" class="form-control">
 
-                            <label for="middle_name">Barangay</label>
+                            <label for="barangay">Barangay</label>
                             <input type="text" style="text-transform: uppercase" v-model="barangayValue" id="barangayValue" class="form-control">
 
-                            <label for="middle_name">Purok</label>
+                            <label for="purok">Purok</label>
                             <input type="text" style="text-transform: uppercase" v-model="purokValue" id="purokValue" class="form-control">
 
                             <label for="address">Address</label>
@@ -249,6 +252,7 @@ export default {
             lastNameValue: null,
             firstNameValue: null,
             middleNameValue: null,
+            lastNameValue: null,
             licenseNumberValue: null,
             tricycleIdValue: null,
             makeTypeValue: null,
@@ -293,6 +297,7 @@ export default {
             this.lastNameValue = '';
             this.firstNameValue = '';
             this.middleNameValue = '';
+            this.lastNameValue = '';
             this.cityValue = '';
             this.barangayValue = '';
             this.purokValue = '';
@@ -370,9 +375,9 @@ export default {
             axios.get('drivers/edit/' + id)
             .then(response => {
                 this.driverIdValue = response.data.driver.driver_id;
-                this.lastNameValue = response.data.driver.last_name;
                 this.firstNameValue = response.data.driver.first_name;
                 this.middleNameValue = response.data.driver.middle_name;
+                this.lastNameValue = response.data.driver.last_name;
                 this.cityValue = response.data.driver.city;
                 this.barangayValue = response.data.driver.barangay;
                 this.purokValue = response.data.driver.purok;
@@ -396,10 +401,9 @@ export default {
         storeRecord() {
             this.loader = true;
             axios.post('drivers/store', {
-
-                last_name: this.lastNameValue,
                 first_name: this.firstNameValue,
                 middle_name: this.middleNameValue,
+                last_name: this.lastNameValue,
                 city: this.cityValue,
                 barangay: this.barangayValue,
                 purok: this.purokValue,
@@ -427,9 +431,9 @@ export default {
             axios.patch('drivers/update/' + this.driverIdValue, {
 
                 id: this.driverIdValue,
-                last_name: this.lastNameValue,
                 first_name: this.firstNameValue,
                 middle_name: this.middleNameValue,
+                last_name: this.lastNameValue,
                 city: this.cityValye,
                 barangay: this.barangayValue,
                 purok: this.purokValue,

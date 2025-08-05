@@ -3485,10 +3485,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _defineProperty(e, r, t) { return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: !0, configurable: !0, writable: !0 }) : e[r] = t, e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: ['associations'],
   data: function data() {
-    return {
+    var _ref;
+    return _ref = {
       columns: ['body_number', 'full_name', 'driver_license_no', 'address', 'gcash', 'mobile_number', 'association', 'created_at', 'updated_at', 'actions'],
       tableData: [],
       options: {
@@ -3530,31 +3535,8 @@ __webpack_require__.r(__webpack_exports__);
       driverIdValue: null,
       lastNameValue: null,
       firstNameValue: null,
-      middleNameValue: null,
-      licenseNumberValue: null,
-      tricycleIdValue: null,
-      makeTypeValue: null,
-      engineNoValue: null,
-      chassisNoValue: null,
-      plateNoValue: null,
-      operatorValue: null,
-      addressValue: null,
-      mobileValue: null,
-      gcashValue: null,
-      associationValue: null,
-      cityValue: null,
-      barangayValue: null,
-      purokValue: null,
-      err_msg: '',
-      err: false,
-      suc_msg: '',
-      suc: false,
-      loader: false,
-      adding: false,
-      print: false,
-      paperSize: 'Letter',
-      paperOrientation: 'Portrait'
-    };
+      middleNameValue: null
+    }, _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_ref, "lastNameValue", null), "licenseNumberValue", null), "tricycleIdValue", null), "makeTypeValue", null), "engineNoValue", null), "chassisNoValue", null), "plateNoValue", null), "operatorValue", null), "addressValue", null), "mobileValue", null), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_defineProperty(_ref, "gcashValue", null), "associationValue", null), "cityValue", null), "barangayValue", null), "purokValue", null), "err_msg", ''), "err", false), "suc_msg", ''), "suc", false), "loader", false), _defineProperty(_defineProperty(_defineProperty(_defineProperty(_ref, "adding", false), "print", false), "paperSize", 'Letter'), "paperOrientation", 'Portrait');
   },
   methods: {
     errorHandler: function errorHandler(errors) {
@@ -3570,6 +3552,7 @@ __webpack_require__.r(__webpack_exports__);
       this.lastNameValue = '';
       this.firstNameValue = '';
       this.middleNameValue = '';
+      this.lastNameValue = '';
       this.cityValue = '';
       this.barangayValue = '';
       this.purokValue = '';
@@ -3636,9 +3619,9 @@ __webpack_require__.r(__webpack_exports__);
       var _this3 = this;
       axios.get('drivers/edit/' + id).then(function (response) {
         _this3.driverIdValue = response.data.driver.driver_id;
-        _this3.lastNameValue = response.data.driver.last_name;
         _this3.firstNameValue = response.data.driver.first_name;
         _this3.middleNameValue = response.data.driver.middle_name;
+        _this3.lastNameValue = response.data.driver.last_name;
         _this3.cityValue = response.data.driver.city;
         _this3.barangayValue = response.data.driver.barangay;
         _this3.purokValue = response.data.driver.purok;
@@ -3662,9 +3645,9 @@ __webpack_require__.r(__webpack_exports__);
       var _this4 = this;
       this.loader = true;
       axios.post('drivers/store', {
-        last_name: this.lastNameValue,
         first_name: this.firstNameValue,
         middle_name: this.middleNameValue,
+        last_name: this.lastNameValue,
         city: this.cityValue,
         barangay: this.barangayValue,
         purok: this.purokValue,
@@ -3687,9 +3670,9 @@ __webpack_require__.r(__webpack_exports__);
       this.loader = true;
       axios.patch('drivers/update/' + this.driverIdValue, {
         id: this.driverIdValue,
-        last_name: this.lastNameValue,
         first_name: this.firstNameValue,
         middle_name: this.middleNameValue,
+        last_name: this.lastNameValue,
         city: this.cityValye,
         barangay: this.barangayValue,
         purok: this.purokValue,
@@ -9625,7 +9608,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
             return row.trnx_date !== null ? moment(row.trnx_date).format('YYYY-MM-DD') : null;
           },
           trans_type: function trans_type(h, row) {
-            return row.trans_type ? row.trans_type.toUpperCase() : 'N/A';
+            return row.trans_type ? row.trans_type : 'N/A';
           }
         },
         texts: {
@@ -9652,7 +9635,6 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
           filter: 'Search:'
         }
       },
-      //dropdowns
       errors: [],
       filters: [],
       operator_data: [],
@@ -9690,7 +9672,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         _this.receiptData = {
           date: moment(row.trnx_date).format('MMMM D, YYYY'),
           operator_name: row.full_name,
-          body_number: row.body_number,
+          mtfrb_case_no: response.data.header ? response.data.header.mtfrb_case_no : '',
           items: charges,
           total: total,
           or_number: row.or_number,
@@ -9739,23 +9721,31 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
       }
       if (this.filter_value === 'body_number') {
         axios__WEBPACK_IMPORTED_MODULE_0___default().get('tax_report/get_data/' + this.filter_value + '/' + this.search_value).then(function (response) {
-          console.log('Response data:', response.data.data);
+          var _tableData$;
+          var tableData = response.data.data;
           var operatorArr = {
-            full_name: response.data.data[0].full_name
+            full_name: ((_tableData$ = tableData[0]) === null || _tableData$ === void 0 ? void 0 : _tableData$.full_name) || ''
           };
           _this2.operator_data = operatorArr;
-          var promises = response.data.data.map(function (row) {
+          var promises = tableData.map(function (row) {
             return axios__WEBPACK_IMPORTED_MODULE_0___default().get('tax_report/or_details/' + row.or_number).then(function (orResponse) {
-              var total = orResponse.data.charges.reduce(function (sum, charge) {
+              var charges = orResponse.data.charges;
+              var total = charges.reduce(function (sum, charge) {
                 return sum + parseFloat(charge.ln_amnt);
               }, 0);
+              var allDescriptions = charges.map(function (charge) {
+                return charge.inc_desc;
+              }).join(', ');
               return _objectSpread(_objectSpread({}, row), {}, {
-                ln_amnt: total
+                ln_amnt: total,
+                inc_desc: allDescriptions,
+                trans_type: row.trans_type || 'N/A'
               });
             });
           });
           Promise.all(promises).then(function (updatedData) {
             _this2.tableData = updatedData;
+            console.log('Updated table data:', _this2.tableData);
           });
         });
       } else if (this.filter_value === 'operator') {
@@ -9788,6 +9778,7 @@ function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e 
         });
         Promise.all(promises).then(function (updatedData) {
           _this3.tableData = updatedData;
+          console.log(_this3.tableData);
         });
       });
       $('#modal-operator').modal('hide');
@@ -15416,7 +15407,35 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("label", {
     attrs: {
-      "for": "middle_name"
+      "for": "last_name"
+    }
+  }, [_vm._v("Last Name")]), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: _vm.lastNameValue,
+      expression: "lastNameValue"
+    }],
+    staticClass: "form-control",
+    staticStyle: {
+      "text-transform": "uppercase"
+    },
+    attrs: {
+      type: "text",
+      id: "last_name"
+    },
+    domProps: {
+      value: _vm.lastNameValue
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.lastNameValue = $event.target.value;
+      }
+    }
+  }), _vm._v(" "), _c("label", {
+    attrs: {
+      "for": "city"
     }
   }, [_vm._v("City")]), _vm._v(" "), _c("input", {
     directives: [{
@@ -15444,7 +15463,7 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("label", {
     attrs: {
-      "for": "middle_name"
+      "for": "barangay"
     }
   }, [_vm._v("Barangay")]), _vm._v(" "), _c("input", {
     directives: [{
@@ -15472,7 +15491,7 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("label", {
     attrs: {
-      "for": "middle_name"
+      "for": "purok"
     }
   }, [_vm._v("Purok")]), _vm._v(" "), _c("input", {
     directives: [{
@@ -32923,11 +32942,11 @@ var render = function render() {
     staticStyle: {
       "font-weight": "bold"
     }
-  }, [_vm._v("Body Number: ")]), _vm._v(" "), _c("div", {
+  }, [_vm._v("MTFRB Case No.: ")]), _vm._v(" "), _c("div", {
     attrs: {
       STYLE: ""
     }
-  }, [_vm._v(_vm._s(_vm.receiptData.body_number))])]), _vm._v(" "), _c("div", {
+  }, [_vm._v(_vm._s(_vm.receiptData.mtfrb_case_no))])]), _vm._v(" "), _c("div", {
     staticClass: "mb-2"
   }, [_c("div", {
     staticStyle: {
@@ -42221,7 +42240,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n#receipt-modal .modal-content[data-v-7716311f]{\r\n    border-radius: 0;\r\n    border: none;\n}\n#receipt-modal .modal-sm[data-v-7716311f]{\r\n    max-width: 400px;\n}\n.receipt-container[data-v-7716311f]{\r\n    font-family: 'Sege UI', Arial, sans-serif;\r\n    background-color: #ffff;\r\n    padding: 18px 12px;\r\n    border-radius: 8px;\r\n    box-shadow: 0 2px 8px rgba(0,0,0,0.08);\n}\n.receipt-container h4.text-center[data-v-7716311f]{\r\n    text-align: center;\n}\n.receipt-container table th[data-v-7716311f]:last-child,\r\n.receipt-container table td[data-v-7716311f]:last-child{\r\n    text-align: right !important;\r\n    padding-right: 10px;\n}\n.receipt-container table th[data-v-7716311f]{\r\n    font-weight: 600;\r\n    color: #333;\n}\n.receipt-container table td[data-v-7716311f]{\r\n    color: #222;\n}\n.close[data-v-7716311f]{\r\n    color: #000;\r\n    opacity: 1;\n}\n.close[data-v-7716311f]:hover{\r\n    color: #000;\r\n    opacity: 0.75;\n}\n.btn-sm[data-v-7716311f]{\r\n    padding: 0.25rem 0.5rem;\r\n    font-size: 0.75rem;\n}\n.btn-primary[data-v-7716311f]{\r\n    background-color: #007bff;\r\n    border-color: #007bff;\n}\n.btn-primary[data-v-7716311f]:hover{\r\n    background-color: #0069d9;\r\n    border-color: #0062cc;\n}\n.main-container[data-v-7716311f] {\r\n    margin-top: 80px;\r\n    display: block;\r\n    width: 100%;\n}\n.card[data-v-7716311f] {\r\n    width: 100%;\r\n    max-width: none;\r\n    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);\r\n    border: none;\n}\n.card-header[data-v-7716311f] {\r\n    padding: 1rem 1.5rem;\r\n    border-bottom: 1px solid rgba(0, 0, 0, 0.1);\r\n    background-color: #fd7e14 !important;\n}\n.search-btn[data-v-7716311f]{\r\n    background-color: #28a745;\r\n    border-color: #28a745;\n}\n.search-btn[data-v-7716311f]:hover{\r\n    background-color: #218838;\r\n    border-color: #1e7e34;\r\n    transform: translateY(-1px);\r\n    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);\n}\n.form-control[data-v-7716311f], .input-group-text[data-v-7716311f] {\r\n    font-size: 0.875rem;\n}\n.btn[data-v-7716311f] {\r\n    font-size: 0.875rem;\r\n    padding: 0.375rem 0.75rem;\n}\n.table-responsive\r\n.VueTables__table[data-v-7716311f] {\r\n    width: 100% !important;\n}\n.VueTables__heading[data-v-7716311f] {\r\n    font-weight: 600 !important;\r\n    background-color: #f8f9fa !important;\r\n    color: #495057 !important;\n}\n.VueTables__table tr[data-v-7716311f]:nth-child(even){\r\n    background-color: #f8f9fa;\n}\n.VueTables__no-results[data-v-7716311f]{\r\n    text-align: center !important;\r\n    padding: 2rem !important;\r\n    color: #6c757d !important;\r\n    font-size: 1.1 rem !important;\n}\n[data-v-7716311f]:empty-results{\r\n    min-height: 200px;\r\n    display: flex; \r\n    flex-direction: column;\r\n    justify-content: center;\r\n    align-items: center;\n}\n.btn[data-v-7716311f], .form-control[data-v-7716311f]{\r\n    transition: all 0.2s ease;\n}\n.VueTables__table th[data-v-7716311f] {\r\n    border-top: none !important;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n#receipt-modal .modal-content[data-v-7716311f]{\n    border-radius: 0;\n    border: none;\n}\n#receipt-modal .modal-sm[data-v-7716311f]{\n    max-width: 400px;\n}\n.receipt-container[data-v-7716311f]{\n    font-family: 'Sege UI', Arial, sans-serif;\n    background-color: #ffff;\n    padding: 18px 12px;\n    border-radius: 8px;\n    box-shadow: 0 2px 8px rgba(0,0,0,0.08);\n}\n.receipt-container h4.text-center[data-v-7716311f]{\n    text-align: center;\n}\n.receipt-container table th[data-v-7716311f]:last-child,\n.receipt-container table td[data-v-7716311f]:last-child{\n    text-align: right !important;\n    padding-right: 10px;\n}\n.receipt-container table th[data-v-7716311f]{\n    font-weight: 600;\n    color: #333;\n}\n.receipt-container table td[data-v-7716311f]{\n    color: #222;\n}\n.close[data-v-7716311f]{\n    color: #000;\n    opacity: 1;\n}\n.close[data-v-7716311f]:hover{\n    color: #000;\n    opacity: 0.75;\n}\n.btn-sm[data-v-7716311f]{\n    padding: 0.25rem 0.5rem;\n    font-size: 0.75rem;\n}\n.btn-primary[data-v-7716311f]{\n    background-color: #007bff;\n    border-color: #007bff;\n}\n.btn-primary[data-v-7716311f]:hover{\n    background-color: #0069d9;\n    border-color: #0062cc;\n}\n.main-container[data-v-7716311f] {\n    margin-top: 80px;\n    display: block;\n    width: 100%;\n}\n.card[data-v-7716311f] {\n    width: 100%;\n    max-width: none;\n    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);\n    border: none;\n}\n.card-header[data-v-7716311f] {\n    padding: 1rem 1.5rem;\n    border-bottom: 1px solid rgba(0, 0, 0, 0.1);\n    background-color: #fd7e14 !important;\n}\n.search-btn[data-v-7716311f]{\n    background-color: #28a745;\n    border-color: #28a745;\n}\n.search-btn[data-v-7716311f]:hover{\n    background-color: #218838;\n    border-color: #1e7e34;\n    transform: translateY(-1px);\n    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);\n}\n.form-control[data-v-7716311f], .input-group-text[data-v-7716311f] {\n    font-size: 0.875rem;\n}\n.btn[data-v-7716311f] {\n    font-size: 0.875rem;\n    padding: 0.375rem 0.75rem;\n}\n.table-responsive\n.VueTables__table[data-v-7716311f] {\n    width: 100% !important;\n}\n.VueTables__heading[data-v-7716311f] {\n    font-weight: 600 !important;\n    background-color: #f8f9fa !important;\n    color: #495057 !important;\n}\n.VueTables__table tr[data-v-7716311f]:nth-child(even){\n    background-color: #f8f9fa;\n}\n.VueTables__no-results[data-v-7716311f]{\n    text-align: center !important;\n    padding: 2rem !important;\n    color: #6c757d !important;\n    font-size: 1.1 rem !important;\n}\n[data-v-7716311f]:empty-results{\n    min-height: 200px;\n    display: flex; \n    flex-direction: column;\n    justify-content: center;\n    align-items: center;\n}\n.btn[data-v-7716311f], .form-control[data-v-7716311f]{\n    transition: all 0.2s ease;\n}\n.VueTables__table th[data-v-7716311f] {\n    border-top: none !important;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
