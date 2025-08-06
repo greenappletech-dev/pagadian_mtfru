@@ -105,30 +105,21 @@ class TransactionBodyNumberController extends Controller
     $dataArr = [];
 
     foreach($getTricycle as $tricycle){
-        // First, let's try a different approach - get transactions directly from colhdr
-        // and then try to match with mtop_applications
+        // Get transactions from colhdr - simplified approach
         $transactions = \DB::table('colhdr')
             ->leftJoin('mtop_applications', function($join) {
                 $join->on('colhdr.mtop_application_id', '=', 'mtop_applications.id');
             })
             ->leftJoin('tricycles', 'mtop_applications.tricycle_id', '=', 'tricycles.id')
             ->leftJoin('taxpayer', 'mtop_applications.taxpayer_id', '=', 'taxpayer.id')
-            ->where(function($query) use ($tricycle) {
-                $query->where('mtop_applications.tricycle_id', $tricycle->id)
-                      ->orWhere(function($subQuery) use ($tricycle) {
-                          // Fallback: try to match by body number in case mtop_application_id is not set
-                          $subQuery->whereNull('colhdr.mtop_application_id')
-                                   ->where('colhdr.inc_desc', 'LIKE', '%' . $tricycle->body_number . '%');
-                      });
-            })
+            ->where('mtop_applications.tricycle_id', $tricycle->id)
             ->whereNull('colhdr.cancel')
             ->select([
                 'tricycles.body_number',
                 'colhdr.trnx_date',
                 'colhdr.or_number',
-                'colhdr.amount AS ln_amnt',
+                'colhdr.or_code',
                 'taxpayer.full_name',
-                'colhdr.inc_desc',
                 'mtop_applications.transact_type',
                 'colhdr.mtop_application_id',
                 'mtop_applications.id as mtop_app_id'
@@ -137,13 +128,26 @@ class TransactionBodyNumberController extends Controller
             ->get();
 
         foreach($transactions as $transaction){
+            // Calculate total amount from collne2 table
+            $totalAmount = \DB::table('collne2')
+                ->where('or_code', $transaction->or_code)
+                ->sum('ln_amnt');
+
+            // Get description from collne2 and otherinc tables
+            $descriptions = \DB::table('collne2')
+                ->leftJoin('otherinc', 'otherinc.inc_code', 'collne2.inc_code')
+                ->where('collne2.or_code', $transaction->or_code)
+                ->pluck('otherinc.inc_desc')
+                ->filter()
+                ->toArray();
+
             $dataArr[] = [
                 'body_number' => $transaction->body_number ?: $tricycle->body_number,
                 'trnx_date' => $transaction->trnx_date,
                 'or_number' => $transaction->or_number,
-                'ln_amnt' => $transaction->ln_amnt,
+                'ln_amnt' => $totalAmount ?: 0,
                 'full_name' => $transaction->full_name ?: $tricycle->full_name,
-                'inc_desc' => $transaction->inc_desc,
+                'inc_desc' => implode(', ', $descriptions),
                 'trans_type' => $transaction->transact_type ? $this->mapTransactionType($transaction->transact_type) : 'N/A',
             ];
         }
@@ -153,6 +157,12 @@ class TransactionBodyNumberController extends Controller
 }
 
 private function mapTransactionType($type){
+    // Handle null or empty values
+    if (empty($type)) {
+        return 'N/A';
+    }
+
+    // Map of transaction type IDs to names
     $map = [
         '1' => 'New',
         '2' => 'Renewal',
@@ -160,9 +170,20 @@ private function mapTransactionType($type){
         '4' => 'Change Unit',
     ];
 
+    // Split the type string by comma and process each ID
     $typeArray = explode(',', $type);
-    $mapped = array_map(fn($id) => $map[trim($id)] ?? 'Unknown', $typeArray);
+    $mapped = [];
 
+    foreach ($typeArray as $typeId) {
+        $trimmedId = trim($typeId);
+        if (isset($map[$trimmedId])) {
+            $mapped[] = $map[$trimmedId];
+        } else {
+            $mapped[] = 'Unknown (' . $trimmedId . ')';
+        }
+    }
+
+    // Join the mapped types with comma and space
     return implode(', ', $mapped);
 }
 

@@ -221,9 +221,7 @@ export default {
                 templates: {
                     trnx_date: function(h, row) {
                         return row.trnx_date !== null ? moment(row.trnx_date).format('YYYY-MM-DD') : null;
-                    },
-                    trans_type: (h, row) => row.trans_type ? row.trans_type : 'N/A'
-                    
+                    }
                 },
                 texts: {
                     filter: 'Search:',
