@@ -164,10 +164,10 @@ private function mapTransactionType($type){
 
     // Map of transaction type IDs to names
     $map = [
-        '1' => 'New',
-        '2' => 'Renewal',
-        '3' => 'Dropping',
-        '4' => 'Change Unit',
+        '1' => 'Renewal',
+        '2' => 'Transfer',
+        '3' => 'Change Unit',
+        '4' => 'New',
     ];
 
     // Split the type string by comma and process each ID
