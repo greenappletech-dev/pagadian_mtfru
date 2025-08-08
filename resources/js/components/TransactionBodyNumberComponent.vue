@@ -404,7 +404,7 @@ export default {
                     
                     Promise.all(promises).then(updatedData => {
                         this.tableData = updatedData;
-                        console.log(this.tableData);
+                        console.log(this.tableData); 
                     });
                 });
 
