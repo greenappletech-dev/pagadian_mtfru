@@ -398,7 +398,7 @@ export default {
                                     ...row,
                                     ln_amnt: total,
                                     trans_type: row.trans_type || 'N/A'
-                                };
+                                }; 
                             })
                     );
                     
