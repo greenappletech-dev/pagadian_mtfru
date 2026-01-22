@@ -34884,7 +34884,7 @@ window.axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js")
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 //production url
-window.axios.defaults.baseURL = 'http://192.168.100.100/mtfru';
+window.axios.defaults.baseURL = 'http://192.168.1.1/mtfru';
 
 //dev url   
 // window.axios.defaults.baseURL = 'http://localhost/pagadian_mtfru/';

@@ -381,7 +381,7 @@ export default {
                     });
             }
         },
-
+ 
         selectOperator(rowindex) {
             this.operator_data = this.tableData_operator[rowindex];
             let search_data = this.filter_value === 'body_number' ? this.search_value : this.operator_data.id;
