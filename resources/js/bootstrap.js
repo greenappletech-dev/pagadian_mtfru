@@ -26,7 +26,7 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 
 //production url
-window.axios.defaults.baseURL = 'http://192.168.1.7/mtfru/';    
+window.axios.defaults.baseURL = 'http://192.168.1.7/mtfru';     
 
 //dev url   
 // window.axios.defaults.baseURL = 'http://localhost/pagadian_mtfru/';
