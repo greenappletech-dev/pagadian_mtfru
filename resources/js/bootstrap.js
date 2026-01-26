@@ -24,11 +24,13 @@ window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
+// Set base URL to root path (works with any domain)
+// window.axios.defaults.baseURL = '/';
 
 //production url
-window.axios.defaults.baseURL = 'http://192.168.1.7';          
+window.axios.defaults.baseURL = 'http://192.168.1.7';          //new path
 
-//dev url   
+//dev url
 // window.axios.defaults.baseURL = 'http://localhost/pagadian_mtfru/';
 
 // window.axios.defaults.baseURL = 'http://192.168.1.17/pagadian_mtfru/';

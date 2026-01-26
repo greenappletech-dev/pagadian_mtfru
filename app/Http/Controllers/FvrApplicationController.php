@@ -788,9 +788,9 @@ class FvrApplicationController extends Controller
         $fvr_auxiliary_engine = $this->fvr_application_auxiliary_engine->fetchDataByForeignId($id);
         $boat_captain = $this->boat_captain->fetchDataByBanca($fvr_application->banca_id);
         $operator_img = $this->operator_img->fetchDataById($fvr_application->taxpayer_id);
-        $m99 = DB::table('m99')->select('comp_addr', 'banca_trading')->first();
+        $m99 = DB::table('m99')->select('comp_addr', 'banca_traiding')->first();
         $company_address = $m99->comp_addr;
-        $trading = $m99->banca_trading;
+        $trading = $m99->banca_traiding;
 
         $engine_count = 1 + count($fvr_auxiliary_engine);
 
@@ -837,6 +837,31 @@ class FvrApplicationController extends Controller
             )
         ->first();
 
+        // If no signatories record exists, create empty default values
+        if (!$signatories) {
+            $signatories = (object)[
+                'ac_officer' => '',
+                'ac_verified' => '',
+                'ac_noted' => '',
+                'ac_approved' => '',
+                'cn_recommending' => '',
+                'cn_noted' => '',
+                'cn_approved' => '',
+                'sc_inspected' => '',
+                'sc_noted' => '',
+                'sc_approved' => '',
+                'mo_recommending' => '',
+                'mo_approved' => '',
+                'bc_recommending' => '',
+                'bc_approved' => '',
+                'cf_recommending' => '',
+                'cf_approved' => '',
+                'sf_verified' => '',
+                'sf_recommending' => '',
+                'sf_approved' => '',
+                'pb_certified' => '',
+            ];
+        }
 
         // dd($signatories);
 
