@@ -788,9 +788,9 @@ class FvrApplicationController extends Controller
         $fvr_auxiliary_engine = $this->fvr_application_auxiliary_engine->fetchDataByForeignId($id);
         $boat_captain = $this->boat_captain->fetchDataByBanca($fvr_application->banca_id);
         $operator_img = $this->operator_img->fetchDataById($fvr_application->taxpayer_id);
-        $m99 = DB::table('m99')->select('comp_addr', 'banca_traiding')->first();
+        $m99 = DB::table('m99')->select('comp_addr', 'banca_trading')->first();
         $company_address = $m99->comp_addr;
-        $trading = $m99->banca_traiding;
+        $trading = $m99->banca_trading;
 
         $engine_count = 1 + count($fvr_auxiliary_engine);
 
