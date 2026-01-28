@@ -34888,7 +34888,7 @@ window.axios.defaults.baseURL = '/';
 
 //production url
 // window.axios.defaults.baseURL = 'http://192.168.1.7';          //new path
-window.axios.defaults.baseURL = 'http://localhost'; //local path without internet
+window.axios.defaults.baseURL = 'http://localhost/'; //local path without internet
 
 //dev url
 // window.axios.defaults.baseURL = 'http://localhost/pagadian_mtfru/';
