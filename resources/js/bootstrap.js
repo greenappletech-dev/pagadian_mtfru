@@ -24,16 +24,11 @@ window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-// Set base URL to root path (works with any domain)
-window.axios.defaults.baseURL = '/';
+// Set base URL for XAMPP localhost (with project folder path)
+window.axios.defaults.baseURL = 'http://localhost/'; //new path
 
-//production url
-// window.axios.defaults.baseURL = 'http://192.168.1.7';          //new path
-window.axios.defaults.baseURL = 'http://localhost/'; //local path without internet
-
-
-//dev url
-// window.axios.defaults.baseURL = 'http://localhost/pagadian_mtfru/';
+//production url (network access)
+// window.axios.defaults.baseURL = 'http://192.168.1.7';
 
 // window.axios.defaults.baseURL = 'http://192.168.1.17/pagadian_mtfru/';
 
