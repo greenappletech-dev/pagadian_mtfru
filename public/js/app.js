@@ -34887,7 +34887,8 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 // window.axios.defaults.baseURL = '/';
 
 //production url
-window.axios.defaults.baseURL = 'http://192.168.1.7'; //new path
+// window.axios.defaults.baseURL = 'http://192.168.1.7';          //new path
+window.axios.defaults.baseURL = 'http://localhost/pagadian_mtfru/'; //local path without internet
 
 //dev url
 // window.axios.defaults.baseURL = 'http://localhost/pagadian_mtfru/';
