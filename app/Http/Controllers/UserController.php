@@ -52,6 +52,7 @@ class UserController extends Controller
 
         if($action === 'update') {
             unset($arr['password'], $arr['confirmation'], $arr['email']);
+            $arr['new_password'] = ['sometimes', 'nullable', 'string', 'min:8', 'confirmed'];
         }
 
         $request->validate($arr);
@@ -126,6 +127,10 @@ class UserController extends Controller
 
         $user->name = $this->trimInputs($request->name);
         $user->email = $this->trimInputs($request->email);
+
+        if ($request->filled('new_password')) {
+            $user->password = Hash::make($request->new_password);
+        }
 
         if($user->save()) {
             return response()->json([

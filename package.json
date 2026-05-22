@@ -25,7 +25,7 @@
         "vue-template-compiler": "^2.6.12"
     },
     "dependencies": {
-        "chart.js": "^3.5.1",
+        "chart.js": "^2.9.4",
         "moment": "^2.29.1",
         "sweetalert2": "^11.26.17",
         "toastr": "^2.1.4",

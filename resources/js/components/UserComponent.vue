@@ -124,6 +124,20 @@
                                 <label for="password_confirmation">Re-type Password</label>
                                 <input v-model = "user.password_confirmation" type="password" class="form-control" id="password_confirmation">
                             </div>
+
+                            <div v-if="!adding" class="mt-3">
+                                <a href="#" @click.prevent="resetPass = !resetPass" style="font-size: 13px; color: #e67e22;">
+                                    <i class="fas fa-key mr-1"></i>
+                                    {{ resetPass ? 'Cancel Password Reset' : 'Reset Password' }}
+                                </a>
+                                <div v-if="resetPass" class="mt-2 p-3 border rounded" style="background: #fefefe;">
+                                    <label for="new_password">New Password</label>
+                                    <input v-model="user.new_password" type="password" class="form-control" id="new_password" placeholder="Min. 8 characters">
+
+                                    <label for="new_password_confirmation" class="mt-2">Confirm New Password</label>
+                                    <input v-model="user.new_password_confirmation" type="password" class="form-control" id="new_password_confirmation" placeholder="Re-type new password">
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -182,6 +196,7 @@ export default {
             user: [],
             adding: false,
             print: false,
+            resetPass: false,
             paperSize: 'Letter',
             paperOrientation: 'Portrait',
         }
@@ -274,9 +289,14 @@ export default {
                 .then(response => {
                     this.errors = [];
                     this.adding = false;
-                    this.user.id = response.data.user.id;
-                    this.user.name = response.data.user.name;
-                    this.user.email = response.data.user.email;
+                    this.resetPass = false;
+                    this.user = {
+                        id: response.data.user.id,
+                        name: response.data.user.name,
+                        email: response.data.user.email,
+                        new_password: '',
+                        new_password_confirmation: '',
+                    };
                     $('#create-modal').modal('show');
                 })
                 .catch(error => {
@@ -290,11 +310,14 @@ export default {
             axios.patch('users/update/' + this.user.id, {
                 id: this.user.id,
                 name: this.user.name,
-                email: this.user.email
+                email: this.user.email,
+                new_password: this.resetPass ? this.user.new_password : null,
+                new_password_confirmation: this.resetPass ? this.user.new_password_confirmation : null,
             })
             .then(
                 response => {
                     $("#create-modal").modal("hide");
+                    this.resetPass = false;
                     this.suc = true;
                     this.suc_msg = response.data.message;
             })

@@ -24,19 +24,7 @@ window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-// Set base URL for XAMPP localhost (with project folder path)
-window.axios.defaults.baseURL = 'http://localhost/'; //new path
-
-//production url (network access)
-// window.axios.defaults.baseURL = 'http://192.168.1.7';
-
-// window.axios.defaults.baseURL = 'http://192.168.1.17/pagadian_mtfru/';
-
-
-//staging url
-// window.axios.defaults.baseURL = 'http://staging-mtfru.ideasoftcloud.com';
-
-// window.axios.defaults.baseURL = 'http://mtfru.test';
+window.axios.defaults.baseURL = window.location.origin + '/';
 
 
 /**
