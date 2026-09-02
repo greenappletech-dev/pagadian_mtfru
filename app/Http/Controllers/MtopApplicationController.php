@@ -657,8 +657,17 @@ class MtopApplicationController extends Controller
                 $association = $getAssociation->association;
             }
 
+            /* Issue date on item 9 must follow the latest OR tagged to the body number,
+               never the validity date. Only pure Change Unit needs this: when the
+               transaction also includes a renewal the validity date moves with the
+               same OR, so item 9 is already correct. */
+            $latest_or_date = $this->latestOrDate(
+                $mtop_application[0]->tricycle_id,
+                $mtop_application[0]->transact_date
+            );
+
             /* get the previous application */
-            array_push($data[0], $application_type, $system_parameter, $association);
+            array_push($data[0], $application_type, $system_parameter, $association, $latest_or_date);
             $data = $data[0];
         }
 
@@ -667,6 +676,27 @@ class MtopApplicationController extends Controller
         $pdf->loadView('pdf.' . $blade, compact('data'));
         $pdf->setPaper('legal');
         return $pdf->stream();
+    }
+
+
+    /**
+     * Latest uncancelled OR tagged to a body number (tricycle), across every
+     * application that tricycle has had. Falls back to the given date when the
+     * body number has no OR at all yet.
+     */
+    private function latestOrDate($tricycle_id, $fallback_date) {
+
+        $latest_or = DB::table('colhdr')
+            ->join('mtop_applications', 'colhdr.mtop_application_id', 'mtop_applications.id')
+            ->where('mtop_applications.tricycle_id', $tricycle_id)
+            ->whereNull('colhdr.cancel')
+            ->whereNotNull('colhdr.trnx_date')
+            ->orderByDesc('colhdr.trnx_date')
+            ->orderByDesc('colhdr.id')
+            ->select('colhdr.trnx_date')
+            ->first();
+
+        return $latest_or ? $latest_or->trnx_date : $fallback_date;
     }
 
 

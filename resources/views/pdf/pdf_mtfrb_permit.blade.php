@@ -225,7 +225,12 @@
 
     <div class="expiration_date">{{ date('F d, Y', strtotime($data[0]['validity_date'])) }}</div>
 
-    {{ $day = date('j', strtotime($data[3] === 'CU' ? $data[0]['validity_date'] : $data[0]['trnx_date'])) }}
+    {{--  Item 9 issue date. For a pure Change Unit this is the latest OR tagged to the
+          body number (passed in as $data[6]); it must never be derived from the
+          validity date, which the supervisor may edit independently.  --}}
+    {{ $issue_date = $data[3] === 'CU' ? $data[6] : $data[0]['trnx_date'] }}
+
+    {{ $day = date('j', strtotime($issue_date)) }}
     {{ $last_digit = substr($day, -1) }}
     {{ $ordinal = 'th' }}
 
@@ -241,16 +246,10 @@
         {{ $ordinal = 'th' }}
     @endif
 
-    {{ $year = date('Y', strtotime($data[0]['trnx_date'])) }}
-
-    {{--  GET VALIDITY DATE AND MINUS TO 2  --}}
-    @if($data[3] === 'CU')
-        {{ $year = \Carbon\Carbon::parse($data[0]['validity_date'])->subYears(2)->format('Y') }}
-    @endif
-
+    {{ $year = date('Y', strtotime($issue_date)) }}
 
     <div class="issue_day">{{ $day.$ordinal }}</div>
-    <div class="issue_month">{{ date('F', strtotime($data[3] === 'CU' ? $data[0]['validity_date'] : $data[0]['trnx_date'])) . ', ' . $year }}</div>
+    <div class="issue_month">{{ date('F', strtotime($issue_date)) . ', ' . $year }}</div>
 
 
     <table>
@@ -268,7 +267,7 @@
                     </tr>
                     @if($data[3] === 'CU')
                         <tr>
-                            <th style="width: 120px" colspan="2">{{ date('F d, Y', strtotime($data[0]['trnx_date'])) }}</th>
+                            <th style="width: 120px" colspan="2">{{ date('F d, Y', strtotime($issue_date)) }}</th>
                         </tr>
                     @endif
                 </table>
@@ -280,7 +279,7 @@
                     </tr>
                     @if($data[3] === 'CU')
                         <tr>
-                            <th style="width: 120px" colspan="2">{{ date('F d, Y', strtotime($data[0]['trnx_date'])) }}</th>
+                            <th style="width: 120px" colspan="2">{{ date('F d, Y', strtotime($issue_date)) }}</th>
                         </tr>
                     @endif
                 </table>
@@ -292,7 +291,7 @@
                     </tr>
                     @if($data[3] === 'CU')
                         <tr>
-                            <th style="width: 120px" colspan="2">{{ date('F d, Y', strtotime($data[0]['trnx_date'])) }}</th>
+                            <th style="width: 120px" colspan="2">{{ date('F d, Y', strtotime($issue_date)) }}</th>
                         </tr>
                     @endif
                 </table>
@@ -304,7 +303,7 @@
                     </tr>
                     @if($data[3] === 'CU')
                         <tr>
-                            <th style="width: 120px" colspan="2">{{ date('F d, Y', strtotime($data[0]['trnx_date'])) }}</th>
+                            <th style="width: 120px" colspan="2">{{ date('F d, Y', strtotime($issue_date)) }}</th>
                         </tr>
                     @endif
                 </table>
