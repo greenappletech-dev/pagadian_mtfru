@@ -11,6 +11,7 @@ use App\Models\OperatorImage;
 use App\Models\Taxpayer;
 use App\Models\Tricycle;
 use App\Models\TricycleAssociationMember;
+use App\Models\TricycleUnitHistory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -140,13 +141,47 @@ class MtopApplicationController extends Controller
         return response()->json(['tricycles' => $tricycles], 200);
     }
 
-    public function updateTricycleDetails($data) {
+    /* serial numbers are compared and stored uppercase and trimmed, so that a
+       difference in casing or a stray space is never mistaken for a different unit */
+    private function normalizeSerial($value) {
+        return $value === null ? null : strtoupper(trim($value));
+    }
+
+    public function updateTricycleDetails($data, $mtop_application_id = null) {
         $tricycle = Tricycle::where('id', $data['tricycle_id'])->first();
+
+        if(!$tricycle) {
+            return;
+        }
+
+        $new_engine_motor_no = $this->normalizeSerial($data['engine_motor_no']);
+        $new_chassis_no = $this->normalizeSerial($data['chassis_no']);
+
+        /* the tricycle master only ever holds the CURRENT unit. before it is
+           overwritten by a change unit, keep the unit being replaced on record. */
+
+        $unit_replaced = $this->normalizeSerial($tricycle->engine_motor_no) !== $new_engine_motor_no
+                      || $this->normalizeSerial($tricycle->chassis_no) !== $new_chassis_no;
+
+        if($unit_replaced) {
+            TricycleUnitHistory::create([
+                'tricycle_id' => $tricycle->id,
+                'mtop_application_id' => $mtop_application_id,
+                'operator_id' => $tricycle->operator_id,
+                'body_number' => $tricycle->body_number,
+                'make_type' => $tricycle->make_type,
+                'engine_motor_no' => $tricycle->engine_motor_no,
+                'chassis_no' => $tricycle->chassis_no,
+                'plate_no' => $tricycle->plate_no,
+                'replaced_at' => now(),
+            ]);
+        }
+
         $tricycle->operator_id = $data['operator_id'];
-        $tricycle->make_type =$data['make_type'];
-        $tricycle->engine_motor_no = $data['engine_motor_no'];
-        $tricycle->chassis_no = $data['chassis_no'];
-        $tricycle->plate_no = $data['plate_no'];
+        $tricycle->make_type = $this->normalizeSerial($data['make_type']);
+        $tricycle->engine_motor_no = $new_engine_motor_no;
+        $tricycle->chassis_no = $new_chassis_no;
+        $tricycle->plate_no = $this->normalizeSerial($data['plate_no']);
         $tricycle->save();
     }
 
@@ -584,7 +619,7 @@ class MtopApplicationController extends Controller
                 $tricycle->mtop_application_id = $mtop_application_update_status->id;
                 $tricycle->save();
 
-                $this->updateTricycleDetails($data);
+                $this->updateTricycleDetails($data, $mtop_application_update_status->id);
 
                 $message = 'Application Approved';
             }
