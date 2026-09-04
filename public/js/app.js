@@ -6300,22 +6300,27 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     listRemove: function listRemove(key) {
-      this.orList.splice(this.orList[key], 1);
+      this.orList.splice(key, 1);
     },
     addToList: function addToList() {
-      var _this = this;
-      console.log(this.orDetailsTableData[0]);
+      /* nothing was found for the OR number, so there is nothing to add.
+         without this the click handler throws on an empty result. */
+      if (!this.orDetailsTableData || this.orDetailsTableData.length === 0) {
+        alert('Search an OR Number first. If nothing was found, the OR may already be tagged to another transaction.');
+        return;
+      }
+      var found = this.orDetailsTableData[0];
       var checker = false;
       this.orList.forEach(function (item) {
-        if (item.id == _this.orDetailsTableData[0].id) {
+        if (item.id == found.id) {
           checker = true;
         }
       });
       if (checker == false) {
         this.orList.push({
-          id: this.orDetailsTableData[0].id,
-          or_number: this.orDetailsTableData[0].or_number,
-          full_name: this.orDetailsTableData[0].full_name
+          id: found.id,
+          or_number: found.or_number,
+          full_name: found.full_name
         });
       } else {
         alert('Already in list');
@@ -6384,29 +6389,29 @@ __webpack_require__.r(__webpack_exports__);
     openModalToPrintReport: function openModalToPrintReport() {
       this.print = false;
       this.validity_update = false;
-      this.tagOr = false;
+      this.tagOR = false;
       $('#print-modal').modal('show');
     },
     openModalToEditValidity: function openModalToEditValidity(id) {
       this.validity_update = true;
-      this.tagOr = false;
+      this.tagOR = false;
       this.applicationIdValue = id;
       $('#print-modal').modal('show');
     },
     updateValidity: function updateValidity() {
-      var _this2 = this;
+      var _this = this;
       this.loader = true;
       axios.patch('mtop/validity_date', {
         id: this.applicationIdValue,
         validity_date: this.validityDateValue
       }).then(function (response) {
-        _this2.suc = true;
-        _this2.suc_msg = response.data.message;
+        _this.suc = true;
+        _this.suc_msg = response.data.message;
       })["catch"](function (error) {
-        _this2.err = true;
-        _this2.err_msg = error.response.data.err_msg;
+        _this.err = true;
+        _this.err_msg = error.response.data.err_msg;
       })["finally"](function () {
-        return _this2.loader = false;
+        return _this.loader = false;
       });
       this.validity_update = false;
       $('#print-modal').modal('hide');
@@ -6436,11 +6441,29 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     approveForPayment: function approveForPayment(id) {
-      var _this3 = this;
+      var _this2 = this;
       var confirmBox = confirm("Proceed to Payment?");
       if (confirmBox === true) {
         this.loader = true;
         axios.patch('mtop/approve/' + id + '/payment', {
+          application_id: id
+        }).then(function (response) {
+          _this2.suc = true;
+          _this2.suc_msg = response.data.message;
+        })["catch"](function (error) {
+          _this2.err = true;
+          _this2.err_msg = error.response.data.err_msg;
+        })["finally"](function () {
+          return _this2.loader = false;
+        });
+      }
+    },
+    approveApplication: function approveApplication(id) {
+      var _this3 = this;
+      var confirmBox = confirm("Approve this Application?");
+      if (confirmBox === true) {
+        this.loader = true;
+        axios.patch('mtop/approve/' + id + '/approval', {
           application_id: id
         }).then(function (response) {
           _this3.suc = true;
@@ -6453,69 +6476,51 @@ __webpack_require__.r(__webpack_exports__);
         });
       }
     },
-    approveApplication: function approveApplication(id) {
-      var _this4 = this;
-      var confirmBox = confirm("Approve this Application?");
-      if (confirmBox === true) {
-        this.loader = true;
-        axios.patch('mtop/approve/' + id + '/approval', {
-          application_id: id
-        }).then(function (response) {
-          _this4.suc = true;
-          _this4.suc_msg = response.data.message;
-        })["catch"](function (error) {
-          _this4.err = true;
-          _this4.err_msg = error.response.data.err_msg;
-        })["finally"](function () {
-          return _this4.loader = false;
-        });
-      }
-    },
     initialData: function initialData() {
-      var _this5 = this;
+      var _this4 = this;
       axios.get('mtop/getdata').then(function (response) {
-        _this5.barangayCodeTableData = response.data.barangays;
+        _this4.barangayCodeTableData = response.data.barangays;
       });
     },
     getDataFiltered: function getDataFiltered() {
-      var _this6 = this;
+      var _this5 = this;
       this.loader = true;
       this.tableData = [];
       var optional_route = this.barangayCodeValue === '' ? '/null' : '/' + this.barangayCodeValue;
       axios.get('mtop/getdata_filtered/' + this.fromDateValue + '/' + this.toDateValue + optional_route + '?page=' + this.pageNumber).then(function (response) {
-        _this6.tableData = response.data.mtop_applications.data;
-        _this6.totalPageNumber = response.data.mtop_applications.last_page;
+        _this5.tableData = response.data.mtop_applications.data;
+        _this5.totalPageNumber = response.data.mtop_applications.last_page;
       })["finally"](function () {
-        return _this6.loader = false;
+        return _this5.loader = false;
       });
       this.currentPage = this.pageNumber;
     },
     destroyRecord: function destroyRecord(id) {
-      var _this7 = this;
+      var _this6 = this;
       var confirmBox = confirm("Do you really want to delete this application?");
       if (confirmBox === true) {
         this.loader = true;
         axios.get('mtop/destroy/' + id).then(function (response) {
-          _this7.suc = true;
-          _this7.suc_msg = response.data.message;
+          _this6.suc = true;
+          _this6.suc_msg = response.data.message;
         })["catch"](function (error) {
-          _this7.err = true;
-          _this7.err_msg = error.response.data.err_msg;
+          _this6.err = true;
+          _this6.err_msg = error.response.data.err_msg;
         })["finally"](function () {
-          return _this7.loader = false;
+          return _this6.loader = false;
         });
       }
     },
     cancelTransaction: function cancelTransaction(id) {
-      var _this8 = this;
+      var _this7 = this;
       axios.get('mtop/cancel/' + id).then(function (response) {
-        _this8.suc = true;
-        _this8.suc_msg = response.data.message;
+        _this7.suc = true;
+        _this7.suc_msg = response.data.message;
       })["catch"](function (error) {
-        _this8.err = true;
-        _this8.err_msg = error.response.data.err_msg;
+        _this7.err = true;
+        _this7.err_msg = error.response.data.err_msg;
       })["finally"](function () {
-        return _this8.loader = false;
+        return _this7.loader = false;
       });
     },
     openToCreate: function openToCreate() {
@@ -6536,42 +6541,45 @@ __webpack_require__.r(__webpack_exports__);
       $('#tag_or_modal').modal('show');
     },
     searchOR: function searchOR() {
-      var _this9 = this;
+      var _this8 = this;
       if (!this.or_no || this.or_no === '') {
         alert('OR Number is Required');
         return;
       }
       axios.get('mtop/or_finder/' + this.or_no).then(function (response) {
-        _this9.orDetailsTableData = response.data.data;
+        _this8.orDetailsTableData = response.data.data || [];
+        if (_this8.orDetailsTableData.length === 0) {
+          alert('No untagged OR found for ' + _this8.or_no + '. It may already be tagged to another transaction.');
+        }
       });
     },
     submitOrTag: function submitOrTag() {
-      var _this10 = this;
+      var _this9 = this;
       axios.patch('mtop/tagOR', {
         or_list: this.orList,
         application_id: this.applicationIdValue
       }).then(function (response) {
-        _this10.suc = true;
-        _this10.suc_msg = response.data.message;
+        _this9.suc = true;
+        _this9.suc_msg = response.data.message;
         $('#or_modal_list').modal('hide');
       })["catch"](function (error) {
-        _this10.err = true;
-        _this10.err_msg = error.response.data.err_msg;
+        _this9.err = true;
+        _this9.err_msg = error.response.data.err_msg;
       })["finally"](function () {
-        return _this10.loader = false;
+        return _this9.loader = false;
       });
     },
     getDataSearched: function getDataSearched() {
-      var _this11 = this;
+      var _this10 = this;
       this.loader = true;
       this.tableData = [];
       var optional_route = this.barangayCodeValue === '' ? '/null' : '/' + this.barangayCodeValue;
       axios.get('mtop/getdata_search/' + this.fromDateValue + '/' + this.toDateValue + optional_route + '/' + this.searchOption + '/' + this.searchValue + '?page=' + this.pageNumber).then(function (response) {
-        _this11.tableData = response.data.mtop_applications.data;
-        _this11.totalPageNumber = response.data.mtop_applications.last_page;
+        _this10.tableData = response.data.mtop_applications.data;
+        _this10.totalPageNumber = response.data.mtop_applications.last_page;
         console.log(response.data.mtop_applications.last_page);
       })["finally"](function () {
-        return _this11.loader = false;
+        return _this10.loader = false;
       });
       this.currentPage = this.pageNumber;
     }
@@ -140298,7 +140306,7 @@ class di {
 /***/ ((module) => {
 
 "use strict";
-module.exports = /*#__PURE__*/JSON.parse('{"_from":"axios@^0.21","_id":"axios@0.21.4","_inBundle":false,"_integrity":"sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==","_location":"/axios","_phantomChildren":{},"_requested":{"type":"range","registry":true,"raw":"axios@^0.21","name":"axios","escapedName":"axios","rawSpec":"^0.21","saveSpec":null,"fetchSpec":"^0.21"},"_requiredBy":["#DEV:/"],"_resolved":"https://registry.npmjs.org/axios/-/axios-0.21.4.tgz","_shasum":"c67b90dc0568e5c1cf2b0b858c43ba28e2eda575","_spec":"axios@^0.21","_where":"C:\\\\xampp\\\\htdocs\\\\pagadian_mtfru","author":{"name":"Matt Zabriskie"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"bugs":{"url":"https://github.com/axios/axios/issues"},"bundleDependencies":false,"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}],"dependencies":{"follow-redirects":"^1.14.0"},"deprecated":false,"description":"Promise based HTTP client for the browser and node.js","devDependencies":{"coveralls":"^3.0.0","es6-promise":"^4.2.4","grunt":"^1.3.0","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.1.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^23.0.0","grunt-karma":"^4.0.0","grunt-mocha-test":"^0.13.3","grunt-ts":"^6.0.0-beta.19","grunt-webpack":"^4.0.2","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^6.3.2","karma-chrome-launcher":"^3.1.0","karma-firefox-launcher":"^2.1.0","karma-jasmine":"^1.1.1","karma-jasmine-ajax":"^0.1.13","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^4.3.6","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.8","karma-webpack":"^4.0.2","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","mocha":"^8.2.1","sinon":"^4.5.0","terser-webpack-plugin":"^4.2.3","typescript":"^4.0.5","url-search-params":"^0.10.0","webpack":"^4.44.2","webpack-dev-server":"^3.11.0"},"homepage":"https://axios-http.com","jsdelivr":"dist/axios.min.js","keywords":["xhr","http","ajax","promise","node"],"license":"MIT","main":"index.js","name":"axios","repository":{"type":"git","url":"git+https://github.com/axios/axios.git"},"scripts":{"build":"NODE_ENV=production grunt build","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","examples":"node ./examples/server.js","fix":"eslint --fix lib/**/*.js","postversion":"git push && git push --tags","preversion":"npm test","start":"node ./sandbox/server.js","test":"grunt test","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json"},"typings":"./index.d.ts","unpkg":"dist/axios.min.js","version":"0.21.4"}');
+module.exports = /*#__PURE__*/JSON.parse('{"_args":[["axios@0.21.4","C:\\\\laragon\\\\www\\\\pagadian_mtfru"]],"_development":true,"_from":"axios@0.21.4","_id":"axios@0.21.4","_inBundle":false,"_integrity":"sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==","_location":"/axios","_phantomChildren":{},"_requested":{"type":"version","registry":true,"raw":"axios@0.21.4","name":"axios","escapedName":"axios","rawSpec":"0.21.4","saveSpec":null,"fetchSpec":"0.21.4"},"_requiredBy":["#DEV:/"],"_resolved":"https://registry.npmjs.org/axios/-/axios-0.21.4.tgz","_spec":"0.21.4","_where":"C:\\\\laragon\\\\www\\\\pagadian_mtfru","author":{"name":"Matt Zabriskie"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"bugs":{"url":"https://github.com/axios/axios/issues"},"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}],"dependencies":{"follow-redirects":"^1.14.0"},"description":"Promise based HTTP client for the browser and node.js","devDependencies":{"coveralls":"^3.0.0","es6-promise":"^4.2.4","grunt":"^1.3.0","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.1.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^23.0.0","grunt-karma":"^4.0.0","grunt-mocha-test":"^0.13.3","grunt-ts":"^6.0.0-beta.19","grunt-webpack":"^4.0.2","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^6.3.2","karma-chrome-launcher":"^3.1.0","karma-firefox-launcher":"^2.1.0","karma-jasmine":"^1.1.1","karma-jasmine-ajax":"^0.1.13","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^4.3.6","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.8","karma-webpack":"^4.0.2","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","mocha":"^8.2.1","sinon":"^4.5.0","terser-webpack-plugin":"^4.2.3","typescript":"^4.0.5","url-search-params":"^0.10.0","webpack":"^4.44.2","webpack-dev-server":"^3.11.0"},"homepage":"https://axios-http.com","jsdelivr":"dist/axios.min.js","keywords":["xhr","http","ajax","promise","node"],"license":"MIT","main":"index.js","name":"axios","repository":{"type":"git","url":"git+https://github.com/axios/axios.git"},"scripts":{"build":"NODE_ENV=production grunt build","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","examples":"node ./examples/server.js","fix":"eslint --fix lib/**/*.js","postversion":"git push && git push --tags","preversion":"npm test","start":"node ./sandbox/server.js","test":"grunt test","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json"},"typings":"./index.d.ts","unpkg":"dist/axios.min.js","version":"0.21.4"}');
 
 /***/ })
 

@@ -19,6 +19,27 @@ class StoreTricycle extends FormRequest
     }
 
     /**
+     * The tricycle master stores serial numbers uppercase and trimmed. Normalise
+     * them BEFORE validation runs, otherwise the unique rules compare the raw
+     * input against already-uppercased rows and a duplicate slips through in a
+     * different casing, or an existing record is reported as free when it is not.
+     *
+     * @return void
+     */
+    protected function prepareForValidation()
+    {
+        $normalised = [];
+
+        foreach (['body_number', 'make_type', 'engine_motor_no', 'chassis_no', 'plate_no'] as $field) {
+            if ($this->has($field) && is_string($this->input($field))) {
+                $normalised[$field] = strtoupper(trim($this->input($field)));
+            }
+        }
+
+        $this->merge($normalised);
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array

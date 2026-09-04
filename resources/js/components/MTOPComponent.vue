@@ -399,18 +399,26 @@ export default {
             }
         },
         listRemove(key){
-            this.orList.splice(this.orList[key], 1);
+            this.orList.splice(key, 1);
         },
         addToList(){
-            console.log(this.orDetailsTableData[0]);
+            /* nothing was found for the OR number, so there is nothing to add.
+               without this the click handler throws on an empty result. */
+            if(!this.orDetailsTableData || this.orDetailsTableData.length === 0){
+                alert('Search an OR Number first. If nothing was found, the OR may already be tagged to another transaction.');
+                return;
+            }
+
+            const found = this.orDetailsTableData[0];
             let checker = false;
+
             this.orList.forEach(item=>{
-                if(item.id == this.orDetailsTableData[0].id){
+                if(item.id == found.id){
                     checker=true;
                 }
             })
             if(checker == false){
-                this.orList.push({id:this.orDetailsTableData[0].id, or_number:this.orDetailsTableData[0].or_number, full_name:this.orDetailsTableData[0].full_name});
+                this.orList.push({id:found.id, or_number:found.or_number, full_name:found.full_name});
             }
             else{
                 alert('Already in list');
@@ -493,13 +501,13 @@ export default {
         openModalToPrintReport() {
             this.print = false;
             this.validity_update = false;
-            this.tagOr = false;
+            this.tagOR = false;
             $('#print-modal').modal('show');
         },
 
         openModalToEditValidity(id) {
             this.validity_update = true;
-            this.tagOr = false;
+            this.tagOR = false;
             this.applicationIdValue = id;
             $('#print-modal').modal('show');
         },
@@ -674,7 +682,11 @@ export default {
 
             axios.get('mtop/or_finder/' + this.or_no)
             .then(response => {
-                this.orDetailsTableData = response.data.data;
+                this.orDetailsTableData = response.data.data || [];
+
+                if(this.orDetailsTableData.length === 0){
+                    alert('No untagged OR found for ' + this.or_no + '. It may already be tagged to another transaction.');
+                }
             })
         },
 
