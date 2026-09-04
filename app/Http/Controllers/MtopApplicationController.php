@@ -755,12 +755,32 @@ class MtopApplicationController extends Controller
         $getOR = DB::table('colhdr')
             ->leftJoin('collne2', 'collne2.or_code', 'colhdr.or_code')
             ->where('colhdr.or_number', 'LIKE', '%'. $or_no . '%')
-            ->where('mtop_application_id', '<=', 0)
+
+            /* an OR that has never been tagged, or that has been untagged so it
+               can be tagged again, carries null here. comparing null with <= 0
+               is never true in sql, so those ORs could not be found at all. */
+            ->where(function($query) {
+                $query->whereNull('colhdr.mtop_application_id')
+                    ->orWhere('colhdr.mtop_application_id', '<=', 0);
+            })
             ->where(function($query) {
                 $query->where('colhdr.trans_type', 'MTOP')
                     ->orWhere('colhdr.trans_type', null)
                     ->orWhere('colhdr.trans_type', "");
             })
+
+            /* the join brings a second id into scope and collne2 wins, so without
+               this the id handed back is the line item's. tagOR then matches it
+               against colhdr.id and tags a different operator's OR. */
+            ->select(
+                'colhdr.id as id',
+                'colhdr.or_number',
+                'colhdr.or_code',
+                'colhdr.full_name',
+                'colhdr.trnx_date',
+                'collne2.inc_desc',
+                'collne2.ln_amnt'
+            )
             ->get();
 
         return response()->json(['data'=> $getOR]);
