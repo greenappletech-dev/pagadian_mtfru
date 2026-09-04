@@ -98,6 +98,7 @@ class CheckTricycleDrift extends Command
 
         $this->newLine();
         $this->reportBypass();
+        $this->reportPaidWithoutApproval();
         $this->reportDuplicates();
 
         return 1;
@@ -196,6 +197,45 @@ class CheckTricycleDrift extends Command
             $missing, $total
         ));
         $this->line('  These are where future drift comes from. Records approved outside the system never update the tricycle master.');
+    }
+
+    /**
+     * Applications the cashier has already collected on but which were never
+     * approved. This is drift before it happens: the moment one of these is
+     * marked approved by hand, the master is left holding the previous unit.
+     */
+    private function reportPaidWithoutApproval()
+    {
+        $unapproved = DB::select("
+            select m.id, m.body_number, m.transact_date, m.transact_type, m.status
+            from mtop_applications m
+            join colhdr c on c.mtop_application_id = m.id
+            where c.canc_date is null and m.status <> 4
+            group by m.id, m.body_number, m.transact_date, m.transact_type, m.status
+            order by m.transact_date desc
+        ");
+
+        if (empty($unapproved)) {
+            return;
+        }
+
+        $changeUnit = array_filter($unapproved, function ($a) {
+            return strpos((string) $a->transact_type, '3') !== false;
+        });
+
+        $this->newLine();
+        $this->warn(sprintf('%d application(s) have been paid but never approved.', count($unapproved)));
+
+        if (count($changeUnit)) {
+            $this->error(sprintf('  %d of them are change units and will drift the master if approved by hand:', count($changeUnit)));
+
+            $this->table(
+                ['App', 'Body', 'Date', 'Type', 'Status'],
+                array_map(function ($a) {
+                    return [$a->id, $a->body_number, $a->transact_date, $a->transact_type, $a->status];
+                }, $changeUnit)
+            );
+        }
     }
 
     /**
