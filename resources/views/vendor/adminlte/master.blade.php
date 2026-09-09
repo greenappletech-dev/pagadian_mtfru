@@ -9,6 +9,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
+    {{-- where the app is actually served from. url('/') comes from the request,
+         so it keeps the sub folder when the app lives in one - on the office
+         server that is http://192.168.100.100/mtfru, not the bare host. --}}
+    <meta name="base-url" content="{{ url('/') }}">
+
     {{-- Custom Meta Tags --}}
     @yield('meta_tags')
 
