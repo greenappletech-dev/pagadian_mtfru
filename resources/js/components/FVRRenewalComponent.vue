@@ -1,4 +1,4 @@
-<template>
+  <template>
     <div class="main-container p-4">
         <div style="position: absolute; top: 0; left: 0; z-index: 1000; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.2);" v-if="loader">
             <div style="position: fixed; top: 450px; left: 55%; transform:translate(-50%, -70%)">
@@ -770,8 +770,10 @@ export default {
 
         closeMessageBox() {
             if(this.suc === true) {
-                let pathname = window.location.pathname.split('/').splice(1, 2).join('/').replace('fvr_entry', 'fvr');
-                location.replace(window.location.origin + '/' + pathname);
+                /* this used to keep the record id in the path and land on /fvr/123,
+                   which is not a route. it only ever worked when the app sat in a sub
+                   folder. the axios base already knows where the app is served from. */
+                location.replace(window.axios.defaults.baseURL + 'fvr');
             }
 
             this.adding = false;

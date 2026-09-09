@@ -355,7 +355,11 @@ export default {
             pageNumber: 1,
             currentPage: 1,
             searchValue: '',
-            searchOption: '',
+            /* the dropdown has no blank option, so an empty value still LOOKED like
+               Body Number was chosen while sending nothing. the search url then
+               carried an empty segment - getdata_search/.../null//1635 - which
+               matches no route and answered 404. */
+            searchOption: 'body_number',
 
             err_msg: '',
             err: false,
