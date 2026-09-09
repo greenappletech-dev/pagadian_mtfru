@@ -752,6 +752,15 @@ class MtopApplicationController extends Controller
 
     public function findor($or_no) {
 
+        /* an OR number pasted from a form or a spreadsheet often carries a
+           leading or trailing space. that space went straight into the LIKE
+           pattern, so a perfectly good OR came back as "not found". */
+        $or_no = trim($or_no);
+
+        if($or_no === '') {
+            return response()->json(['data' => []]);
+        }
+
         $getOR = DB::table('colhdr')
             ->leftJoin('collne2', 'collne2.or_code', 'colhdr.or_code')
             ->where('colhdr.or_number', 'LIKE', '%'. $or_no . '%')

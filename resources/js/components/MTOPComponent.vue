@@ -678,18 +678,24 @@ export default {
         },
 
         searchOR() {
-            if (!this.or_no || this.or_no === '')
+            /* a pasted OR number usually brings a space with it, which used to
+               travel into the url as %20 and find nothing. */
+            const or_no = (this.or_no || '').trim();
+
+            if (or_no === '')
             {
                 alert('OR Number is Required');
                 return;
             }
 
-            axios.get('mtop/or_finder/' + this.or_no)
+            this.or_no = or_no;
+
+            axios.get('mtop/or_finder/' + encodeURIComponent(or_no))
             .then(response => {
                 this.orDetailsTableData = response.data.data || [];
 
                 if(this.orDetailsTableData.length === 0){
-                    alert('No untagged OR found for ' + this.or_no + '. It may already be tagged to another transaction.');
+                    alert('No untagged OR found for ' + or_no + '. It may already be tagged to another transaction.');
                 }
             })
         },
