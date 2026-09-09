@@ -691,6 +691,15 @@ export default {
         },
 
         submitOrTag() {
+            /* the server rejects an empty list now, but stopping here keeps the
+               clerk from getting an error dialog for an obvious mistake. */
+            if(this.orList.length === 0){
+                alert('Add at least one OR Number to the list before tagging.');
+                return;
+            }
+
+            this.loader = true;
+
             axios.patch('mtop/tagOR', {
                 or_list: this.orList,
                 application_id : this.applicationIdValue
@@ -698,12 +707,30 @@ export default {
                 this.suc = true;
                 this.suc_msg = response.data.message;
                 $('#or_modal_list').modal('hide');
+
+                /* the list was kept between transactions, so tagging one
+                   application and then another re-tagged the first one's ORs. */
+                this.orList = [];
+
+                /* the status moves to For Printing on the server now, so pull the
+                   row again instead of leaving the old status on screen. */
+                this.reloadList();
             })
             .catch(error => {
                 this.err = true;
-                this.err_msg = error.response.data.err_msg;
+                this.err_msg = (error.response && error.response.data && error.response.data.err_msg)
+                    ? error.response.data.err_msg
+                    : 'Tagging failed. Please try again.';
             })
             .finally(()=> this.loader = false);
+        },
+
+        reloadList() {
+            if(this.searchValue !== '' && this.searchValue !== null){
+                this.getDataSearched();
+            } else {
+                this.getDataFiltered();
+            }
         },
 
         getDataSearched() {

@@ -117,6 +117,10 @@ Route::group(['middleware'=> 'auth'], function() {
         Route::get('mtop/or_finder/{or_no}', [MtopApplicationController::class, 'findor']);
         Route::patch('mtop/tagOR', [MtopApplicationController::class,'tagOR']);
 
+        /* releasing an engine/chassis held by an older tricycle */
+        Route::get('mtop/serial_holder/{field}', [MtopApplicationController::class, 'serialHolder']);
+        Route::patch('mtop/drop_old_unit', [MtopApplicationController::class, 'dropOldUnit']);
+
         /* MTOP Entry */
         Route::get('mtop_entry/renew/{id}', [MtopApplicationController::class, 'renew']);
         Route::get('mtop_entry', [MtopApplicationController::class, 'create']);

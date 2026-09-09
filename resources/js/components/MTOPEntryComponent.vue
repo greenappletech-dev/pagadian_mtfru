@@ -355,6 +355,26 @@
                         </div>
 
                         <div class="card-body" id="change_unit_details" v-if="change_unit_details">
+
+                            <div class="alert alert-warning" v-if="serialHolder">
+                                <div class="mb-2"><strong>Ginagamit pa ang engine/chassis na ito.</strong></div>
+                                <div>Body Number: <strong>{{ serialHolder.body_number }}</strong> &mdash; {{ serialHolder.full_name }}</div>
+                                <div>Engine: {{ serialHolder.engine_motor_no }}</div>
+                                <div>Chassis: {{ serialHolder.chassis_no }}</div>
+                                <div class="mb-2">Huling update: {{ serialHolder.updated_at }}</div>
+
+                                <div class="input-group">
+                                    <input type="password"
+                                           class="form-control"
+                                           placeholder="Drop Old Unit Password"
+                                           v-model="dropPassword">
+                                    <div class="input-group-append">
+                                        <button type="button" class="btn btn-danger" v-on:click="dropOldUnit">Drop Old Unit</button>
+                                    </div>
+                                </div>
+                                <small class="text-danger" v-if="dropErrorMsg">{{ dropErrorMsg }}</small>
+                            </div>
+
                             <label>New Tricycle Details</label>
                             <div class="row">
 
@@ -613,6 +633,9 @@ export default {
             change_unit_details:false,
             //dropdowns
             errors: [],
+            serialHolder: null,
+            dropPassword: '',
+            dropErrorMsg: '',
             barangayCodeTableData: [],
             tricycleTableData: [],
 
@@ -887,6 +910,10 @@ export default {
 
             this.errors = [];
             this.errors = this.errorHandler(error.response.data.errors);
+
+            /* a taken engine/chassis is the one error the clerk can act on, so
+               show which tricycle is holding it instead of only the red text. */
+            this.lookupSerialHolder(error.response.data.errors);
         },
 
         fillTricycleInfo(event) {
@@ -929,6 +956,62 @@ export default {
             }
         },
 
+        /* find the tricycle standing in the way of a change unit */
+        lookupSerialHolder(errors) {
+            this.serialHolder = null;
+            this.dropErrorMsg = '';
+            this.dropPassword = '';
+
+            let field = null;
+
+            if(errors['change_unit_details.new_engine_motor_no']) {
+                field = 'engine_motor_no';
+            } else if(errors['change_unit_details.new_chassis_no']) {
+                field = 'chassis_no';
+            }
+
+            if(!field) {
+                return;
+            }
+
+            let serial = field === 'engine_motor_no' ? this.newEngineMotorNo : this.newChassisNoValue;
+
+            axios.get('mtop/serial_holder/' + field, { params: { serial: serial } })
+                .then(response => {
+                    this.serialHolder = response.data.holder;
+                });
+        },
+
+        dropOldUnit() {
+            if(!this.dropPassword) {
+                this.dropErrorMsg = 'Password is required.';
+                return;
+            }
+
+            this.loader = true;
+            this.dropErrorMsg = '';
+
+            axios.patch('mtop/drop_old_unit', {
+                tricycle_id: this.serialHolder.id,
+                own_tricycle_id: this.tricycleValue,
+                password: this.dropPassword,
+            })
+            .then(() => {
+                this.serialHolder = null;
+                this.dropPassword = '';
+                this.errors = [];
+
+                /* the serial is free now, so finish the save the clerk already
+                   asked for rather than making them press Update again. */
+                this.storeRecord();
+            })
+            .catch(error => {
+                this.dropErrorMsg = (error.response && error.response.data && error.response.data.err_msg)
+                    ? error.response.data.err_msg
+                    : 'Could not drop the old unit.';
+            })
+            .finally(() => this.loader = false);
+        },
         storeRecord() {
 
             // if(!this.renewal && !this.newOperator && !this.changeUnit && !this.newTransaction) {

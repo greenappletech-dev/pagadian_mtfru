@@ -789,18 +789,236 @@ class MtopApplicationController extends Controller
     public function tagOR(Request $request)
     {
         $or_list = $request->or_list;
-        foreach($or_list as $list){
-            DB::table('colhdr')
-            ->where('id', $list['id'])
-            ->where(function($query) {
-                $query->where('colhdr.trans_type', 'MTOP')
-                    ->orWhere('colhdr.trans_type', null)
-                    ->orWhere('colhdr.trans_type', "");
-            })
-            ->update(['mtop_application_id' => $request->application_id, 'trans_type' => 'MTOP']);
+
+        /* an empty list used to fall straight through the loop and still report
+           success, so staff were told the OR was tagged when nothing was written. */
+        if(!is_array($or_list) || count($or_list) === 0)
+        {
+            return response()->json(['err_msg' => 'No OR Number was selected. Search an OR and click Add first.'], 422);
         }
 
-        return response()->json(['message' => 'OR Tagged Successfully!']);
+        $application = MtopApplication::find($request->application_id);
+
+        if(!$application)
+        {
+            return response()->json(['err_msg' => 'The application to tag could not be found.'], 404);
+        }
+
+        $tagged = 0;
+
+        DB::beginTransaction();
+
+        try {
+
+            foreach($or_list as $list){
+                $tagged += DB::table('colhdr')
+                ->where('id', $list['id'])
+                ->where(function($query) {
+                    $query->where('colhdr.trans_type', 'MTOP')
+                        ->orWhere('colhdr.trans_type', null)
+                        ->orWhere('colhdr.trans_type', "");
+                })
+
+                /* findor only ever offers untagged ORs, but nothing stopped the
+                   write itself from taking one off another application - a stale
+                   list or a second clerk could move it. this is the same filter,
+                   plus this application's own rows so a retry stays harmless. */
+                ->where(function($query) use ($request) {
+                    $query->whereNull('colhdr.mtop_application_id')
+                        ->orWhere('colhdr.mtop_application_id', '<=', 0)
+                        ->orWhere('colhdr.mtop_application_id', $request->application_id);
+                })
+                ->update(['mtop_application_id' => $request->application_id, 'trans_type' => 'MTOP']);
+            }
+
+            /* every row was already taken by another transaction, so nothing was
+               written. reporting success here is what hid the problem before. */
+            if($tagged === 0)
+            {
+                DB::rollBack();
+
+                return response()->json(['err_msg' => 'No OR was tagged. It may already be tagged to another transaction.'], 409);
+            }
+
+            /* the 2 -> 3 move used to happen only when the list page happened to
+               render this row, so the status stayed behind after tagging. */
+            $this->advanceStatusAfterOR($application);
+
+            DB::commit();
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return response()->json(['err_msg' => 'Tagging failed: ' . $e->getMessage()], 500);
+        }
+
+        return response()->json([
+            'message' => $tagged === 1
+                ? 'OR Tagged Successfully!'
+                : $tagged . ' ORs Tagged Successfully!',
+            'status' => $application->status,
+            'validity_date' => $application->validity_date,
+        ]);
+    }
+
+    /* mirrors the status-2 branch of the list transform so a freshly tagged
+       application is already "For Printing" when the clerk looks at it. */
+    private function advanceStatusAfterOR(MtopApplication $application)
+    {
+        if((int)$application->status !== 2)
+        {
+            return;
+        }
+
+        $validity_date = $this->ORDetails(['application_id' => $application->id]);
+
+        if(!$validity_date || $validity_date === 'cancelled')
+        {
+            return;
+        }
+
+        $transaction_type = explode(',', $application->transact_type);
+
+        /* a change-unit-only transaction keeps the validity date of the unit it
+           replaced, it does not start a new two year term. 3 is change unit. */
+        if(count($transaction_type) === 1 && (int)$transaction_type[0] === 3)
+        {
+            $previous_transaction = Tricycle::leftJoin('mtop_applications', 'mtop_applications.id', 'tricycles.mtop_application_id')
+                ->where('tricycles.body_number', $application->body_number)
+                ->first();
+
+            $validity_date = $previous_transaction->validity_date ?? $validity_date;
+        }
+
+        $application->status = 3;
+        $application->validity_date = $validity_date;
+        $application->save();
+    }
+
+    /* which tricycle is holding an engine or chassis number. the form calls this
+       after a "has already been taken" error so the clerk can see what is in the
+       way instead of being told only that something is. */
+    public function serialHolder($field, Request $request)
+    {
+        if(!in_array($field, ['engine_motor_no', 'chassis_no'])) {
+            return response()->json(['err_msg' => 'Unknown field.'], 422);
+        }
+
+        /* the serial travels as a query string rather than a path segment because
+           a dropped one already carries a slash */
+        $serial = $this->normalizeSerial($request->query('serial'));
+
+        if($serial === null || $serial === '') {
+            return response()->json(['holder' => null], 200);
+        }
+
+        $holder = Tricycle::leftJoin('taxpayer', 'taxpayer.id', 'tricycles.operator_id')
+            ->whereRaw('upper(trim(tricycles.' . $field . ')) = ?', [$serial])
+            ->select(
+                'tricycles.id',
+                'tricycles.body_number',
+                'tricycles.operator_id',
+                'tricycles.make_type',
+                'tricycles.engine_motor_no',
+                'tricycles.chassis_no',
+                'tricycles.plate_no',
+                'tricycles.updated_at',
+                'taxpayer.full_name'
+            )
+            ->first();
+
+        return response()->json(['holder' => $holder], 200);
+    }
+
+    /* release an engine/chassis still held by an older tricycle so it can be used
+       again. this is the "/drop" the staff were applying by hand in the database. */
+    public function dropOldUnit(Request $request)
+    {
+        $tricycle_id = $request->tricycle_id;
+        $own_tricycle_id = $request->own_tricycle_id;
+
+        $password = DB::table('m99')->where('par_code', '001')->value('dropunitpassword');
+
+        /* until the head sets a password on the Parameter page there is nothing to
+           check against, so the action stays closed rather than open to everyone. */
+        if(empty($password)) {
+            return response()->json(['err_msg' => 'No drop password is set yet. Please ask the head to set it in System Parameter.'], 403);
+        }
+
+        if($this->normalizeSerial($request->password) !== $this->normalizeSerial($password)) {
+            return response()->json(['err_msg' => 'Wrong password.'], 403);
+        }
+
+        $tricycle = Tricycle::find($tricycle_id);
+
+        if(!$tricycle) {
+            return response()->json(['err_msg' => 'The tricycle holding this unit could not be found.'], 404);
+        }
+
+        /* the application's own tricycle is not something to drop - that collision
+           means the unit is already recorded against this very application, which
+           the uniqueness rule now ignores. dropping it would rename a live record. */
+        if($own_tricycle_id && (int)$own_tricycle_id === (int)$tricycle->id) {
+            return response()->json(['err_msg' => 'This unit already belongs to the tricycle you are updating, so there is nothing to drop.'], 409);
+        }
+
+        if($this->alreadyDropped($tricycle->engine_motor_no) && $this->alreadyDropped($tricycle->chassis_no)) {
+            return response()->json(['err_msg' => 'This unit has already been dropped.'], 409);
+        }
+
+        DB::beginTransaction();
+
+        try {
+
+            /* keep the real serials before the suffix goes on, so the unit stays
+               traceable once the master no longer shows its true number. */
+            TricycleUnitHistory::create([
+                'tricycle_id' => $tricycle->id,
+                'mtop_application_id' => $request->mtop_application_id,
+                'operator_id' => $tricycle->operator_id,
+                'dropped_by' => auth()->id(),
+                'body_number' => $tricycle->body_number,
+                'make_type' => $tricycle->make_type,
+                'engine_motor_no' => $tricycle->engine_motor_no,
+                'chassis_no' => $tricycle->chassis_no,
+                'plate_no' => $tricycle->plate_no,
+                'replaced_at' => now(),
+                'dropped_at' => now(),
+            ]);
+
+            $tricycle->engine_motor_no = $this->appendDropSuffix($tricycle->engine_motor_no);
+            $tricycle->chassis_no = $this->appendDropSuffix($tricycle->chassis_no);
+            $tricycle->save();
+
+            DB::commit();
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            return response()->json(['err_msg' => 'Could not drop the old unit: ' . $e->getMessage()], 500);
+        }
+
+        return response()->json([
+            'message' => 'Old unit dropped. Body ' . $tricycle->body_number . ' released its engine and chassis number.',
+        ], 200);
+    }
+
+    private function alreadyDropped($value)
+    {
+        return $value === null || $value === '' || substr($this->normalizeSerial($value), -5) === '/DROP';
+    }
+
+    /* an already dropped serial is left alone so a second press cannot produce
+       AZXWSD26650/drop/drop */
+    private function appendDropSuffix($value)
+    {
+        if($this->alreadyDropped($value)) {
+            return $value;
+        }
+
+        return $this->normalizeSerial($value) . '/drop';
     }
 
     public function getdata_searched($from, $to, $barangay_id, $option, $value) {

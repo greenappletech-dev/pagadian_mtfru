@@ -18,7 +18,8 @@ class SystemParameterController extends Controller
         return response()->json([
             'body_number_from' => $systemParameter[0]->body_number_from,
             'body_number_to' => $systemParameter[0]->body_number_to,
-            'mtfru_chairman' => $systemParameter[0]->mtfru_chairman
+            'mtfru_chairman' => $systemParameter[0]->mtfru_chairman,
+            'dropunitpassword' => $systemParameter[0]->dropunitpassword
         ], 200);
     }
 
@@ -32,7 +33,13 @@ class SystemParameterController extends Controller
         DB::table('m99')->where('par_code', '001')->update([
                 'body_number_from' => $request->body_number_from,
                 'body_number_to' => $request->body_number_to,
-                'mtfru_chairman' => $request->mtfru_chairman
+                'mtfru_chairman' => $request->mtfru_chairman,
+
+                /* left blank means "keep the current one", so saving the other
+                   parameters never wipes the password by accident */
+                'dropunitpassword' => $request->dropunitpassword === null || $request->dropunitpassword === ''
+                    ? DB::raw('dropunitpassword')
+                    : $request->dropunitpassword
             ]);
 
         return response()->json([
