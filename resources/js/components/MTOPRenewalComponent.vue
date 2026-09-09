@@ -600,8 +600,10 @@ export default {
 
         closeMessageBox() {
             if(this.suc === true) {
-                let pathname = window.location.pathname.split('/').splice(1, 2).join('/').replace('mtop_entry', 'mtop');
-                location.replace(window.location.origin + '/' + pathname);
+                /* this used to keep the record id in the path and land on /mtop/123,
+                   which is not a route. it only ever worked when the app sat in a sub
+                   folder. the axios base already knows where the app is served from. */
+                location.replace(window.axios.defaults.baseURL + 'mtop');
             }
 
             this.err = false;
