@@ -59,6 +59,10 @@
                         <label for="mtfru_chairman">MTFRU Chairman</label>
                         <input type="text" class="form-control mb-3" id="mtfru_chairman" v-model="mtfruChairman">
 
+                        <label for="dropunitpassword">Drop Old Unit Password</label>
+                        <input type="text" class="form-control" id="dropunitpassword" v-model="dropUnitPassword" placeholder="Leave blank to keep the current password">
+                        <small class="text-muted d-block mb-3">Needed before a clerk can release an engine or chassis number that an older tricycle is still holding.</small>
+
 
                         <button v-if="adding" class="form-control btn btn-primary d-inline-block" v-on:click="saveRecord">
                             <i class="fas fa-check mr-1"></i>Save
@@ -92,6 +96,7 @@ export default {
             bodyNumberToValue: null,
             bodyNumberFromValue: null,
             mtfruChairman : null,
+            dropUnitPassword : null,
 
             err_msg: null,
             suc_msg: null,
@@ -128,6 +133,7 @@ export default {
                 this.bodyNumberFromValue = response.data.body_number_from;
                 this.bodyNumberToValue = response.data.body_number_to;
                 this.mtfruChairman = response.data.mtfru_chairman;
+                this.dropUnitPassword = response.data.dropunitpassword;
             });
         },
 
@@ -148,6 +154,7 @@ export default {
             $('#body_number_from').attr('readonly', false);
             $('#body_number_to').attr('readonly', false);
             $('#mtfru_chairman').attr('readonly', false);
+            $('#dropunitpassword').attr('readonly', false);
         },
 
         saveRecord() {
@@ -156,7 +163,8 @@ export default {
             axios.patch('parameter/update', {
                 body_number_from: this.bodyNumberFromValue,
                 body_number_to: this.bodyNumberToValue,
-                mtfru_chairman: this.mtfruChairman
+                mtfru_chairman: this.mtfruChairman,
+                dropunitpassword: this.dropUnitPassword
             })
             .then(response =>
             {
@@ -166,6 +174,7 @@ export default {
                 $('#body_number_from').attr('readonly', true);
                 $('#body_number_to').attr('readonly', true);
                 $('#mtfru_chairman').attr('readonly', true);
+        $('#dropunitpassword').attr('readonly', true);
             })
             .catch(error =>
             {
@@ -181,6 +190,7 @@ export default {
         $('#body_number_from').attr('readonly', true);
         $('#body_number_to').attr('readonly', true);
         $('#mtfru_chairman').attr('readonly', true);
+        $('#dropunitpassword').attr('readonly', true);
         this.initialData();
     }
 }

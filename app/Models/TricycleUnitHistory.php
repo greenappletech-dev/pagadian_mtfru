@@ -13,16 +13,19 @@ class TricycleUnitHistory extends Model
         'tricycle_id',
         'mtop_application_id',
         'operator_id',
+        'dropped_by',
         'body_number',
         'make_type',
         'engine_motor_no',
         'chassis_no',
         'plate_no',
         'replaced_at',
+        'dropped_at',
     ];
 
     protected $casts = [
         'replaced_at' => 'datetime',
+        'dropped_at' => 'datetime',
     ];
 
     public function tricycle() {
