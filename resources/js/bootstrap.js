@@ -24,7 +24,15 @@ window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
-window.axios.defaults.baseURL = window.location.origin + '/';
+/* window.location.origin drops the path, so on a sub folder install every
+   request lost the folder and went to the host root: /mtop/getdata instead of
+   /mtfru/mtop/getdata, and every call answered 404. the meta tag carries what
+   Laravel itself thinks the base is, which is right on localhost, on artisan
+   serve and in a sub folder alike. */
+const baseUrlMeta = document.head.querySelector('meta[name="base-url"]');
+
+window.axios.defaults.baseURL = ((baseUrlMeta && baseUrlMeta.content) || window.location.origin)
+    .replace(/\/*$/, '/');
 
 
 /**
